@@ -13,6 +13,7 @@ import { EmptyStateComponent } from '../../../../shared/ui/empty-state/empty-sta
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { ConfirmModalComponent } from '../../../../shared/ui/confirm-modal/confirm-modal.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { NotificationService } from '../../../../shared/data-access/notification.service';
 import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model';
 
 @Component({
@@ -33,6 +34,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model
 })
 export class DealsPageComponent {
   protected readonly dealsStore = inject(DealsStore);
+  private readonly notifications = inject(NotificationService);
 
   readonly isFormModalOpen = signal(false);
   readonly isEditMode = signal(false);
@@ -74,6 +76,7 @@ export class DealsPageComponent {
       error: () => {
         this.isLoadingDeal.set(false);
         this.onFormModalClose();
+        this.notifications.error('Failed to load deal details.');
       },
     });
   }
@@ -86,13 +89,23 @@ export class DealsPageComponent {
   }
 
   onDealAdded(newDeal: NewDeal): void {
-    this.dealsStore.addDeal(newDeal).subscribe(() => this.onFormModalClose());
+    this.dealsStore.addDeal(newDeal).subscribe({
+      next: (deal) => {
+        this.onFormModalClose();
+        this.notifications.success(`Deal "${deal.dealName}" created.`);
+      },
+      error: () => this.notifications.error('Failed to create deal.'),
+    });
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
-    this.dealsStore
-      .updateDeal(updatedDeal)
-      .subscribe(() => this.onFormModalClose());
+    this.dealsStore.updateDeal(updatedDeal).subscribe({
+      next: (deal) => {
+        this.onFormModalClose();
+        this.notifications.success(`Deal "${deal.dealName}" updated.`);
+      },
+      error: () => this.notifications.error('Failed to update deal.'),
+    });
   }
 
   onDealDeleteRequest(deal: Deal): void {
@@ -106,8 +119,15 @@ export class DealsPageComponent {
     if (this.editingDeal()?.id === deal.id) {
       this.onFormModalClose();
     }
-    this.dealsStore.deleteDeal(deal.id).subscribe(() => {
-      this.dealToDelete.set(null);
+    this.dealsStore.deleteDeal(deal.id).subscribe({
+      next: () => {
+        this.dealToDelete.set(null);
+        this.notifications.success(`Deal "${deal.dealName}" deleted.`);
+      },
+      error: () => {
+        this.dealToDelete.set(null);
+        this.notifications.error('Failed to delete deal.');
+      },
     });
   }
 
