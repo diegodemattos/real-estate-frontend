@@ -268,7 +268,7 @@ Guidelines:
 - keep error behavior consistent across the app
 
 ## Naming
-Use explicit and descriptive names, with angular older functions, using suffix to identify the file type, ex: user.service.ts, list.component.ts, date.pipe.ts.
+Use explicit and descriptive names, with angular older naming convention, using suffix to identify the file type, ex: user.service.ts, list.component.ts, date.pipe.ts.
 
 Prefer:
 - `login`
