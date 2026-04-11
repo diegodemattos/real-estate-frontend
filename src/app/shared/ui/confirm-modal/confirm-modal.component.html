@@ -3,11 +3,27 @@
     <p class="confirm__message">{{ message() }}</p>
 
     <div class="confirm__actions">
-      <button class="btn btn--outline" type="button" (click)="onCancel()">
+      <button
+        class="btn btn--outline"
+        type="button"
+        [disabled]="isConfirming()"
+        (click)="onCancel()"
+      >
         {{ cancelLabel() }}
       </button>
-      <button class="btn btn--danger" type="button" (click)="onConfirm()">
-        {{ confirmLabel() }}
+      <button
+        class="btn btn--danger"
+        type="button"
+        [disabled]="isConfirming()"
+        [class.btn--loading]="isConfirming()"
+        (click)="onConfirm()"
+      >
+        @if (isConfirming()) {
+          <span class="btn__spinner" aria-hidden="true"></span>
+          Deleting...
+        } @else {
+          {{ confirmLabel() }}
+        }
       </button>
     </div>
   </div>

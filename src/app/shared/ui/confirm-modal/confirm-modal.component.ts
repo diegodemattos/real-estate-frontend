@@ -21,14 +21,27 @@ export class ConfirmModalComponent {
   readonly confirmLabel = input<string>('Confirm');
   readonly cancelLabel = input<string>('Cancel');
 
+  /**
+   * When true, both buttons are disabled and the confirm action renders a
+   * spinner. Also blocks the Esc / backdrop cancel paths so the user can't
+   * dismiss the modal while the in-flight request resolves.
+   */
+  readonly isConfirming = input<boolean>(false);
+
   readonly confirmed = output<void>();
   readonly cancelled = output<void>();
 
   onConfirm(): void {
+    if (this.isConfirming()) {
+      return;
+    }
     this.confirmed.emit();
   }
 
   onCancel(): void {
+    if (this.isConfirming()) {
+      return;
+    }
     this.cancelled.emit();
   }
 }

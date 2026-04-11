@@ -79,6 +79,7 @@
   [message]="deleteModalMessage()"
   confirmLabel="Delete"
   cancelLabel="Cancel"
+  [isConfirming]="dealsStore.isMutating()"
   (confirmed)="onDeleteConfirmed()"
   (cancelled)="onDeleteCancelled()"
 />
