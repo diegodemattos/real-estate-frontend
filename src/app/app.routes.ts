@@ -4,28 +4,46 @@ import { publicGuard } from './core/guards/public.guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'deals',
-    pathMatch: 'full',
-  },
-  {
     path: 'login',
     canActivate: [publicGuard],
     loadComponent: () =>
-      import('./features/auth/pages/login-page/login-page.component').then(
-        (m) => m.LoginPageComponent
+      import('./layouts/auth-layout/auth-layout.component').then(
+        (m) => m.AuthLayoutComponent
       ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/auth/pages/login-page/login-page.component'
+          ).then((m) => m.LoginPageComponent),
+      },
+    ],
   },
   {
-    path: 'deals',
+    path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/deals/pages/deals-page/deals-page.component').then(
-        (m) => m.DealsPageComponent
+      import('./layouts/main-layout/main-layout.component').then(
+        (m) => m.MainLayoutComponent
       ),
+    children: [
+      {
+        path: '',
+        redirectTo: 'deals',
+        pathMatch: 'full',
+      },
+      {
+        path: 'deals',
+        loadComponent: () =>
+          import(
+            './features/deals/pages/deals-page/deals-page.component'
+          ).then((m) => m.DealsPageComponent),
+      },
+    ],
   },
   {
     path: '**',
-    redirectTo: 'deals',
+    redirectTo: '',
   },
 ];

@@ -1,13 +1,11 @@
-<div class="login-page">
-  <div class="login-card">
-    <div class="login-card__header">
-      <h1 class="login-card__title">Real Estate Portal</h1>
-      <p class="login-card__subtitle">Sign in to manage your deals</p>
-    </div>
-    <app-login-form
-      [errorMessage]="errorMessage()"
-      [isLoading]="authStore.isLoading()"
-      (login)="onLogin($event)"
-    />
+<div class="login-card">
+  <div class="login-card__header">
+    <h1 class="login-card__title">Real Estate Portal</h1>
+    <p class="login-card__subtitle">Sign in to manage your deals</p>
   </div>
+  <app-login-form
+    [errorMessage]="errorMessage()"
+    [isLoading]="authStore.isLoading()"
+    (login)="onLogin($event)"
+  />
 </div>

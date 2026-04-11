@@ -5,8 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthStore } from '../../../auth/data-access/auth.store';
 import { DealsStore } from '../../data-access/deals.store';
 import { DealFiltersComponent } from '../../ui/deal-filters/deal-filters.component';
 import { DealFormComponent } from '../../ui/deal-form/deal-form.component';
@@ -32,9 +30,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model
   styleUrls: ['./deals-page.component.scss'],
 })
 export class DealsPageComponent {
-  protected readonly authStore = inject(AuthStore);
   protected readonly dealsStore = inject(DealsStore);
-  private readonly router = inject(Router);
 
   // — Form modal state —
   readonly isFormModalOpen = signal(false);
@@ -110,14 +106,9 @@ export class DealsPageComponent {
     this.dealToDelete.set(null);
   }
 
-  // — Auth —
+  // — Filters —
 
   onFiltersChange(filters: DealFilters): void {
     this.dealsStore.updateFilters(filters);
-  }
-
-  onLogout(): void {
-    this.authStore.logout();
-    this.router.navigate(['/login']);
   }
 }

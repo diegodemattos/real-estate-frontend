@@ -1,0 +1,22 @@
+<nav
+  id="main-menu"
+  class="menu"
+  aria-label="Main navigation"
+  [attr.aria-hidden]="!isOpen()"
+  [attr.inert]="!isOpen() ? '' : null"
+>
+  <ul class="menu__list">
+    @for (item of items; track item.route) {
+      <li class="menu__item">
+        <a
+          class="menu__link"
+          [routerLink]="item.route"
+          routerLinkActive="menu__link--active"
+        >
+          <span class="menu__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span class="menu__label">{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

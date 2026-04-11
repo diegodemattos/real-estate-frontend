@@ -1,0 +1,109 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-primary);
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.header__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  background-color: rgb(255 255 255 / 0.08);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-surface);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 0.18);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(255 255 255 / 0.5);
+    outline-offset: 2px;
+  }
+}
+
+.header__toggle-icon {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1.125rem;
+  height: 0.75rem;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 1px;
+  }
+}
+
+.header__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-surface);
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header__username {
+  font-size: var(--font-size-sm);
+  color: rgb(255 255 255 / 0.7);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.15s ease;
+}
+
+.btn--ghost {
+  padding: 0.5rem 1rem;
+  background-color: rgb(255 255 255 / 0.1);
+  color: var(--color-surface);
+
+  &:hover {
+    background-color: rgb(255 255 255 / 0.18);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(255 255 255 / 0.5);
+    outline-offset: 2px;
+  }
+}
