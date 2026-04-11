@@ -28,28 +28,29 @@ import { DealFilters } from '../models/deal.model';
           />
         </div>
 
-        <div class="filters__field">
-          <label class="filters__label" for="filter-price-min">Price &gt;</label>
-          <input
-            id="filter-price-min"
-            class="filters__input"
-            type="number"
-            formControlName="priceMin"
-            placeholder="Min price..."
-            min="0"
-          />
-        </div>
-
-        <div class="filters__field">
-          <label class="filters__label" for="filter-price-max">Price &lt;</label>
-          <input
-            id="filter-price-max"
-            class="filters__input"
-            type="number"
-            formControlName="priceMax"
-            placeholder="Max price..."
-            min="0"
-          />
+        <div class="filters__field filters__field--price">
+          <span class="filters__label">Price</span>
+          <div class="filters__price-range">
+            <input
+              id="filter-price-min"
+              class="filters__input"
+              type="number"
+              formControlName="priceMin"
+              placeholder="Min"
+              min="0"
+              aria-label="Minimum price"
+            />
+            <span class="filters__price-separator">to</span>
+            <input
+              id="filter-price-max"
+              class="filters__input"
+              type="number"
+              formControlName="priceMax"
+              placeholder="Max"
+              min="0"
+              aria-label="Maximum price"
+            />
+          </div>
         </div>
 
         <button class="btn btn--outline" type="button" (click)="onClear()">
@@ -80,6 +81,23 @@ import { DealFilters } from '../models/deal.model';
         gap: 0.375rem;
         flex: 1;
         min-width: 160px;
+      }
+
+      .filters__field--price {
+        min-width: 260px;
+      }
+
+      .filters__price-range {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filters__price-separator {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .filters__label {
