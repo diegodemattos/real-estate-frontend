@@ -13,7 +13,7 @@ The application supports a single mock user only:
 - password is required
 - credentials must match exactly
 - valid login grants access to private pages
-- invalid login shows an error message or feedback
+- invalid login shows clear feedback
 - unauthenticated users cannot access private routes
 
 ### Session Behavior
@@ -58,7 +58,8 @@ Rules:
 - capRate should be calculated automatically
 - capRate should update whenever purchasePrice or noi changes
 - capRate should not require manual user input
-- if purchasePrice is invalid or empty, capRate should not produce misleading output
+- capRate may be displayed as read-only derived information
+- if purchasePrice is invalid, empty, or zero, capRate should not display misleading output
 
 ### Monetary Rules
 - purchasePrice must be greater than 0
@@ -74,7 +75,7 @@ Rules:
 - no advanced formatting or normalization is required
 
 ## Listing Rules
-- user sees a list/table of pre-filled deals after authentication
+- user sees a list or table of pre-filled deals after authentication
 - pre-filled deals may come from in-memory service or mock source
 - list does not need to persist after refresh
 
@@ -100,6 +101,11 @@ Rules:
 - filters may be combined
 - clearing filters should restore the full list
 
+### Filtered View Behavior
+- filtering should not mutate the original source list destructively
+- the application should keep the original deals state and derive the filtered result from it
+- filtered results should update immediately when filter values change
+
 ## Highlighting Rule
 Optional enhancement:
 - the UI may highlight the matching deal name fragment in the table when a name filter is applied
@@ -112,6 +118,30 @@ Recommended formatting:
 
 Optional visual rule:
 - cap rate values in a realistic range such as 5% to 12% may be visually indicated in a subtle way
+
+## Form Behavior Rules
+
+### Login Form
+- should validate required fields before submission
+- should display clear error messages for invalid credentials
+- should prevent invalid submission when fields are empty
+
+### Deal Form
+- should validate required fields before adding a new deal
+- should update capRate reactively as the user edits purchasePrice and noi
+- should avoid showing invalid derived values when required fields are missing or invalid
+- should allow the user to submit only when validation rules are satisfied
+
+### Filter Form
+- should allow partial independent filtering
+- should not require all filter fields to be filled
+- should react quickly and predictably to user changes
+
+## State Rules
+- authentication state may be held in memory only
+- deals state may be held in memory only
+- filter state should be maintained separately from raw deals state
+- derived values such as filtered deals and capRate should be computed from source state, not manually duplicated
 
 ## Error and Validation Rules
 
@@ -129,6 +159,11 @@ Show validation feedback when:
 - purchasePrice is less than or equal to zero
 - noi is missing or invalid
 - noi is negative
+
+### Empty States
+The UI should communicate clearly when:
+- no deals exist
+- no deals match the current filters
 
 ## Persistence Rules
 - all data may be stored in memory only

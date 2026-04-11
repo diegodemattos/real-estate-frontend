@@ -308,6 +308,26 @@ Deal validation:
 - show formatted money and percentage values
 - keep interactions fast and predictable
 
+## Design System and Styling Strategy
+
+The application should use a simple design system based on CSS variables (design tokens).
+
+All core colors must be defined globally using `:root` variables.
+
+Example tokens:
+
+- primary colors
+- background and surface colors
+- text colors
+- border colors
+- semantic colors (success, warning, error)
+
+Guidelines:
+- components must consume tokens via `var(--color-...)`
+- avoid hardcoded colors inside components
+- ensure visual consistency across the application
+- keep styling simple, clean, and maintainable
+
 ## Testing and Tooling Direction
 Recommended project standards:
 - ESLint with `@angular-eslint`

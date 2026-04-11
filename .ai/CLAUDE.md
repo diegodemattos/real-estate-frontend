@@ -4,7 +4,7 @@
 This project is a simple Angular 17 frontend application for managing real estate deals.
 
 The application must simulate a realistic user experience while keeping the implementation intentionally simple.
-Its should use clean frontend architecture, Angular best practices, component structure, state handling, form handling, route protection, filtering, and maintainability.
+Its purpose is to demonstrate clean frontend architecture, Angular best practices, modern Angular patterns, component structure, state handling, form handling, route protection, filtering, and maintainability.
 
 The application should include authentication, private navigation, deal listing, deal creation, and client-side filtering.
 
@@ -25,6 +25,24 @@ The frontend must support:
    - highlighting matched text in filters
    - cap rate formatting
    - visual feedback for realistic cap rate ranges
+
+## Angular Technical Direction
+This project should follow modern Angular 17+ practices.
+
+Preferred standards:
+- standalone components by default
+- `bootstrapApplication()` instead of `AppModule`
+- route-based lazy loading with `loadComponent()` where appropriate
+- signals for local and feature state
+- `computed()` for derived state
+- `effect()` only when truly needed for side effects
+- `inject()` as the preferred dependency injection style when appropriate
+- modern control flow syntax:
+  - `@if`
+  - `@for`
+  - `@switch`
+- `ChangeDetectionStrategy.OnPush` in all components
+- explicit tracking in rendered lists
 
 ## Authentication Rules
 The application must require username and password before allowing access to private pages.
@@ -68,11 +86,14 @@ Implications:
 ## Expected Technical Behavior
 The frontend should:
 - use Angular 17 best practices
-- use a clean feature-based folder structure
+- use a feature-based folder structure
+- use standalone components, pipes, and directives by default
 - separate UI, state, and business behavior appropriately
 - use reactive forms
+- use signals for local and feature state where practical
 - keep route protection explicit
-- implement filtering in the frontend
+- implement filtering fully on the frontend
+- keep components small and focused
 - avoid unnecessary complexity
 - be easy to maintain and extend
 
@@ -81,25 +102,33 @@ The frontend should:
 - TypeScript
 - Angular Router
 - Reactive Forms
-- RxJS
-- standalone components preferred
+- Signals
+- RxJS where async flows naturally benefit from observables
 - built-in Angular features over unnecessary third-party libraries
 
 ## Architectural Direction
 Use a modular, feature-oriented frontend structure with clear separation of concerns.
 
-Recommended features/modules:
-- auth
-- deals
-- shared
+Recommended areas:
 - core
+- shared
+- features/auth
+- features/deals
 
 Recommended responsibilities:
-- pages for route-level screens
-- components for reusable UI parts
-- services for state/data/auth
-- pipes for display or highlighting behavior
-- guards for route access
+- `data-access/` for state and service logic
+- `feature/` for route-level or orchestration components
+- `ui/` for reusable/presentational feature components
+
+## State Direction
+State management should remain simple and explicit.
+
+Preferred approach:
+- use signals for local and feature state
+- use computed values for derived state such as filtered deals or cap rate display
+- keep filter state centralized
+- use RxJS only where asynchronous behavior naturally fits
+- avoid introducing heavyweight state libraries unless absolutely justified
 
 ## UX Direction
 The application should feel polished but simple.
@@ -112,33 +141,33 @@ Suggestions:
 - formatted currency and percentages
 - immediate feedback when filtering
 - automatic cap rate update while user types
-- use these base tokens: 
-:root {
-  --color-primary: #0B1F3A;
-  --color-primary-hover: #12305A;
-  --color-secondary: #5B3FD6;
-  --color-secondary-hover: #4A32B2;
-  --color-bg: #F7F9FC;
-  --color-surface: #FFFFFF;
-  --color-text: #0F172A;
-  --color-text-secondary: #475569;
-  --color-border: #E2E8F0;
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-}
+
+## UI and Styling Guidelines
+
+The application should use a simple design system based on CSS variables.
+
+- all colors must come from design tokens
+- avoid hardcoded values in components
+- ensure visual consistency
+- keep UI clean and minimal
+
+Focus on:
+- readability
+- spacing
+- consistent colors
+- simple but polished UI
 
 ## How to Respond
 When assisting in this project, always:
 
 - explain decisions before or alongside implementation
-- follow Angular best practices
+- follow modern Angular best practices
 - prefer simple and explicit solutions
 - preserve separation of concerns
 - keep the implementation clean and consistent
 - use Angular-native patterns where possible
 - avoid overengineering
-- suggest improvements only if they fit the challenge scope
+- suggest improvements only if they fit the project scope
 
 ## What Not To Do
 - do not introduce unnecessary state libraries unless clearly justified
@@ -148,7 +177,8 @@ When assisting in this project, always:
 - do not skip route protection
 - do not use `any` unless absolutely unavoidable
 - do not add unnecessary external UI libraries unless specifically requested
+- do not use legacy Angular patterns when modern Angular patterns are clearer
 
 ## Implementation Philosophy
 This frontend should feel like a small but well-structured real application:
-simple scope, polished behavior, and production-minded organization.
+simple scope, polished behavior, modern Angular design, and production-minded organization.

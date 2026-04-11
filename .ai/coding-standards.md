@@ -309,3 +309,23 @@ Even if tests are not fully implemented, code should remain testable:
 - excessive third-party dependencies
 - overengineering for a small application
 - legacy patterns when modern Angular patterns are clearer
+
+## Styling and Design Tokens
+
+The application must use CSS variables (design tokens) for all core styling values.
+
+Rules:
+- do not hardcode colors inside components
+- always use `var(--color-...)`
+- keep styling consistent across features
+- use semantic tokens instead of direct colors
+
+Examples:
+- use `var(--color-primary)` instead of hex values
+- use `var(--color-error)` for error states
+
+Guidelines:
+- tokens must be defined in the global stylesheet (`:root`)
+- components should consume tokens, not redefine them
+- styling should remain simple and readable
+- avoid introducing external design systems or UI libraries
