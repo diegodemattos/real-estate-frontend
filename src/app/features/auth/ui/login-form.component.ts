@@ -53,8 +53,18 @@ import { LoginCredentials } from '../models/auth.model';
         </div>
       }
 
-      <button class="btn btn--primary btn--full" type="submit">
-        Sign In
+      <button
+        class="btn btn--primary btn--full"
+        type="submit"
+        [disabled]="isLoading()"
+        [class.btn--loading]="isLoading()"
+      >
+        @if (isLoading()) {
+          <span class="btn__spinner" aria-hidden="true"></span>
+          Signing in...
+        } @else {
+          Sign In
+        }
       </button>
     </form>
   `,
@@ -125,13 +135,14 @@ import { LoginCredentials } from '../models/auth.model';
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 0.5rem;
         padding: 0.75rem 1.5rem;
         font-size: var(--font-size-base);
         font-weight: 500;
         border-radius: var(--radius-md);
         border: none;
         cursor: pointer;
-        transition: background-color 0.15s ease;
+        transition: background-color 0.15s ease, opacity 0.15s ease;
         font-family: inherit;
       }
 
@@ -139,7 +150,7 @@ import { LoginCredentials } from '../models/auth.model';
         background-color: var(--color-primary);
         color: var(--color-surface);
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: var(--color-primary-hover);
         }
 
@@ -147,16 +158,39 @@ import { LoginCredentials } from '../models/auth.model';
           outline: 2px solid var(--color-secondary);
           outline-offset: 2px;
         }
+
+        &:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+        }
       }
 
       .btn--full {
         width: 100%;
+      }
+
+      .btn__spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgb(255 255 255 / 0.35);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
     `,
   ],
 })
 export class LoginFormComponent {
   readonly errorMessage = input<string>('');
+  readonly isLoading = input<boolean>(false);
   readonly login = output<LoginCredentials>();
 
   private readonly fb = inject(FormBuilder);
@@ -172,7 +206,7 @@ export class LoginFormComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    if (this.isLoading() || this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }

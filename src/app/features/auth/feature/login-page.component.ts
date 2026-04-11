@@ -23,6 +23,7 @@ import { LoginCredentials } from '../models/auth.model';
         </div>
         <app-login-form
           [errorMessage]="errorMessage()"
+          [isLoading]="authStore.isLoading()"
           (login)="onLogin($event)"
         />
       </div>
@@ -68,17 +69,20 @@ import { LoginCredentials } from '../models/auth.model';
   ],
 })
 export class LoginPageComponent {
-  private readonly authStore = inject(AuthStore);
+  protected readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
 
   readonly errorMessage = signal('');
 
   onLogin(credentials: LoginCredentials): void {
-    const success = this.authStore.login(credentials);
-    if (success) {
-      this.router.navigate(['/deals']);
-    } else {
-      this.errorMessage.set('Invalid username or password. Please try again.');
-    }
+    this.errorMessage.set('');
+
+    this.authStore.login(credentials).subscribe((success) => {
+      if (success) {
+        this.router.navigate(['/deals']);
+      } else {
+        this.errorMessage.set('Invalid username or password. Please try again.');
+      }
+    });
   }
 }

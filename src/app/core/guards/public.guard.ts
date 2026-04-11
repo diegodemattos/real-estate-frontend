@@ -1,12 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthStore } from '../../features/auth/data-access/auth.store';
+import { TokenService } from '../services/token.service';
 
+/**
+ * Allows access to public routes (e.g. /login) only when no valid token exists.
+ * Redirects an already-authenticated user to /deals.
+ */
 export const publicGuard: CanActivateFn = () => {
-  const authStore = inject(AuthStore);
+  const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  if (!authStore.isAuthenticated()) {
+  if (!tokenService.isTokenValid()) {
     return true;
   }
 

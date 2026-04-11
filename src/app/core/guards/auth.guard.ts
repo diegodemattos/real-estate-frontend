@@ -1,12 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthStore } from '../../features/auth/data-access/auth.store';
+import { TokenService } from '../services/token.service';
 
+/**
+ * Allows access only when a valid, non-expired token exists in localStorage.
+ * Checks TokenService directly so expiry is evaluated at every navigation attempt.
+ */
 export const authGuard: CanActivateFn = () => {
-  const authStore = inject(AuthStore);
+  const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  if (authStore.isAuthenticated()) {
+  if (tokenService.isTokenValid()) {
     return true;
   }
 
