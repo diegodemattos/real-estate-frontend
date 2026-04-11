@@ -3,7 +3,7 @@ import { Observable, defer, delay, of, throwError } from 'rxjs';
 import { Deal, NewDeal, UpdatedDeal } from '../models/deal.model';
 
 const DEALS_KEY = 're_deals';
-const SIMULATED_LATENCY_MS = 400;
+const SIMULATED_LATENCY_MS = 900;
 
 const SEED_DEALS: Deal[] = [
   {

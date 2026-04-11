@@ -42,7 +42,12 @@
         </button>
       </div>
 
-      @if (dealsStore.hasFilteredDeals()) {
+      @if (dealsStore.isLoading()) {
+        <div class="table-loader" role="status" aria-live="polite">
+          <span class="table-loader__spinner" aria-hidden="true"></span>
+          <p class="table-loader__text">Loading deals...</p>
+        </div>
+      } @else if (dealsStore.hasFilteredDeals()) {
         <app-deals-table
           [deals]="dealsStore.filteredDeals()"
           [nameFilter]="currentNameFilter()"
@@ -50,16 +55,14 @@
           (dealEdit)="onDealEdit($event)"
           (dealDelete)="onDealDeleteRequest($event)"
         />
+      } @else if (dealsStore.isFiltering()) {
+        <app-empty-state
+          message="No deals match your current filters. Try adjusting your search."
+        />
       } @else {
-        @if (dealsStore.isFiltering()) {
-          <app-empty-state
-            message="No deals match your current filters. Try adjusting your search."
-          />
-        } @else {
-          <app-empty-state
-            message="No deals yet. Click '+ Add Deal' to get started."
-          />
-        }
+        <app-empty-state
+          message="No deals yet. Click '+ Add Deal' to get started."
+        />
       }
     </section>
   </main>

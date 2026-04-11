@@ -134,3 +134,36 @@
     outline-offset: 2px;
   }
 }
+
+.table-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  padding: 4rem 1.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.table-loader__spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgb(91 63 214 / 0.15);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: table-loader-spin 0.7s linear infinite;
+}
+
+.table-loader__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+@keyframes table-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
