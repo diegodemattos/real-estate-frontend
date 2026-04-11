@@ -1,12 +1,12 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
-import { TokenService } from '../../../core/services/token.service';
+import { SessionService } from '../../../core/services/session.service';
 import { AuthService } from './auth.service';
 import { AuthUser, LoginCredentials } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private readonly tokenService = inject(TokenService);
+  private readonly sessionService = inject(SessionService);
   private readonly authService = inject(AuthService);
 
   /**
@@ -29,7 +29,7 @@ export class AuthStore {
 
     return this.authService.login(credentials).pipe(
       tap((response) => {
-        this.tokenService.saveToken(response.accessToken, response.expiresAt);
+        this.sessionService.saveToken(response.accessToken, response.expiresAt);
         this._user.set({ username: credentials.username });
         this._isLoading.set(false);
       }),
@@ -42,13 +42,13 @@ export class AuthStore {
   }
 
   logout(): void {
-    this.tokenService.clearToken();
+    this.sessionService.clearToken();
     this._user.set(null);
   }
 
   private resolveUserFromStorage(): AuthUser | null {
-    if (!this.tokenService.isTokenValid()) return null;
-    const username = this.tokenService.getUsernameFromToken();
+    if (!this.sessionService.isTokenValid()) return null;
+    const username = this.sessionService.getUsernameFromToken();
     return username ? { username } : null;
   }
 }

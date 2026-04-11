@@ -8,7 +8,7 @@ interface StoredAuth {
 }
 
 @Injectable({ providedIn: 'root' })
-export class TokenService {
+export class SessionService {
   saveToken(accessToken: string, expiresAt: number): void {
     const entry: StoredAuth = { accessToken, expiresAt };
     localStorage.setItem(AUTH_KEY, JSON.stringify(entry));

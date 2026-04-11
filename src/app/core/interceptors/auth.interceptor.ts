@@ -1,19 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { TokenService } from '../services/token.service';
+import { SessionService } from '../services/session.service';
 
 /**
  * Attaches the stored access token as a Bearer Authorization header
  * to every outgoing HTTP request, provided the token exists and is valid.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenService = inject(TokenService);
+  const sessionService = inject(SessionService);
 
-  if (!tokenService.isTokenValid()) {
+  if (!sessionService.isTokenValid()) {
     return next(req);
   }
 
-  const token = tokenService.getToken();
+  const token = sessionService.getToken();
 
   const authenticatedReq = req.clone({
     setHeaders: { Authorization: `Bearer ${token}` },

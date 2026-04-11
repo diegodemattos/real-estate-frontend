@@ -37,7 +37,7 @@ export class AuthService {
 
   /**
    * Builds a mock JWT-shaped token (header.payload.signature).
-   * The payload is a valid base64-encoded JSON so TokenService can decode the username.
+   * The payload is a valid base64-encoded JSON so SessionService can decode the username.
    */
   private buildMockToken(username: string, expiresAt: number): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));

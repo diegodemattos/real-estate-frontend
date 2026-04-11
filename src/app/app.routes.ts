@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [publicGuard],
     loadComponent: () =>
-      import('./features/auth/feature/login-page/login-page.component').then(
+      import('./features/auth/pages/login-page/login-page.component').then(
         (m) => m.LoginPageComponent
       ),
   },
@@ -20,7 +20,7 @@ export const routes: Routes = [
     path: 'deals',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/deals/feature/deals-page/deals-page.component').then(
+      import('./features/deals/pages/deals-page/deals-page.component').then(
         (m) => m.DealsPageComponent
       ),
   },

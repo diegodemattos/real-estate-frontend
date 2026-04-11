@@ -191,13 +191,13 @@ Best direction:
 Separate route-level orchestration from focused UI components.
 
 Recommended split:
-- `feature/` for smart or route-level components
+- `pages/` for smart or route-level components (one folder per page so a feature can host more than one)
 - `ui/` for presentational/reusable components
 - `data-access/` for state, services, and feature logic
 
 Possible examples:
-- `features/auth/feature/login-page.component.ts`
-- `features/deals/feature/deals-page.component.ts`
+- `features/auth/pages/login-page/login-page.component.ts`
+- `features/deals/pages/deals-page/deals-page.component.ts`
 - `features/deals/ui/deals-table.component.ts`
 - `features/deals/ui/deal-form.component.ts`
 - `features/deals/ui/deal-filters.component.ts`

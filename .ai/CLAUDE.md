@@ -117,7 +117,7 @@ Recommended areas:
 
 Recommended responsibilities:
 - `data-access/` for state and service logic
-- `feature/` for route-level or orchestration components
+- `pages/` for route-level or orchestration components (one folder per page)
 - `ui/` for reusable/presentational feature components
 
 ## State Direction
