@@ -23,6 +23,14 @@
 
 .auth-layout__hero-content {
   max-width: 420px;
+  text-align: center;
+}
+
+.auth-layout__hero-logo {
+  display: inline-block;
+  height: 70px;
+  width: auto;
+  margin-bottom: 1.75rem;
 }
 
 .auth-layout__hero-title {

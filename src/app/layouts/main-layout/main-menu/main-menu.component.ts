@@ -4,7 +4,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 interface NavItem {
   readonly label: string;
   readonly route: string;
-  readonly icon: string;
 }
 
 @Component({
@@ -27,6 +26,7 @@ export class MainMenuComponent {
    * the layout, header, and footer remain unchanged.
    */
   readonly items: readonly NavItem[] = [
-    { label: 'Deals', route: '/main/deals', icon: '◧' },
+    { label: 'Deals', route: '/main/deals' },
+    { label: 'Closing', route: '/main/closing' },
   ];
 }

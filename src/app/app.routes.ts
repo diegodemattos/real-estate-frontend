@@ -52,6 +52,13 @@ export const routes: Routes = [
             './features/deals/pages/deals-page/deals-page.component'
           ).then((m) => m.DealsPageComponent),
       },
+      {
+        path: 'closing',
+        loadComponent: () =>
+          import(
+            './features/closing/pages/closing-page/closing-page.component'
+          ).then((m) => m.ClosingPageComponent),
+      },
     ],
   },
   {
