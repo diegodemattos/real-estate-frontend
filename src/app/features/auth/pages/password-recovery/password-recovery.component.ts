@@ -4,14 +4,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../../data-access/auth.service';
 import { PasswordRecoveryFormComponent } from '../../ui/password-recovery-form/password-recovery-form.component';
+import { LinkComponent } from '../../../../shared/ui/link/link.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 
 @Component({
   selector: 'app-password-recovery-page',
   standalone: true,
-  imports: [RouterLink, PasswordRecoveryFormComponent],
+  imports: [PasswordRecoveryFormComponent, LinkComponent, AlertComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './password-recovery.component.html',
   styleUrls: ['./password-recovery.component.scss'],

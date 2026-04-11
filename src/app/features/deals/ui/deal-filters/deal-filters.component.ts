@@ -7,12 +7,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { DealFilters } from '../../models/deal.model';
 
 @Component({
   selector: 'app-deal-filters',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormInputComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './deal-filters.component.html',
   styleUrls: ['./deal-filters.component.scss'],

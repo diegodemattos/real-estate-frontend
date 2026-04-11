@@ -20,9 +20,9 @@
           </span>
         }
       </div>
-      <button class="btn btn--add" type="button" (click)="openAddModal()">
+      <app-button variant="primary" (action)="openAddModal()">
         + Add Deal
-      </button>
+      </app-button>
     </div>
 
     @if (dealsStore.isLoading()) {

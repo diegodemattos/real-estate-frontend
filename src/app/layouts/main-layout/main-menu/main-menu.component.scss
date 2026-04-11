@@ -41,7 +41,7 @@
   padding: 0.625rem 0.875rem;
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   text-decoration: none;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -53,18 +53,18 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-secondary);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 }
 
 .menu__link--active {
-  background-color: rgb(91 63 214 / 0.1);
-  color: var(--color-secondary);
+  background-color: var(--color-primary-bg-medium);
+  color: var(--color-primary);
 
   &:hover {
-    background-color: rgb(91 63 214 / 0.14);
-    color: var(--color-secondary);
+    background-color: var(--color-primary-ring);
+    color: var(--color-primary);
   }
 }
 

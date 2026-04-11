@@ -5,11 +5,12 @@ import {
   output,
 } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-confirm-modal',
   standalone: true,
-  imports: [ModalComponent],
+  imports: [ModalComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.scss'],

@@ -1,0 +1,20 @@
+<button
+  class="button"
+  [class]="'button--' + variant()"
+  [class.button--full]="full()"
+  [class.button--loading]="loading()"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+>
+  @if (loading()) {
+    <span class="button__spinner" aria-hidden="true"></span>
+    @if (loadingLabel()) {
+      {{ loadingLabel() }}
+    } @else {
+      <ng-content />
+    }
+  } @else {
+    <ng-content />
+  }
+</button>

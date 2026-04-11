@@ -7,11 +7,18 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 
 @Component({
   selector: 'app-password-recovery-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    FormInputComponent,
+    ButtonComponent,
+    AlertComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './password-recovery-form.component.html',
   styleUrls: ['./password-recovery-form.component.scss'],

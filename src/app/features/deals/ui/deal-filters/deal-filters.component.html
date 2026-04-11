@@ -1,43 +1,35 @@
 <div class="filters-card">
   <form [formGroup]="form" class="filters">
-    <div class="filters__field">
-      <label class="filters__label" for="filter-name">Deal Name</label>
-      <input
-        id="filter-name"
-        class="filters__input"
+    <div class="filters__name">
+      <app-form-input
+        label="Deal Name"
         type="text"
-        formControlName="name"
         placeholder="Search by name..."
+        formControlName="name"
       />
     </div>
 
-    <div class="filters__field filters__field--price">
-      <span class="filters__label">Price</span>
+    <div class="filters__price">
+      <span class="filters__price-label">Price</span>
       <div class="filters__price-range">
-        <input
-          id="filter-price-min"
-          class="filters__input"
+        <app-form-input
           type="number"
-          formControlName="priceMin"
           placeholder="Min"
-          min="0"
-          aria-label="Minimum price"
+          ariaLabel="Minimum price"
+          [min]="0"
+          formControlName="priceMin"
         />
         <span class="filters__price-separator">to</span>
-        <input
-          id="filter-price-max"
-          class="filters__input"
+        <app-form-input
           type="number"
-          formControlName="priceMax"
           placeholder="Max"
-          min="0"
-          aria-label="Maximum price"
+          ariaLabel="Maximum price"
+          [min]="0"
+          formControlName="priceMax"
         />
       </div>
     </div>
 
-    <button class="btn btn--outline" type="button" (click)="onClear()">
-      Clear
-    </button>
+    <app-button variant="outline" (action)="onClear()">Clear</app-button>
   </form>
 </div>

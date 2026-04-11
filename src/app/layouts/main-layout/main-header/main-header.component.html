@@ -22,9 +22,7 @@
       @if (authStore.user(); as user) {
         <span class="header__username">{{ user.email }}</span>
       }
-      <button class="btn btn--ghost" type="button" (click)="onLogout()">
-        Sign Out
-      </button>
+      <app-button variant="ghost" (action)="onLogout()">Sign Out</app-button>
     </div>
   </div>
 </header>

@@ -15,12 +15,12 @@
   --form-input-bg: var(--color-surface);
   --form-input-color: var(--color-text);
   --form-input-font-size: 0.875rem;
-  --form-input-focus-border: var(--color-secondary);
-  --form-input-focus-ring: rgb(91 63 214 / 0.15);
+  --form-input-focus-border: var(--color-primary);
+  --form-input-focus-ring: var(--color-primary-ring);
   --form-input-error-color: var(--color-error);
-  --form-input-error-ring: rgb(239 68 68 / 0.15);
+  --form-input-error-ring: var(--color-error-ring);
   --form-input-muted-color: var(--color-text-secondary);
-  --form-input-toggle-hover-bg: rgb(0 0 0 / 0.04);
+  --form-input-toggle-hover-bg: var(--color-surface-hover);
 }
 
 .form-input {

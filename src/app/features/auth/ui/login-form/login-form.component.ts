@@ -6,14 +6,22 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { LinkComponent } from '../../../../shared/ui/link/link.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 import { LoginCredentials } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, FormInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    FormInputComponent,
+    ButtonComponent,
+    LinkComponent,
+    AlertComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],

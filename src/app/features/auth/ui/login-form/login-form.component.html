@@ -15,27 +15,21 @@
     formControlName="password"
   />
 
-  <a class="login-form__forgot" routerLink="/public/password-recovery">
-    Forgot password?
-  </a>
+  <div class="login-form__forgot">
+    <app-link to="/public/password-recovery">Forgot password?</app-link>
+  </div>
 
   @if (errorMessage()) {
-    <div class="login-form__error" role="alert">
-      {{ errorMessage() }}
-    </div>
+    <app-alert variant="error">{{ errorMessage() }}</app-alert>
   }
 
-  <button
-    class="btn btn--primary"
+  <app-button
     type="submit"
-    [disabled]="isLoading()"
-    [class.btn--loading]="isLoading()"
+    variant="primary"
+    [full]="true"
+    [loading]="isLoading()"
+    loadingLabel="Signing in..."
   >
-    @if (isLoading()) {
-      <span class="btn__spinner" aria-hidden="true"></span>
-      Signing in...
-    } @else {
-      Sign In
-    }
-  </button>
+    Sign In
+  </app-button>
 </form>

@@ -29,7 +29,7 @@
 
 .section__title {
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text);
 }
 
@@ -38,86 +38,44 @@
   color: var(--color-text-secondary);
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.15s ease;
-}
-
-.btn--add {
-  padding: 0.5rem 1.125rem;
-  background-color: var(--color-secondary);
-  color: var(--color-surface);
-
-  &:hover {
-    background-color: var(--color-secondary-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-secondary);
-    outline-offset: 2px;
-  }
-}
-
-.table-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.875rem;
-  padding: 4rem 1.5rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.table-loader__spinner {
-  display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  border: 3px solid rgb(91 63 214 / 0.15);
-  border-top-color: var(--color-secondary);
-  border-radius: 50%;
-  animation: table-loader-spin 0.7s linear infinite;
-}
-
-.table-loader__text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
+.table-loader,
 .modal-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.875rem;
+  padding: 4rem 1.5rem;
+}
+
+.table-loader {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.modal-loader {
   padding: 3rem 1.5rem;
 }
 
+.table-loader__spinner,
 .modal-loader__spinner {
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border: 3px solid rgb(91 63 214 / 0.15);
-  border-top-color: var(--color-secondary);
+  border: 3px solid var(--color-primary-bg-medium);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
-  animation: table-loader-spin 0.7s linear infinite;
+  animation: deals-page-spin 0.7s linear infinite;
 }
 
+.table-loader__text,
 .modal-loader__text {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
 
-@keyframes table-loader-spin {
+@keyframes deals-page-spin {
   to {
     transform: rotate(360deg);
   }

@@ -12,6 +12,7 @@ import { DealsTableComponent } from '../../ui/deals-table/deals-table.component'
 import { EmptyStateComponent } from '../../../../shared/ui/empty-state/empty-state.component';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { ConfirmModalComponent } from '../../../../shared/ui/confirm-modal/confirm-modal.component';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model';
 
 @Component({
@@ -24,6 +25,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model
     EmptyStateComponent,
     ModalComponent,
     ConfirmModalComponent,
+    ButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './deals-page.component.html',

@@ -2,8 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--color-primary);
-  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  background-color: var(--color-bg-dark);
+  border-bottom: 1px solid var(--color-border-on-dark);
 }
 
 .header__inner {
@@ -30,15 +30,15 @@
   width: 2.25rem;
   height: 2.25rem;
   padding: 0;
-  background-color: rgb(255 255 255 / 0.08);
+  background-color: var(--color-ghost-bg);
   border: none;
   border-radius: var(--radius-md);
-  color: var(--color-surface);
+  color: var(--color-text-on-dark);
   cursor: pointer;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background-color: rgb(255 255 255 / 0.18);
+    background-color: var(--color-ghost-bg-hover);
   }
 
   &:focus-visible {
@@ -65,8 +65,8 @@
 
 .header__title {
   font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-surface);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-on-dark);
 }
 
 .header__user {
@@ -77,33 +77,5 @@
 
 .header__username {
   font-size: var(--font-size-sm);
-  color: rgb(255 255 255 / 0.7);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.15s ease;
-}
-
-.btn--ghost {
-  padding: 0.5rem 1rem;
-  background-color: rgb(255 255 255 / 0.1);
-  color: var(--color-surface);
-
-  &:hover {
-    background-color: rgb(255 255 255 / 0.18);
-  }
-
-  &:focus-visible {
-    outline: 2px solid rgb(255 255 255 / 0.5);
-    outline-offset: 2px;
-  }
+  color: var(--color-text-on-dark-muted);
 }

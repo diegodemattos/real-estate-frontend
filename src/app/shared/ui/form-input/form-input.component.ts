@@ -43,6 +43,13 @@ export class FormInputComponent implements ControlValueAccessor {
   readonly autocomplete = input<string>('');
   readonly min = input<number | null>(null);
 
+  /**
+   * Accessible name for screen readers when no visible `label` is shown.
+   * Use this for inputs that are grouped under a shared heading (e.g. the
+   * Min/Max pair in a price range filter).
+   */
+  readonly ariaLabel = input<string>('');
+
   private readonly ngControl = inject(NgControl, {
     self: true,
     optional: true,

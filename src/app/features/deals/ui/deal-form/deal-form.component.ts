@@ -11,12 +11,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PercentPipe } from '@angular/common';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { Deal, NewDeal, UpdatedDeal } from '../../models/deal.model';
 
 @Component({
   selector: 'app-deal-form',
   standalone: true,
-  imports: [ReactiveFormsModule, PercentPipe, FormInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    PercentPipe,
+    FormInputComponent,
+    ButtonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './deal-form.component.html',
   styleUrls: ['./deal-form.component.scss'],
@@ -56,6 +62,14 @@ export class DealFormComponent {
   });
 
   readonly isEditMode = computed(() => this.deal() !== null);
+
+  readonly submitLabel = computed(() =>
+    this.isEditMode() ? 'Update Deal' : 'Add Deal'
+  );
+
+  readonly submitLoadingLabel = computed(() =>
+    this.isEditMode() ? 'Updating...' : 'Adding...'
+  );
 
   readonly previewCapRate = computed(() => {
     const { purchasePrice, noi } = this.formValues();

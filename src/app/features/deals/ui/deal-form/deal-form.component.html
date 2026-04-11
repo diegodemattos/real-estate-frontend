@@ -45,26 +45,20 @@
   }
 
   <div class="deal-form__actions">
-    <button
-      class="btn btn--outline"
-      type="button"
-      (click)="cancel()"
+    <app-button
+      variant="outline"
       [disabled]="isSaving()"
+      (action)="cancel()"
     >
       Cancel
-    </button>
-    <button
-      class="btn btn--primary"
+    </app-button>
+    <app-button
       type="submit"
-      [disabled]="isSaving()"
-      [class.btn--loading]="isSaving()"
+      variant="primary"
+      [loading]="isSaving()"
+      [loadingLabel]="submitLoadingLabel()"
     >
-      @if (isSaving()) {
-        <span class="btn__spinner" aria-hidden="true"></span>
-        {{ isEditMode() ? 'Updating...' : 'Adding...' }}
-      } @else {
-        {{ isEditMode() ? 'Update Deal' : 'Add Deal' }}
-      }
-    </button>
+      {{ submitLabel() }}
+    </app-button>
   </div>
 </form>

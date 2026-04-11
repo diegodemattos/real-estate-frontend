@@ -7,10 +7,12 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStore } from '../../../features/auth/data-access/auth.store';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-main-header',
   standalone: true,
+  imports: [ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './main-header.component.html',
   styleUrls: ['./main-header.component.scss'],

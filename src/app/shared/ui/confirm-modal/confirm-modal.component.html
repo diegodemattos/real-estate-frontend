@@ -3,28 +3,21 @@
     <p class="confirm__message">{{ message() }}</p>
 
     <div class="confirm__actions">
-      <button
-        class="btn btn--outline"
-        type="button"
+      <app-button
+        variant="outline"
         [disabled]="isConfirming()"
-        (click)="onCancel()"
+        (action)="onCancel()"
       >
         {{ cancelLabel() }}
-      </button>
-      <button
-        class="btn btn--danger"
-        type="button"
-        [disabled]="isConfirming()"
-        [class.btn--loading]="isConfirming()"
-        (click)="onConfirm()"
+      </app-button>
+      <app-button
+        variant="danger"
+        [loading]="isConfirming()"
+        loadingLabel="Deleting..."
+        (action)="onConfirm()"
       >
-        @if (isConfirming()) {
-          <span class="btn__spinner" aria-hidden="true"></span>
-          Deleting...
-        } @else {
-          {{ confirmLabel() }}
-        }
-      </button>
+        {{ confirmLabel() }}
+      </app-button>
     </div>
   </div>
 </app-modal>
