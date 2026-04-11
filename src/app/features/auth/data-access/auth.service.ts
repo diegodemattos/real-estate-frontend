@@ -1,66 +1,55 @@
-import { Injectable } from '@angular/core';
-import { Observable, delay, map, of, throwError } from 'rxjs';
-import { AuthTokenResponse, LoginCredentials } from '../models/auth.model';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, delay, of } from 'rxjs';
+import { API_BASE_URL } from '../../../core/config/api.config';
+import { SKIP_AUTH } from '../../../core/interceptors/tokens/skip-auth.token';
+import {
+  AuthTokenResponse,
+  AuthUser,
+  LoginCredentials,
+} from '../models/auth.model';
 
-const MOCK_EMAIL = 'admin@termsheet.com';
-const MOCK_PASSWORD = 'Ts@123456';
-const TOKEN_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
-const SIMULATED_LATENCY_MS = 600;
+const PASSWORD_RECOVERY_LATENCY_MS = 600;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+
   /**
-   * Simulates a POST /api/auth/login call.
-   * Uses RxJS operators to replicate async network behaviour without a real backend.
-   * Replace the body with a real HttpClient.post() call when a backend is available.
+   * POST /auth/login — opted out of the auth interceptor via the SKIP_AUTH
+   * context flag because this is the very endpoint that hands out tokens.
+   *
+   * The UI collects an email, but the Swagger contract names the field
+   * `username`, so we map at the HTTP boundary.
    */
   login(credentials: LoginCredentials): Observable<AuthTokenResponse> {
-    if (
-      credentials.email !== MOCK_EMAIL ||
-      credentials.password !== MOCK_PASSWORD
-    ) {
-      return throwError(() => new Error('Invalid credentials')).pipe(
-        delay(SIMULATED_LATENCY_MS)
-      );
-    }
-
-    const expiresAt = Date.now() + TOKEN_TTL_MS;
-
-    return of(credentials).pipe(
-      delay(SIMULATED_LATENCY_MS),
-      map(() => ({
-        accessToken: this.buildMockToken(credentials.email, expiresAt),
-        expiresAt,
-      }))
+    return this.http.post<AuthTokenResponse>(
+      `${API_BASE_URL}/auth/login`,
+      {
+        username: credentials.email,
+        password: credentials.password,
+      },
+      {
+        context: new HttpContext().set(SKIP_AUTH, true),
+      }
     );
   }
 
   /**
-   * Simulates a POST /api/auth/password-recovery call.
-   *
-   * Always resolves successfully regardless of the email provided — the
-   * real API would respond the same way to avoid disclosing which addresses
-   * are registered. The UI surfaces a generic "if the email is registered..."
-   * message to match that security posture.
+   * GET /auth/me — returns the currently authenticated user.
+   * Auth interceptor attaches the Bearer token automatically.
+   */
+  getMe(): Observable<AuthUser> {
+    return this.http.get<AuthUser>(`${API_BASE_URL}/auth/me`);
+  }
+
+  /**
+   * Simulated password-recovery request. Not part of the Swagger contract,
+   * so it stays as a direct observable rather than a mocked HTTP call.
+   * Always resolves successfully so the UI can't disclose whether an
+   * address is registered.
    */
   requestPasswordRecovery(_email: string): Observable<void> {
-    return of(void 0).pipe(delay(SIMULATED_LATENCY_MS));
-  }
-
-  /**
-   * Builds a mock JWT-shaped token (header.payload.signature).
-   * The payload is a valid base64-encoded JSON so SessionService can decode the email.
-   */
-  private buildMockToken(email: string, expiresAt: number): string {
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(
-      JSON.stringify({
-        sub: email,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(expiresAt / 1000),
-      })
-    );
-    const signature = btoa('mock-signature');
-    return `${header}.${payload}.${signature}`;
+    return of(void 0).pipe(delay(PASSWORD_RECOVERY_LATENCY_MS));
   }
 }

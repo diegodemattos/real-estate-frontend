@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 import { SessionService } from '../../../core/services/session.service';
 import { AuthService } from './auth.service';
 import { AuthUser, LoginCredentials } from '../models/auth.model';
@@ -10,8 +10,8 @@ export class AuthStore {
   private readonly authService = inject(AuthService);
 
   /**
-   * Hydrated from localStorage on construction so that a page refresh
-   * restores the authenticated user without requiring a new login.
+   * Hydrated synchronously from the token on construction so a page refresh
+   * restores the user without waiting on an HTTP round-trip.
    */
   private readonly _user = signal<AuthUser | null>(this.resolveUserFromStorage());
   private readonly _isLoading = signal(false);
@@ -21,8 +21,9 @@ export class AuthStore {
   readonly isAuthenticated = computed(() => this._user() !== null);
 
   /**
-   * Calls the (mock) login API, persists the token, and updates the user signal.
-   * Returns an observable that emits true on success and false on failure.
+   * Full login flow:
+   *   POST /auth/login → persist the token → GET /auth/me → update the user.
+   * Emits true on success, false on failure.
    */
   login(credentials: LoginCredentials): Observable<boolean> {
     this._isLoading.set(true);
@@ -30,12 +31,17 @@ export class AuthStore {
     return this.authService.login(credentials).pipe(
       tap((response) => {
         this.sessionService.saveToken(response.accessToken, response.expiresAt);
-        this._user.set({ email: credentials.email });
+      }),
+      switchMap(() => this.authService.getMe()),
+      tap((user) => {
+        this._user.set(user);
         this._isLoading.set(false);
       }),
       map(() => true),
       catchError(() => {
         this._isLoading.set(false);
+        this.sessionService.clearToken();
+        this._user.set(null);
         return of(false);
       })
     );
