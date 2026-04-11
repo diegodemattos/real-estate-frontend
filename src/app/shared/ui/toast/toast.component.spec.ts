@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { NotificationService } from '../../data-access/notification.service';
+import { NotificationService } from '../../services/notification.service';
 import { ToastComponent } from './toast.component';
 
 describe('ToastComponent', () => {

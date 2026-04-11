@@ -4,7 +4,7 @@ import { filter, switchMap, timer } from 'rxjs';
 import {
   Notification,
   NotificationService,
-} from '../../data-access/notification.service';
+} from '../../services/notification.service';
 
 const AUTO_DISMISS_MS = 3500;
 

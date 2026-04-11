@@ -13,7 +13,7 @@ import { EmptyStateComponent } from '../../../../shared/ui/empty-state/empty-sta
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { ConfirmModalComponent } from '../../../../shared/ui/confirm-modal/confirm-modal.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { NotificationService } from '../../../../shared/data-access/notification.service';
+import { NotificationService } from '../../../../shared/services/notification.service';
 import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model';
 
 @Component({
