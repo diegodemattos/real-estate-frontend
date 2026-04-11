@@ -10,12 +10,13 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PercentPipe } from '@angular/common';
+import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { Deal, NewDeal, UpdatedDeal } from '../../models/deal.model';
 
 @Component({
   selector: 'app-deal-form',
   standalone: true,
-  imports: [ReactiveFormsModule, PercentPipe],
+  imports: [ReactiveFormsModule, PercentPipe, FormInputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './deal-form.component.html',
   styleUrls: ['./deal-form.component.scss'],
@@ -95,11 +96,6 @@ export class DealFormComponent {
       },
       { allowSignalWrites: true }
     );
-  }
-
-  isFieldInvalid(field: string): boolean {
-    const control = this.form.get(field);
-    return !!(control?.invalid && control.touched);
   }
 
   submit(): void {

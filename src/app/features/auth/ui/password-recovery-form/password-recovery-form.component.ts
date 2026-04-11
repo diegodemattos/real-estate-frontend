@@ -6,11 +6,12 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 
 @Component({
   selector: 'app-password-recovery-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormInputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './password-recovery-form.component.html',
   styleUrls: ['./password-recovery-form.component.scss'],
@@ -27,11 +28,6 @@ export class PasswordRecoveryFormComponent {
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
   });
-
-  isFieldInvalid(field: 'email'): boolean {
-    const control = this.form.get(field);
-    return !!(control?.invalid && control.touched);
-  }
 
   submit(): void {
     if (this.isLoading() || this.form.invalid) {

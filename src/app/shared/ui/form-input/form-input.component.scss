@@ -1,0 +1,131 @@
+:host {
+  display: block;
+
+  // Defaults — any ancestor scope can override by setting these on a
+  // wrapper element (or on :root for a global change).
+  --form-input-gap: 0.375rem;
+  --form-input-label-color: var(--color-text);
+  --form-input-label-size: 0.875rem;
+  --form-input-label-weight: 500;
+  --form-input-required-color: var(--color-error);
+  --form-input-height: 42px;
+  --form-input-padding-x: 0.875rem;
+  --form-input-radius: var(--radius-md);
+  --form-input-border: var(--color-border);
+  --form-input-bg: var(--color-surface);
+  --form-input-color: var(--color-text);
+  --form-input-font-size: 0.875rem;
+  --form-input-focus-border: var(--color-secondary);
+  --form-input-focus-ring: rgb(91 63 214 / 0.15);
+  --form-input-error-color: var(--color-error);
+  --form-input-error-ring: rgb(239 68 68 / 0.15);
+  --form-input-muted-color: var(--color-text-secondary);
+  --form-input-toggle-hover-bg: rgb(0 0 0 / 0.04);
+}
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-input-gap);
+}
+
+.form-input__label {
+  font-size: var(--form-input-label-size);
+  font-weight: var(--form-input-label-weight);
+  color: var(--form-input-label-color);
+}
+
+.form-input__required {
+  color: var(--form-input-required-color);
+  margin-left: 0.125rem;
+}
+
+.form-input__control {
+  position: relative;
+}
+
+.form-input__input {
+  display: block;
+  width: 100%;
+  height: var(--form-input-height);
+  padding: 0 var(--form-input-padding-x);
+  border: 1px solid var(--form-input-border);
+  border-radius: var(--form-input-radius);
+  background-color: var(--form-input-bg);
+  color: var(--form-input-color);
+  font-size: var(--form-input-font-size);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus {
+    border-color: var(--form-input-focus-border);
+    box-shadow: 0 0 0 3px var(--form-input-focus-ring);
+  }
+
+  &::placeholder {
+    color: var(--form-input-muted-color);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  &[type='number']::-webkit-outer-spin-button,
+  &[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
+.form-input__input--password {
+  padding-right: 2.75rem;
+}
+
+.form-input__input--error {
+  border-color: var(--form-input-error-color);
+
+  &:focus {
+    border-color: var(--form-input-error-color);
+    box-shadow: 0 0 0 3px var(--form-input-error-ring);
+  }
+}
+
+.form-input__password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--form-input-muted-color);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    color: var(--form-input-color);
+    background-color: var(--form-input-toggle-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--form-input-focus-border);
+    outline-offset: 2px;
+  }
+}
+
+.form-input__error {
+  font-size: 0.75rem;
+  color: var(--form-input-error-color);
+}

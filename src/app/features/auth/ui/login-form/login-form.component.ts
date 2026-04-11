@@ -1,20 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
   output,
-  signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { LoginCredentials } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FormInputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
@@ -30,25 +29,6 @@ export class LoginFormComponent {
     email: ['admin@termsheet.com', [Validators.required, Validators.email]],
     password: ['Ts@123456', Validators.required],
   });
-
-  /**
-   * Drives the show/hide password toggle. Stays inside the component
-   * because it is purely presentational state.
-   */
-  private readonly _isPasswordVisible = signal(false);
-  readonly isPasswordVisible = this._isPasswordVisible.asReadonly();
-  readonly passwordInputType = computed(() =>
-    this._isPasswordVisible() ? 'text' : 'password'
-  );
-
-  togglePasswordVisibility(): void {
-    this._isPasswordVisible.update((visible) => !visible);
-  }
-
-  isFieldInvalid(field: 'email' | 'password'): boolean {
-    const control = this.form.get(field);
-    return !!(control?.invalid && control.touched);
-  }
 
   submit(): void {
     if (this.isLoading() || this.form.invalid) {

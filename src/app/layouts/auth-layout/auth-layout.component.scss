@@ -20,6 +20,19 @@ $auth-text-on-dark: #ffffff;
 
 .auth-layout__form {
   background-color: $auth-bg-left;
+
+  // Re-theme the shared form-input for the auth context. CSS custom
+  // properties cascade through component encapsulation, so the inputs
+  // rendered inside the router-outlet below pick these up automatically.
+  --form-input-label-color: #7f8b9b;
+  --form-input-label-weight: 400;
+  --form-input-required-color: #2f80ed;
+  --form-input-radius: 4px;
+  --form-input-padding-x: 0.75rem;
+  --form-input-border: #dbe1e7;
+  --form-input-color: #18202b;
+  --form-input-focus-border: #2f80ed;
+  --form-input-focus-ring: rgb(47 128 237 / 0.15);
 }
 
 .auth-layout__hero {
