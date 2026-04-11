@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, delay, map, of, throwError } from 'rxjs';
 import { AuthTokenResponse, LoginCredentials } from '../models/auth.model';
 
-const MOCK_USERNAME = 'admin';
-const MOCK_PASSWORD = '123456';
+const MOCK_EMAIL = 'admin@termsheet.com';
+const MOCK_PASSWORD = 'Ts@123456';
 const TOKEN_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
 const SIMULATED_LATENCY_MS = 600;
 
@@ -16,7 +16,7 @@ export class AuthService {
    */
   login(credentials: LoginCredentials): Observable<AuthTokenResponse> {
     if (
-      credentials.username !== MOCK_USERNAME ||
+      credentials.email !== MOCK_EMAIL ||
       credentials.password !== MOCK_PASSWORD
     ) {
       return throwError(() => new Error('Invalid credentials')).pipe(
@@ -29,21 +29,33 @@ export class AuthService {
     return of(credentials).pipe(
       delay(SIMULATED_LATENCY_MS),
       map(() => ({
-        accessToken: this.buildMockToken(credentials.username, expiresAt),
+        accessToken: this.buildMockToken(credentials.email, expiresAt),
         expiresAt,
       }))
     );
   }
 
   /**
-   * Builds a mock JWT-shaped token (header.payload.signature).
-   * The payload is a valid base64-encoded JSON so SessionService can decode the username.
+   * Simulates a POST /api/auth/password-recovery call.
+   *
+   * Always resolves successfully regardless of the email provided — the
+   * real API would respond the same way to avoid disclosing which addresses
+   * are registered. The UI surfaces a generic "if the email is registered..."
+   * message to match that security posture.
    */
-  private buildMockToken(username: string, expiresAt: number): string {
+  requestPasswordRecovery(_email: string): Observable<void> {
+    return of(void 0).pipe(delay(SIMULATED_LATENCY_MS));
+  }
+
+  /**
+   * Builds a mock JWT-shaped token (header.payload.signature).
+   * The payload is a valid base64-encoded JSON so SessionService can decode the email.
+   */
+  private buildMockToken(email: string, expiresAt: number): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const payload = btoa(
       JSON.stringify({
-        sub: username,
+        sub: email,
         iat: Math.floor(Date.now() / 1000),
         exp: Math.floor(expiresAt / 1000),
       })

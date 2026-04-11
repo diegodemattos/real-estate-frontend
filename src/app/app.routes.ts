@@ -4,7 +4,7 @@ import { publicGuard } from './core/guards/public.guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
+    path: 'public',
     canActivate: [publicGuard],
     loadComponent: () =>
       import('./layouts/auth-layout/auth-layout.component').then(
@@ -13,15 +13,27 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
+      {
+        path: 'login',
         loadComponent: () =>
           import(
             './features/auth/pages/login-page/login-page.component'
           ).then((m) => m.LoginPageComponent),
       },
+      {
+        path: 'password-recovery',
+        loadComponent: () =>
+          import(
+            './features/auth/pages/password-recovery/password-recovery.component'
+          ).then((m) => m.PasswordRecoveryPageComponent),
+      },
     ],
   },
   {
-    path: '',
+    path: 'main',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./layouts/main-layout/main-layout.component').then(
@@ -43,7 +55,12 @@ export const routes: Routes = [
     ],
   },
   {
+    path: '',
+    redirectTo: 'main',
+    pathMatch: 'full',
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'main',
   },
 ];

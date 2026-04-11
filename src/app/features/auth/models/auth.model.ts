@@ -1,10 +1,10 @@
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface AuthUser {
-  username: string;
+  email: string;
 }
 
 /** Shape returned by the (mock) login API endpoint. */

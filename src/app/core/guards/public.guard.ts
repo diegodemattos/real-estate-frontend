@@ -3,8 +3,9 @@ import { CanActivateFn, Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 
 /**
- * Allows access to public routes (e.g. /login) only when no valid token exists.
- * Redirects an already-authenticated user to /deals.
+ * Allows access to public routes (e.g. /public/login, /public/password-recovery)
+ * only when no valid token exists. Redirects an already-authenticated user
+ * to the main deals page.
  */
 export const publicGuard: CanActivateFn = () => {
   const sessionService = inject(SessionService);
@@ -14,5 +15,5 @@ export const publicGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/deals']);
+  return router.createUrlTree(['/main/deals']);
 };

@@ -31,6 +31,6 @@ export class MainHeaderComponent {
 
   protected onLogout(): void {
     this.authStore.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/public/login']);
   }
 }

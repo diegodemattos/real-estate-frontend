@@ -30,7 +30,7 @@ export class AuthStore {
     return this.authService.login(credentials).pipe(
       tap((response) => {
         this.sessionService.saveToken(response.accessToken, response.expiresAt);
-        this._user.set({ username: credentials.username });
+        this._user.set({ email: credentials.email });
         this._isLoading.set(false);
       }),
       map(() => true),
@@ -48,7 +48,7 @@ export class AuthStore {
 
   private resolveUserFromStorage(): AuthUser | null {
     if (!this.sessionService.isTokenValid()) return null;
-    const username = this.sessionService.getUsernameFromToken();
-    return username ? { username } : null;
+    const email = this.sessionService.getEmailFromToken();
+    return email ? { email } : null;
   }
 }

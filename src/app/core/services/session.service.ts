@@ -33,10 +33,10 @@ export class SessionService {
   }
 
   /**
-   * Decodes the payload segment of the mock JWT and returns the subject claim.
-   * Returns null if the token is absent or malformed.
+   * Decodes the payload segment of the mock JWT and returns the subject claim
+   * (the user's email). Returns null if the token is absent or malformed.
    */
-  getUsernameFromToken(): string | null {
+  getEmailFromToken(): string | null {
     const token = this.getToken();
     if (!token) return null;
     try {

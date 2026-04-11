@@ -28,9 +28,9 @@ export class LoginPageComponent {
 
     this.authStore.login(credentials).subscribe((success) => {
       if (success) {
-        this.router.navigate(['/deals']);
+        this.router.navigate(['/main/deals']);
       } else {
-        this.errorMessage.set('Invalid username or password. Please try again.');
+        this.errorMessage.set('Invalid email or password. Please try again.');
       }
     });
   }

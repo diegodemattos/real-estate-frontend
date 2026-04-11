@@ -15,12 +15,12 @@
           <span></span>
         </span>
       </button>
-      <h1 class="header__title">Real Estate Portal</h1>
+      <h1 class="header__title">TermSheet</h1>
     </div>
 
     <div class="header__user">
       @if (authStore.user(); as user) {
-        <span class="header__username">{{ user.username }}</span>
+        <span class="header__username">{{ user.email }}</span>
       }
       <button class="btn btn--ghost" type="button" (click)="onLogout()">
         Sign Out

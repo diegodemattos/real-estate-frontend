@@ -27,6 +27,6 @@ export class MainMenuComponent {
    * the layout, header, and footer remain unchanged.
    */
   readonly items: readonly NavItem[] = [
-    { label: 'Deals', route: '/deals', icon: '◧' },
+    { label: 'Deals', route: '/main/deals', icon: '◧' },
   ];
 }
