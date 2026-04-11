@@ -72,7 +72,7 @@
     text-align: right;
   }
 
-  &.table__td--center {
+  &.table__td--actions {
     text-align: center;
   }
 
@@ -155,5 +155,101 @@
     background-color: var(--color-error-bg);
     border-color: var(--color-error-border);
     color: var(--color-error);
+  }
+}
+
+// ─── Mobile: each row becomes a stacked card ────────────────────────
+@media (max-width: 640px) {
+  .table-wrapper {
+    overflow-x: visible;
+    border: none;
+    background-color: transparent;
+  }
+
+  .table,
+  .table > tbody {
+    display: block;
+  }
+
+  .table > thead {
+    display: none;
+  }
+
+  tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .table__row {
+    display: block;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    &:hover {
+      background-color: var(--color-surface);
+    }
+  }
+
+  .table__row--editing,
+  .table__row--editing:hover {
+    background-color: var(--color-primary-bg-faint);
+    border-color: var(--color-primary);
+  }
+
+  .table__td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    white-space: normal;
+    text-align: right;
+
+    &::before {
+      content: attr(data-label);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-secondary);
+      text-align: left;
+    }
+
+    &.table__td--name {
+      font-size: var(--font-size-base);
+      white-space: normal;
+    }
+
+    &.table__td--secondary {
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  .table__td--actions {
+    border-bottom: none;
+    padding-top: 0.75rem;
+    justify-content: flex-end;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  .table__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .action-btn {
+    padding: 0.4rem 0.875rem;
+    font-size: var(--font-size-sm);
   }
 }

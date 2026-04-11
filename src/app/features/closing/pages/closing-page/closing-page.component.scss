@@ -18,3 +18,9 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
 }
+
+@media (max-width: 640px) {
+  .closing-page {
+    padding: 1.25rem 1rem;
+  }
+}

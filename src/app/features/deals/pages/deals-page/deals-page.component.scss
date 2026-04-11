@@ -19,6 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .section__header-left {
@@ -78,5 +79,20 @@
 @keyframes deals-page-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .deals-page {
+    padding: 1.25rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .section__header > app-button {
+    width: 100%;
+  }
+
+  .table-loader {
+    padding: 3rem 1rem;
   }
 }

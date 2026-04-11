@@ -7,6 +7,15 @@
   <div class="main-layout__body">
     <app-main-menu [isOpen]="isMenuOpen()" />
 
+    @if (isMenuOpen()) {
+      <button
+        type="button"
+        class="main-layout__backdrop"
+        aria-label="Close menu"
+        (click)="closeMenu()"
+      ></button>
+    }
+
     <main class="main-layout__main">
       <router-outlet />
     </main>

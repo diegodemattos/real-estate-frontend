@@ -16,19 +16,25 @@
           class="table__row"
           [class.table__row--editing]="deal.id === editingDealId()"
         >
-          <td class="table__td table__td--name">
+          <td class="table__td table__td--name" data-label="Deal Name">
             <span [innerHTML]="deal.dealName | highlight: nameFilter()"></span>
           </td>
-          <td class="table__td table__td--secondary">
+          <td class="table__td table__td--secondary" data-label="Address">
             {{ deal.address }}
           </td>
-          <td class="table__td table__td--right table__td--mono">
+          <td
+            class="table__td table__td--right table__td--mono"
+            data-label="Purchase Price"
+          >
             {{ deal.purchasePrice | currency: 'USD' : 'symbol' : '1.0-0' }}
           </td>
-          <td class="table__td table__td--right table__td--mono">
+          <td
+            class="table__td table__td--right table__td--mono"
+            data-label="NOI"
+          >
             {{ deal.noi | currency: 'USD' : 'symbol' : '1.0-0' }}
           </td>
-          <td class="table__td table__td--right">
+          <td class="table__td table__td--right" data-label="Cap Rate">
             <span
               class="cap-rate-badge"
               [class.cap-rate-badge--good]="isGoodCapRate(deal.capRate)"
@@ -38,7 +44,7 @@
               {{ deal.capRate | percent: '1.2-2' }}
             </span>
           </td>
-          <td class="table__td table__td--center">
+          <td class="table__td table__td--actions">
             <div class="table__actions">
               <button
                 class="action-btn action-btn--edit"

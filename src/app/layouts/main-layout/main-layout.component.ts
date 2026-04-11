@@ -23,4 +23,8 @@ export class MainLayoutComponent {
   protected toggleMenu(): void {
     this.isMenuOpen.update((open) => !open);
   }
+
+  protected closeMenu(): void {
+    this.isMenuOpen.set(false);
+  }
 }

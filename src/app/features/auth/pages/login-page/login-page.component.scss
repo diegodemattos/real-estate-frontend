@@ -2,11 +2,34 @@
   width: 100%;
   max-width: 400px;
   min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .login-card__title {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
-  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .login-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    min-width: 300px;
+    padding: 1.75rem 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .login-card__title {
+    font-size: var(--font-size-2xl);
+  }
 }
