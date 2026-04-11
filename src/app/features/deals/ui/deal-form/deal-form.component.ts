@@ -27,6 +27,9 @@ export class DealFormComponent {
    */
   readonly deal = input<Deal | null>(null);
 
+  /** Drives the submit button loading state while the parent persists the change. */
+  readonly isSaving = input<boolean>(false);
+
   readonly dealAdded = output<NewDeal>();
   readonly dealUpdated = output<UpdatedDeal>();
   readonly dealCancelled = output<void>();
@@ -100,7 +103,7 @@ export class DealFormComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    if (this.isSaving() || this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
@@ -122,7 +125,6 @@ export class DealFormComponent {
         address: value.address ?? '',
         noi: Number(value.noi),
       });
-      this.form.reset();
     }
   }
 

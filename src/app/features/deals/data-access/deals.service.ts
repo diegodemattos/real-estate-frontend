@@ -106,6 +106,18 @@ export class DealsService {
     );
   }
 
+  /** GET /api/deals/:id */
+  getDealById(id: string): Observable<Deal> {
+    return defer(() => {
+      const deals = this.readFromStorage();
+      const deal = deals.find((d) => d.id === id);
+      if (!deal) {
+        return throwError(() => new Error(`Deal ${id} not found`));
+      }
+      return of(deal);
+    }).pipe(delay(SIMULATED_LATENCY_MS));
+  }
+
   /** POST /api/deals */
   createDeal(newDeal: NewDeal): Observable<Deal> {
     return defer(() => {

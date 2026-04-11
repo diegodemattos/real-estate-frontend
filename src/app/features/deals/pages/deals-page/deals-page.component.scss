@@ -93,6 +93,30 @@
   color: var(--color-text-secondary);
 }
 
+.modal-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  padding: 3rem 1.5rem;
+}
+
+.modal-loader__spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgb(91 63 214 / 0.15);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: table-loader-spin 0.7s linear infinite;
+}
+
+.modal-loader__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
 @keyframes table-loader-spin {
   to {
     transform: rotate(360deg);

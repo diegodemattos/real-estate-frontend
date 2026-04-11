@@ -56,12 +56,20 @@
   [title]="formModalTitle()"
   (closed)="onFormModalClose()"
 >
-  <app-deal-form
-    [deal]="editingDeal()"
-    (dealAdded)="onDealAdded($event)"
-    (dealUpdated)="onDealUpdated($event)"
-    (dealCancelled)="onFormModalClose()"
-  />
+  @if (isLoadingDeal()) {
+    <div class="modal-loader" role="status" aria-live="polite">
+      <span class="modal-loader__spinner" aria-hidden="true"></span>
+      <p class="modal-loader__text">Loading deal...</p>
+    </div>
+  } @else {
+    <app-deal-form
+      [deal]="editingDeal()"
+      [isSaving]="dealsStore.isMutating()"
+      (dealAdded)="onDealAdded($event)"
+      (dealUpdated)="onDealUpdated($event)"
+      (dealCancelled)="onFormModalClose()"
+    />
+  }
 </app-modal>
 
 <!-- Delete confirmation modal -->

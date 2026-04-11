@@ -27,8 +27,8 @@ export class LoginFormComponent {
   private readonly fb = inject(FormBuilder);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    email: ['admin@termsheet.com', [Validators.required, Validators.email]],
+    password: ['Ts@123456', Validators.required],
   });
 
   /**

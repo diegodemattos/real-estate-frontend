@@ -34,10 +34,12 @@ export class DealsPageComponent {
 
   // — Form modal state —
   readonly isFormModalOpen = signal(false);
+  readonly isEditMode = signal(false);
+  readonly isLoadingDeal = signal(false);
   readonly editingDeal = signal<Deal | null>(null);
 
   readonly formModalTitle = computed(() =>
-    this.editingDeal() !== null ? 'Edit Deal' : 'Add New Deal'
+    this.isEditMode() ? 'Edit Deal' : 'Add New Deal'
   );
 
   // — Delete confirmation modal state —
@@ -56,30 +58,50 @@ export class DealsPageComponent {
   // — Form modal handlers —
 
   openAddModal(): void {
+    this.isEditMode.set(false);
     this.editingDeal.set(null);
     this.isFormModalOpen.set(true);
   }
 
+  /**
+   * Opens the modal in edit mode and simulates fetching the deal from the API.
+   * The modal renders a loader until the (mock) request resolves, then swaps
+   * to the form pre-filled with the fresh deal snapshot.
+   */
   onDealEdit(deal: Deal): void {
-    this.editingDeal.set(deal);
+    this.isEditMode.set(true);
+    this.editingDeal.set(null);
+    this.isLoadingDeal.set(true);
     this.isFormModalOpen.set(true);
+
+    this.dealsStore.loadDeal(deal.id).subscribe({
+      next: (freshDeal) => {
+        this.editingDeal.set(freshDeal);
+        this.isLoadingDeal.set(false);
+      },
+      error: () => {
+        this.isLoadingDeal.set(false);
+        this.onFormModalClose();
+      },
+    });
   }
 
   onFormModalClose(): void {
     this.isFormModalOpen.set(false);
+    this.isEditMode.set(false);
+    this.isLoadingDeal.set(false);
     this.editingDeal.set(null);
   }
 
   onDealAdded(newDeal: NewDeal): void {
     this.dealsStore.addDeal(newDeal).subscribe(() => {
-      this.isFormModalOpen.set(false);
+      this.onFormModalClose();
     });
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
     this.dealsStore.updateDeal(updatedDeal).subscribe(() => {
-      this.isFormModalOpen.set(false);
-      this.editingDeal.set(null);
+      this.onFormModalClose();
     });
   }
 

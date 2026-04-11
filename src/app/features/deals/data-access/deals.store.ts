@@ -68,6 +68,15 @@ export class DealsStore {
     });
   }
 
+  /**
+   * Fetches a single deal from the service.
+   * Used by the edit flow so the modal always shows a fresh copy of the
+   * record rather than the possibly-stale row the user clicked.
+   */
+  loadDeal(id: string): Observable<Deal> {
+    return this.dealsService.getDealById(id);
+  }
+
   addDeal(newDeal: NewDeal): Observable<Deal> {
     this._isMutating.set(true);
     return this.dealsService.createDeal(newDeal).pipe(
