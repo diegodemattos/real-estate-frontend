@@ -1,60 +1,95 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
+import { computed, inject } from '@angular/core';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import {
+  Observable,
+  catchError,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { SessionService } from '../../../core/services/session.service';
 import { AuthService } from './auth.service';
 import { AuthUser, LoginCredentials } from '../models/auth.model';
 
-@Injectable({ providedIn: 'root' })
-export class AuthStore {
-  private readonly sessionService = inject(SessionService);
-  private readonly authService = inject(AuthService);
-
-  /**
-   * Hydrated synchronously from the token on construction so a page refresh
-   * restores the user without waiting on an HTTP round-trip.
-   */
-  private readonly _user = signal<AuthUser | null>(this.resolveUserFromStorage());
-  private readonly _isLoading = signal(false);
-
-  readonly user = this._user.asReadonly();
-  readonly isLoading = this._isLoading.asReadonly();
-  readonly isAuthenticated = computed(() => this._user() !== null);
-
-  /**
-   * Full login flow:
-   *   POST /auth/login → persist the token → GET /auth/me → update the user.
-   * Emits true on success, false on failure.
-   */
-  login(credentials: LoginCredentials): Observable<boolean> {
-    this._isLoading.set(true);
-
-    return this.authService.login(credentials).pipe(
-      tap((response) => {
-        this.sessionService.saveToken(response.accessToken, response.expiresAt);
-      }),
-      switchMap(() => this.authService.getMe()),
-      tap((user) => {
-        this._user.set(user);
-        this._isLoading.set(false);
-      }),
-      map(() => true),
-      catchError(() => {
-        this._isLoading.set(false);
-        this.sessionService.clearToken();
-        this._user.set(null);
-        return of(false);
-      })
-    );
-  }
-
-  logout(): void {
-    this.sessionService.clearToken();
-    this._user.set(null);
-  }
-
-  private resolveUserFromStorage(): AuthUser | null {
-    if (!this.sessionService.isTokenValid()) return null;
-    const email = this.sessionService.getEmailFromToken();
-    return email ? { email } : null;
-  }
+interface AuthState {
+  user: AuthUser | null;
+  isLoading: boolean;
 }
+
+/**
+ * Session state for the authenticated user, implemented with @ngrx/signals.
+ *
+ * The state is hydrated synchronously from the persisted token via a
+ * `withState` factory — by the time any component calls `inject(AuthStore)`
+ * the user signal is already populated, so a page refresh doesn't flash
+ * an unauthenticated UI.
+ */
+export const AuthStore = signalStore(
+  { providedIn: 'root' },
+  withState<AuthState>(() => {
+    // `withState` accepts a factory that runs in an injection context,
+    // so we can pull services in here to rebuild state from localStorage
+    // at store creation time.
+    const sessionService = inject(SessionService);
+    const email = sessionService.isTokenValid()
+      ? sessionService.getEmailFromToken()
+      : null;
+    return {
+      user: email ? { email } : null,
+      isLoading: false,
+    };
+  }),
+  withComputed((store) => ({
+    isAuthenticated: computed(() => store.user() !== null),
+  })),
+  withMethods(
+    (
+      store,
+      authService = inject(AuthService),
+      sessionService = inject(SessionService)
+    ) => ({
+      /**
+       * Full login flow:
+       *   POST /auth/login → persist the token → GET /auth/me → update user.
+       * Emits true on success, false on failure so the calling page can
+       * decide whether to navigate or show an inline error.
+       */
+      login(credentials: LoginCredentials): Observable<boolean> {
+        patchState(store, { isLoading: true });
+
+        return authService.login(credentials).pipe(
+          tap((response) => {
+            sessionService.saveToken(
+              response.accessToken,
+              response.expiresAt
+            );
+          }),
+          switchMap(() => authService.getMe()),
+          tap((user) => {
+            patchState(store, { user, isLoading: false });
+          }),
+          map(() => true),
+          catchError(() => {
+            // A failed login anywhere in the chain leaves the app logged
+            // out — clear any stale token and reset the user.
+            sessionService.clearToken();
+            patchState(store, { user: null, isLoading: false });
+            return of(false);
+          })
+        );
+      },
+
+      logout(): void {
+        sessionService.clearToken();
+        patchState(store, { user: null });
+      },
+    })
+  )
+);
