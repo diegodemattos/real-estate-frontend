@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DealsStore } from '../../data-access/deals.store';
 import { DealFiltersComponent } from '../../ui/deal-filters/deal-filters.component';
 import { DealFormComponent } from '../../ui/deal-form/deal-form.component';
@@ -35,6 +37,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model
 export class DealsPageComponent {
   protected readonly dealsStore = inject(DealsStore);
   private readonly notifications = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly isFormModalOpen = signal(false);
   readonly isEditMode = signal(false);
@@ -55,6 +58,9 @@ export class DealsPageComponent {
   });
 
   readonly currentNameFilter = computed(() => this.dealsStore.filters().name);
+  readonly dealsCountLabel = computed(() =>
+    this.dealsStore.totalDealsCount() === 1 ? 'deal' : 'deals'
+  );
 
   openAddModal(): void {
     this.isEditMode.set(false);
@@ -68,17 +74,20 @@ export class DealsPageComponent {
     this.isLoadingDeal.set(true);
     this.isFormModalOpen.set(true);
 
-    this.dealsStore.loadDeal(deal.id).subscribe({
-      next: (freshDeal) => {
-        this.editingDeal.set(freshDeal);
-        this.isLoadingDeal.set(false);
-      },
-      error: () => {
-        this.isLoadingDeal.set(false);
-        this.onFormModalClose();
-        this.notifications.error('Failed to load deal details.');
-      },
-    });
+    this.dealsStore
+      .loadDeal(deal.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (freshDeal) => {
+          this.editingDeal.set(freshDeal);
+          this.isLoadingDeal.set(false);
+        },
+        error: () => {
+          this.isLoadingDeal.set(false);
+          this.onFormModalClose();
+          this.notifications.error('Failed to load deal details.');
+        },
+      });
   }
 
   onFormModalClose(): void {
@@ -89,23 +98,29 @@ export class DealsPageComponent {
   }
 
   onDealAdded(newDeal: NewDeal): void {
-    this.dealsStore.addDeal(newDeal).subscribe({
-      next: (deal) => {
-        this.onFormModalClose();
-        this.notifications.success(`Deal "${deal.dealName}" created.`);
-      },
-      error: () => this.notifications.error('Failed to create deal.'),
-    });
+    this.dealsStore
+      .addDeal(newDeal)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (deal) => {
+          this.onFormModalClose();
+          this.notifications.success(`Deal "${deal.dealName}" created.`);
+        },
+        error: () => this.notifications.error('Failed to create deal.'),
+      });
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
-    this.dealsStore.updateDeal(updatedDeal).subscribe({
-      next: (deal) => {
-        this.onFormModalClose();
-        this.notifications.success(`Deal "${deal.dealName}" updated.`);
-      },
-      error: () => this.notifications.error('Failed to update deal.'),
-    });
+    this.dealsStore
+      .updateDeal(updatedDeal)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (deal) => {
+          this.onFormModalClose();
+          this.notifications.success(`Deal "${deal.dealName}" updated.`);
+        },
+        error: () => this.notifications.error('Failed to update deal.'),
+      });
   }
 
   onDealDeleteRequest(deal: Deal): void {
@@ -119,16 +134,19 @@ export class DealsPageComponent {
     if (this.editingDeal()?.id === deal.id) {
       this.onFormModalClose();
     }
-    this.dealsStore.deleteDeal(deal.id).subscribe({
-      next: () => {
-        this.dealToDelete.set(null);
-        this.notifications.success(`Deal "${deal.dealName}" deleted.`);
-      },
-      error: () => {
-        this.dealToDelete.set(null);
-        this.notifications.error('Failed to delete deal.');
-      },
-    });
+    this.dealsStore
+      .deleteDeal(deal.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.dealToDelete.set(null);
+          this.notifications.success(`Deal "${deal.dealName}" deleted.`);
+        },
+        error: () => {
+          this.dealToDelete.set(null);
+          this.notifications.error('Failed to delete deal.');
+        },
+      });
   }
 
   onDeleteCancelled(): void {

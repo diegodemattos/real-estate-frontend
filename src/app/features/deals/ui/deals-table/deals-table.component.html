@@ -35,12 +35,7 @@
             {{ deal.noi | currency: 'USD' : 'symbol' : '1.0-0' }}
           </td>
           <td class="table__td table__td--right" data-label="Cap Rate">
-            <span
-              class="cap-rate-badge"
-              [class.cap-rate-badge--good]="isGoodCapRate(deal.capRate)"
-              [class.cap-rate-badge--high]="isHighCapRate(deal.capRate)"
-              [class.cap-rate-badge--low]="isLowCapRate(deal.capRate)"
-            >
+            <span [class]="capRateBadgeClass(deal.capRate)">
               {{ deal.capRate | percent: '1.2-2' }}
             </span>
           </td>

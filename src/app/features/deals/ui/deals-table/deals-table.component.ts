@@ -24,16 +24,11 @@ export class DealsTableComponent {
   readonly dealEdit = output<Deal>();
   readonly dealDelete = output<Deal>();
 
-  isGoodCapRate(capRate: number): boolean {
-    return capRate >= 0.05 && capRate <= 0.12;
-  }
-
-  isHighCapRate(capRate: number): boolean {
-    return capRate > 0.12;
-  }
-
-  isLowCapRate(capRate: number): boolean {
-    return capRate > 0 && capRate < 0.05;
+  protected capRateBadgeClass(capRate: number): string {
+    if (capRate >= 0.05 && capRate <= 0.12) return 'cap-rate-badge cap-rate-badge--good';
+    if (capRate > 0.12) return 'cap-rate-badge cap-rate-badge--high';
+    if (capRate > 0 && capRate < 0.05) return 'cap-rate-badge cap-rate-badge--low';
+    return 'cap-rate-badge';
   }
 
   onEdit(deal: Deal): void {

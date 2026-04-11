@@ -26,9 +26,9 @@ describe('DealsTableComponent', () => {
     TestBed.configureTestingModule({ imports: [DealsTableComponent] });
   });
 
-  function create() {
+  function create(overrideDeals = deals) {
     const fixture = TestBed.createComponent(DealsTableComponent);
-    fixture.componentRef.setInput('deals', deals);
+    fixture.componentRef.setInput('deals', overrideDeals);
     fixture.detectChanges();
     return fixture;
   }
@@ -62,18 +62,20 @@ describe('DealsTableComponent', () => {
     expect(spy).toHaveBeenCalledWith(deals[0]);
   });
 
-  it('classifies cap rates into good / high / low buckets', () => {
-    const fixture = create();
-    const c = fixture.componentInstance;
+  it('applies the correct cap rate badge class in the DOM', () => {
+    const capRateDeals: Deal[] = [
+      { id: '1', dealName: 'Good', purchasePrice: 1_000_000, address: 'A', noi: 80_000, capRate: 0.07 },
+      { id: '2', dealName: 'High', purchasePrice: 1_000_000, address: 'B', noi: 150_000, capRate: 0.15 },
+      { id: '3', dealName: 'Low',  purchasePrice: 1_000_000, address: 'C', noi: 30_000,  capRate: 0.03 },
+    ];
+    const fixture = create(capRateDeals);
 
-    expect(c.isGoodCapRate(0.07)).toBe(true);
-    expect(c.isGoodCapRate(0.05)).toBe(true);
-    expect(c.isGoodCapRate(0.12)).toBe(true);
+    const badges = fixture.nativeElement.querySelectorAll(
+      '.table__row td:nth-child(5) span'
+    ) as NodeListOf<HTMLElement>;
 
-    expect(c.isHighCapRate(0.13)).toBe(true);
-    expect(c.isHighCapRate(0.1)).toBe(false);
-
-    expect(c.isLowCapRate(0.04)).toBe(true);
-    expect(c.isLowCapRate(0)).toBe(false);
+    expect(badges[0].classList.contains('cap-rate-badge--good')).toBe(true);
+    expect(badges[1].classList.contains('cap-rate-badge--high')).toBe(true);
+    expect(badges[2].classList.contains('cap-rate-badge--low')).toBe(true);
   });
 });

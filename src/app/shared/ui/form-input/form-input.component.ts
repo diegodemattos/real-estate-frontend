@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   signal,
@@ -24,6 +25,7 @@ export class FormInputComponent implements ControlValueAccessor {
   readonly autocomplete = input<string>('');
   readonly min = input<number | null>(null);
   readonly ariaLabel = input<string>('');
+  readonly errors = input<Record<string, string>>({});
 
   // Manual accessor assignment avoids the NG_VALUE_ACCESSOR forwardRef cycle
   // and lets the template read errors/touched straight from the control.
@@ -62,11 +64,9 @@ export class FormInputComponent implements ControlValueAccessor {
     this.disabled.set(isDisabled);
   }
 
-  protected get effectiveType(): InputType {
-    return this.type() === 'password' && this.isPasswordVisible()
-      ? 'text'
-      : this.type();
-  }
+  protected readonly effectiveType = computed<InputType>(() =>
+    this.type() === 'password' && this.isPasswordVisible() ? 'text' : this.type()
+  );
 
   protected get shouldShowError(): boolean {
     const control = this.ngControl?.control;
@@ -75,19 +75,18 @@ export class FormInputComponent implements ControlValueAccessor {
 
   protected get errorText(): string | null {
     if (!this.shouldShowError) return null;
-    const errors = this.ngControl?.control?.errors;
-    if (!errors) return null;
+    const controlErrors = this.ngControl?.control?.errors;
+    if (!controlErrors) return null;
 
-    const label = this.label() || 'This field';
-    if (errors['required']) return `${label} is required.`;
-    if (errors['email']) return 'Please enter a valid email.';
-    if (errors['min']) {
-      const min = (errors['min'] as { min?: number })?.min;
-      return min !== undefined
-        ? `${label} must be at least ${min}.`
-        : `${label} is below the minimum.`;
+    // Custom validators can return { error: 'message' } to provide
+    // the display text directly without configuring the errors input.
+    if (typeof controlErrors['error'] === 'string') {
+      return controlErrors['error'];
     }
-    return 'Invalid value.';
+
+    const messages = this.errors();
+    const matchedKey = Object.keys(controlErrors).find((key) => messages[key]);
+    return matchedKey ? messages[matchedKey] : null;
   }
 
   protected onInput(event: Event): void {

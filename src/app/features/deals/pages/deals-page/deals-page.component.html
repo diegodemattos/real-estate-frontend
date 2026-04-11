@@ -15,8 +15,7 @@
           </span>
         } @else if (!dealsStore.isLoading()) {
           <span class="section__count">
-            {{ dealsStore.totalDealsCount() }}
-            {{ dealsStore.totalDealsCount() === 1 ? 'deal' : 'deals' }}
+            {{ dealsStore.totalDealsCount() }} {{ dealsCountLabel() }}
           </span>
         }
       </div>

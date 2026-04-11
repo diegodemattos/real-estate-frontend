@@ -5,6 +5,7 @@
     [required]="true"
     autocomplete="email"
     formControlName="email"
+    [errors]="{ required: 'Email is required.', email: 'Enter a valid email address.' }"
   />
 
   <app-form-input
@@ -13,6 +14,7 @@
     [required]="true"
     autocomplete="current-password"
     formControlName="password"
+    [errors]="{ required: 'Password is required.' }"
   />
 
   <div class="login-form__forgot">

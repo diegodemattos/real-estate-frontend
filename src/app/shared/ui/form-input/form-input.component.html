@@ -14,7 +14,7 @@
       class="form-input__input"
       [class.form-input__input--error]="shouldShowError"
       [class.form-input__input--password]="type() === 'password'"
-      [type]="effectiveType"
+      [type]="effectiveType()"
       [value]="value()"
       [placeholder]="placeholder()"
       [attr.autocomplete]="autocomplete() || null"

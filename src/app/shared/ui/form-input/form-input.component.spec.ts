@@ -17,6 +17,7 @@ import { FormInputComponent } from './form-input.component';
         [label]="label"
         [type]="type"
         [required]="required"
+        [errors]="errorMessages"
         formControlName="field"
       />
     </form>
@@ -26,6 +27,10 @@ class HostComponent {
   label = 'Email';
   type: 'text' | 'email' | 'password' | 'number' = 'email';
   required = true;
+  errorMessages: Record<string, string> = {
+    required: 'Email is required.',
+    email: 'Please enter a valid email.',
+  };
   form: UntypedFormGroup = new UntypedFormGroup({
     field: new UntypedFormControl('', [Validators.required, Validators.email]),
   });
@@ -101,6 +106,42 @@ describe('FormInputComponent', () => {
 
     const err = fixture.nativeElement.querySelector('.form-input__error');
     expect(err.textContent).toContain('Please enter a valid email');
+  });
+
+  it('shows no error text when errors input has no mapping for the active validator', () => {
+    TestBed.configureTestingModule({ imports: [HostComponent] });
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.errorMessages = {};
+    fixture.detectChanges();
+
+    const el = input(fixture);
+    el.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+
+    // Red border still appears (shouldShowError), but no text is rendered
+    expect(
+      fixture.nativeElement.querySelector('.form-input__input--error')
+    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.form-input__error')).toBeNull();
+  });
+
+  it('displays the message from { error: "string" } custom validator error directly', () => {
+    TestBed.configureTestingModule({ imports: [HostComponent] });
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.errorMessages = {};
+    const customValidator = () => ({ error: 'Custom validator message.' });
+    fixture.componentInstance.form = new UntypedFormGroup({
+      field: new UntypedFormControl('any-value', [customValidator]),
+    });
+    fixture.detectChanges();
+
+    const el = input(fixture);
+    el.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+
+    const err = fixture.nativeElement.querySelector('.form-input__error');
+    expect(err).not.toBeNull();
+    expect(err.textContent).toContain('Custom validator message.');
   });
 
   it('renders the password visibility toggle when type is password', () => {
