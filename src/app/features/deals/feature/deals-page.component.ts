@@ -12,6 +12,8 @@ import { DealFiltersComponent } from '../ui/deal-filters.component';
 import { DealFormComponent } from '../ui/deal-form.component';
 import { DealsTableComponent } from '../ui/deals-table.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state.component';
+import { ModalComponent } from '../../../shared/ui/modal.component';
+import { ConfirmModalComponent } from '../../../shared/ui/confirm-modal.component';
 import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
 
 @Component({
@@ -22,6 +24,8 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
     DealFormComponent,
     DealsTableComponent,
     EmptyStateComponent,
+    ModalComponent,
+    ConfirmModalComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -55,13 +59,18 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
 
         <section class="section">
           <div class="section__header">
-            <h2 class="section__title">Deals</h2>
-            @if (dealsStore.isFiltering()) {
-              <span class="section__count">
-                {{ dealsStore.filteredDeals().length }} of
-                {{ dealsStore.totalDealsCount() }} shown
-              </span>
-            }
+            <div class="section__header-left">
+              <h2 class="section__title">Deals</h2>
+              @if (dealsStore.isFiltering()) {
+                <span class="section__count">
+                  {{ dealsStore.filteredDeals().length }} of
+                  {{ dealsStore.totalDealsCount() }} shown
+                </span>
+              }
+            </div>
+            <button class="btn btn--add" type="button" (click)="openAddModal()">
+              + Add Deal
+            </button>
           </div>
 
           @if (dealsStore.hasFilteredDeals()) {
@@ -70,7 +79,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
               [nameFilter]="currentNameFilter()"
               [editingDealId]="editingDeal()?.id ?? null"
               (dealEdit)="onDealEdit($event)"
-              (dealDelete)="onDealDelete($event)"
+              (dealDelete)="onDealDeleteRequest($event)"
             />
           } @else {
             @if (dealsStore.isFiltering()) {
@@ -79,22 +88,38 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
               />
             } @else {
               <app-empty-state
-                message="No deals yet. Add your first deal below."
+                message="No deals yet. Click '+ Add Deal' to get started."
               />
             }
           }
         </section>
-
-        <section class="section">
-          <app-deal-form
-            [deal]="editingDeal()"
-            (dealAdded)="onDealAdded($event)"
-            (dealUpdated)="onDealUpdated($event)"
-            (dealCancelled)="onEditCancelled()"
-          />
-        </section>
       </main>
     </div>
+
+    <!-- Add / Edit modal -->
+    <app-modal
+      [isOpen]="isFormModalOpen()"
+      [title]="formModalTitle()"
+      (closed)="onFormModalClose()"
+    >
+      <app-deal-form
+        [deal]="editingDeal()"
+        (dealAdded)="onDealAdded($event)"
+        (dealUpdated)="onDealUpdated($event)"
+        (dealCancelled)="onFormModalClose()"
+      />
+    </app-modal>
+
+    <!-- Delete confirmation modal -->
+    <app-confirm-modal
+      [isOpen]="isDeleteModalOpen()"
+      title="Delete Deal"
+      [message]="deleteModalMessage()"
+      confirmLabel="Delete"
+      cancelLabel="Cancel"
+      (confirmed)="onDeleteConfirmed()"
+      (cancelled)="onDeleteCancelled()"
+    />
   `,
   styles: [
     `
@@ -175,6 +200,12 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
         gap: 1rem;
       }
 
+      .section__header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
       .section__title {
         font-size: var(--font-size-lg);
         font-weight: 600;
@@ -190,7 +221,6 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.5rem 1rem;
         font-size: var(--font-size-sm);
         font-weight: 500;
         border-radius: var(--radius-md);
@@ -201,6 +231,7 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
       }
 
       .btn--ghost {
+        padding: 0.5rem 1rem;
         background-color: rgb(255 255 255 / 0.1);
         color: var(--color-surface);
 
@@ -213,6 +244,21 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
           outline-offset: 2px;
         }
       }
+
+      .btn--add {
+        padding: 0.5rem 1.125rem;
+        background-color: var(--color-secondary);
+        color: var(--color-surface);
+
+        &:hover {
+          background-color: var(--color-secondary-hover);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--color-secondary);
+          outline-offset: 2px;
+        }
+      }
     `,
   ],
 })
@@ -221,37 +267,80 @@ export class DealsPageComponent {
   protected readonly dealsStore = inject(DealsStore);
   private readonly router = inject(Router);
 
-  /** The deal currently being edited, or null when in add mode. */
+  // — Form modal state —
+  readonly isFormModalOpen = signal(false);
   readonly editingDeal = signal<Deal | null>(null);
 
+  readonly formModalTitle = computed(() =>
+    this.editingDeal() !== null ? 'Edit Deal' : 'Add New Deal'
+  );
+
+  // — Delete confirmation modal state —
+  readonly dealToDelete = signal<Deal | null>(null);
+  readonly isDeleteModalOpen = computed(() => this.dealToDelete() !== null);
+  readonly deleteModalMessage = computed(() => {
+    const deal = this.dealToDelete();
+    return deal
+      ? `Are you sure you want to delete "${deal.dealName}"? This action cannot be undone.`
+      : '';
+  });
+
+  // — Derived —
   readonly currentNameFilter = computed(() => this.dealsStore.filters().name);
 
-  onFiltersChange(filters: DealFilters): void {
-    this.dealsStore.updateFilters(filters);
-  }
+  // — Form modal handlers —
 
-  onDealAdded(newDeal: NewDeal): void {
-    this.dealsStore.addDeal(newDeal);
+  openAddModal(): void {
+    this.editingDeal.set(null);
+    this.isFormModalOpen.set(true);
   }
 
   onDealEdit(deal: Deal): void {
     this.editingDeal.set(deal);
+    this.isFormModalOpen.set(true);
+  }
+
+  onFormModalClose(): void {
+    this.isFormModalOpen.set(false);
+    this.editingDeal.set(null);
+  }
+
+  onDealAdded(newDeal: NewDeal): void {
+    this.dealsStore.addDeal(newDeal);
+    this.isFormModalOpen.set(false);
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
     this.dealsStore.updateDeal(updatedDeal);
+    this.isFormModalOpen.set(false);
     this.editingDeal.set(null);
   }
 
-  onEditCancelled(): void {
-    this.editingDeal.set(null);
+  // — Delete modal handlers —
+
+  onDealDeleteRequest(deal: Deal): void {
+    this.dealToDelete.set(deal);
   }
 
-  onDealDelete(id: string): void {
-    if (this.editingDeal()?.id === id) {
-      this.editingDeal.set(null);
+  onDeleteConfirmed(): void {
+    const deal = this.dealToDelete();
+    if (deal) {
+      if (this.editingDeal()?.id === deal.id) {
+        this.onFormModalClose();
+      }
+      this.dealsStore.deleteDeal(deal.id);
     }
-    this.dealsStore.deleteDeal(id);
+    this.dealToDelete.set(null);
+  }
+
+  onDeleteCancelled(): void {
+    this.dealToDelete.set(null);
+  }
+
+  // — Auth —
+
+  onFiltersChange(filters: DealFilters): void {
+    this.dealsStore.updateFilters(filters);
   }
 
   onLogout(): void {

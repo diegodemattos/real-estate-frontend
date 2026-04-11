@@ -253,7 +253,7 @@ export class DealsTableComponent {
   readonly editingDealId = input<string | null>(null);
 
   readonly dealEdit = output<Deal>();
-  readonly dealDelete = output<string>();
+  readonly dealDelete = output<Deal>();
 
   isGoodCapRate(capRate: number): boolean {
     return capRate >= 0.05 && capRate <= 0.12;
@@ -272,8 +272,6 @@ export class DealsTableComponent {
   }
 
   onDelete(deal: Deal): void {
-    if (window.confirm(`Delete "${deal.dealName}"? This cannot be undone.`)) {
-      this.dealDelete.emit(deal.id);
-    }
+    this.dealDelete.emit(deal);
   }
 }

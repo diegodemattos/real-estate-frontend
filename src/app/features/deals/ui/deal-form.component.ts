@@ -18,173 +18,114 @@ import { Deal, NewDeal, UpdatedDeal } from '../models/deal.model';
   imports: [ReactiveFormsModule, PercentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="deal-form-card" [class.deal-form-card--editing]="isEditMode()">
-      <div class="deal-form-card__header">
-        <h2 class="deal-form-card__title">
-          {{ isEditMode() ? 'Edit Deal' : 'Add New Deal' }}
-        </h2>
-        @if (isEditMode()) {
-          <span class="deal-form-card__editing-badge">Editing</span>
-        }
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="deal-form">
+      <div class="form-row">
+        <div class="field">
+          <label class="field__label" for="dealName">Deal Name</label>
+          <input
+            id="dealName"
+            class="field__input"
+            [class.field__input--error]="isFieldInvalid('dealName')"
+            type="text"
+            formControlName="dealName"
+            placeholder="e.g. Sunset Apartments"
+          />
+          @if (isFieldInvalid('dealName')) {
+            <span class="field__error" role="alert">
+              Deal name is required.
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="address">Address</label>
+          <input
+            id="address"
+            class="field__input"
+            [class.field__input--error]="isFieldInvalid('address')"
+            type="text"
+            formControlName="address"
+            placeholder="e.g. 123 Main St, City, State"
+          />
+          @if (isFieldInvalid('address')) {
+            <span class="field__error" role="alert">
+              Address is required.
+            </span>
+          }
+        </div>
       </div>
 
-      <form
-        [formGroup]="form"
-        (ngSubmit)="submit()"
-        novalidate
-        class="deal-form"
-      >
-        <div class="form-row">
-          <div class="field">
-            <label class="field__label" for="dealName">Deal Name</label>
-            <input
-              id="dealName"
-              class="field__input"
-              [class.field__input--error]="isFieldInvalid('dealName')"
-              type="text"
-              formControlName="dealName"
-              placeholder="e.g. Sunset Apartments"
-            />
-            @if (isFieldInvalid('dealName')) {
+      <div class="form-row">
+        <div class="field">
+          <label class="field__label" for="purchasePrice">
+            Purchase Price ($)
+          </label>
+          <input
+            id="purchasePrice"
+            class="field__input"
+            [class.field__input--error]="isFieldInvalid('purchasePrice')"
+            type="number"
+            formControlName="purchasePrice"
+            placeholder="e.g. 2500000"
+            min="1"
+          />
+          @if (isFieldInvalid('purchasePrice')) {
+            @if (form.get('purchasePrice')?.errors?.['required']) {
               <span class="field__error" role="alert">
-                Deal name is required.
+                Purchase price is required.
+              </span>
+            } @else if (form.get('purchasePrice')?.errors?.['min']) {
+              <span class="field__error" role="alert">
+                Purchase price must be greater than 0.
               </span>
             }
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="address">Address</label>
-            <input
-              id="address"
-              class="field__input"
-              [class.field__input--error]="isFieldInvalid('address')"
-              type="text"
-              formControlName="address"
-              placeholder="e.g. 123 Main St, City, State"
-            />
-            @if (isFieldInvalid('address')) {
-              <span class="field__error" role="alert">
-                Address is required.
-              </span>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label class="field__label" for="purchasePrice">
-              Purchase Price ($)
-            </label>
-            <input
-              id="purchasePrice"
-              class="field__input"
-              [class.field__input--error]="isFieldInvalid('purchasePrice')"
-              type="number"
-              formControlName="purchasePrice"
-              placeholder="e.g. 2500000"
-              min="1"
-            />
-            @if (isFieldInvalid('purchasePrice')) {
-              @if (form.get('purchasePrice')?.errors?.['required']) {
-                <span class="field__error" role="alert">
-                  Purchase price is required.
-                </span>
-              } @else if (form.get('purchasePrice')?.errors?.['min']) {
-                <span class="field__error" role="alert">
-                  Purchase price must be greater than 0.
-                </span>
-              }
-            }
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="noi">
-              Net Operating Income ($)
-            </label>
-            <input
-              id="noi"
-              class="field__input"
-              [class.field__input--error]="isFieldInvalid('noi')"
-              type="number"
-              formControlName="noi"
-              placeholder="e.g. 175000"
-              min="0"
-            />
-            @if (isFieldInvalid('noi')) {
-              @if (form.get('noi')?.errors?.['required']) {
-                <span class="field__error" role="alert">NOI is required.</span>
-              } @else if (form.get('noi')?.errors?.['min']) {
-                <span class="field__error" role="alert">
-                  NOI cannot be negative.
-                </span>
-              }
-            }
-          </div>
-        </div>
-
-        @if (previewCapRate() !== null) {
-          <div class="cap-rate-preview">
-            <span class="cap-rate-preview__label">Estimated Cap Rate:</span>
-            <span class="cap-rate-preview__value">
-              {{ previewCapRate()! | percent: '1.2-2' }}
-            </span>
-          </div>
-        }
-
-        <div class="deal-form__actions">
-          @if (isEditMode()) {
-            <button
-              class="btn btn--outline"
-              type="button"
-              (click)="cancel()"
-            >
-              Cancel
-            </button>
           }
-          <button class="btn btn--primary" type="submit">
-            {{ isEditMode() ? 'Update Deal' : 'Add Deal' }}
-          </button>
         </div>
-      </form>
-    </div>
+
+        <div class="field">
+          <label class="field__label" for="noi">Net Operating Income ($)</label>
+          <input
+            id="noi"
+            class="field__input"
+            [class.field__input--error]="isFieldInvalid('noi')"
+            type="number"
+            formControlName="noi"
+            placeholder="e.g. 175000"
+            min="0"
+          />
+          @if (isFieldInvalid('noi')) {
+            @if (form.get('noi')?.errors?.['required']) {
+              <span class="field__error" role="alert">NOI is required.</span>
+            } @else if (form.get('noi')?.errors?.['min']) {
+              <span class="field__error" role="alert">
+                NOI cannot be negative.
+              </span>
+            }
+          }
+        </div>
+      </div>
+
+      @if (previewCapRate() !== null) {
+        <div class="cap-rate-preview">
+          <span class="cap-rate-preview__label">Estimated Cap Rate:</span>
+          <span class="cap-rate-preview__value">
+            {{ previewCapRate()! | percent: '1.2-2' }}
+          </span>
+        </div>
+      }
+
+      <div class="deal-form__actions">
+        <button class="btn btn--outline" type="button" (click)="cancel()">
+          Cancel
+        </button>
+        <button class="btn btn--primary" type="submit">
+          {{ isEditMode() ? 'Update Deal' : 'Add Deal' }}
+        </button>
+      </div>
+    </form>
   `,
   styles: [
     `
-      .deal-form-card {
-        background-color: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-md);
-        padding: 1.5rem;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .deal-form-card--editing {
-        border-color: var(--color-secondary);
-        box-shadow: 0 0 0 3px rgb(91 63 214 / 0.1);
-      }
-
-      .deal-form-card__header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
-      }
-
-      .deal-form-card__title {
-        font-size: var(--font-size-lg);
-        font-weight: 600;
-        color: var(--color-text);
-      }
-
-      .deal-form-card__editing-badge {
-        font-size: var(--font-size-xs);
-        font-weight: 600;
-        padding: 0.2rem 0.625rem;
-        border-radius: 9999px;
-        background-color: rgb(91 63 214 / 0.1);
-        color: var(--color-secondary);
-      }
-
       .deal-form {
         display: flex;
         flex-direction: column;
@@ -284,6 +225,7 @@ import { Deal, NewDeal, UpdatedDeal } from '../models/deal.model';
         display: flex;
         justify-content: flex-end;
         gap: 0.75rem;
+        padding-top: 0.25rem;
       }
 
       .btn {
@@ -332,7 +274,7 @@ import { Deal, NewDeal, UpdatedDeal } from '../models/deal.model';
 export class DealFormComponent {
   /**
    * When provided, the form switches to edit mode and pre-fills with this deal.
-   * When null, the form is in add mode.
+   * Null means add mode.
    */
   readonly deal = input<Deal | null>(null);
 
@@ -352,10 +294,6 @@ export class DealFormComponent {
   /**
    * Bridges form.valueChanges (RxJS) into the signal graph so previewCapRate
    * can be a computed() — no manual subscriptions needed.
-   *
-   * allowSignalWrites: true is required because patchValue() triggers
-   * valueChanges synchronously, which updates the toSignal-managed signal
-   * during the effect's execution.
    */
   private readonly formValues = toSignal(this.form.valueChanges, {
     initialValue: this.form.value,
@@ -381,9 +319,9 @@ export class DealFormComponent {
   constructor() {
     /**
      * Sync the deal input into the form whenever it changes.
-     * allowSignalWrites: true is needed because form.patchValue() triggers
-     * valueChanges synchronously, which writes to the formValues signal
-     * (managed by toSignal) during this effect's execution.
+     * allowSignalWrites: true is required because form.patchValue() fires
+     * valueChanges synchronously, which writes to the toSignal-managed
+     * formValues signal during this effect's execution.
      */
     effect(
       () => {

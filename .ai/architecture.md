@@ -202,6 +202,8 @@ Possible examples:
 - `features/deals/ui/deal-form.component.ts`
 - `features/deals/ui/deal-filters.component.ts`
 
+Important: Always separate component layers into different files: HTML, SCSS, and TS files
+
 ## Dependency Injection Strategy
 Prefer modern dependency injection with `inject()` when it improves clarity and reduces boilerplate.
 
