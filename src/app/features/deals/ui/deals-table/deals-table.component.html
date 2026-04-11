@@ -1,0 +1,66 @@
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="table__th">Deal Name</th>
+        <th class="table__th">Address</th>
+        <th class="table__th table__th--right">Purchase Price</th>
+        <th class="table__th table__th--right">NOI</th>
+        <th class="table__th table__th--right">Cap Rate</th>
+        <th class="table__th table__th--center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (deal of deals(); track deal.id) {
+        <tr
+          class="table__row"
+          [class.table__row--editing]="deal.id === editingDealId()"
+        >
+          <td class="table__td table__td--name">
+            <span [innerHTML]="deal.dealName | highlight: nameFilter()"></span>
+          </td>
+          <td class="table__td table__td--secondary">
+            {{ deal.address }}
+          </td>
+          <td class="table__td table__td--right table__td--mono">
+            {{ deal.purchasePrice | currency: 'USD' : 'symbol' : '1.0-0' }}
+          </td>
+          <td class="table__td table__td--right table__td--mono">
+            {{ deal.noi | currency: 'USD' : 'symbol' : '1.0-0' }}
+          </td>
+          <td class="table__td table__td--right">
+            <span
+              class="cap-rate-badge"
+              [class.cap-rate-badge--good]="isGoodCapRate(deal.capRate)"
+              [class.cap-rate-badge--high]="isHighCapRate(deal.capRate)"
+              [class.cap-rate-badge--low]="isLowCapRate(deal.capRate)"
+            >
+              {{ deal.capRate | percent: '1.2-2' }}
+            </span>
+          </td>
+          <td class="table__td table__td--center">
+            <div class="table__actions">
+              <button
+                class="action-btn action-btn--edit"
+                type="button"
+                [class.action-btn--active]="deal.id === editingDealId()"
+                (click)="onEdit(deal)"
+                [attr.aria-label]="'Edit ' + deal.dealName"
+              >
+                Edit
+              </button>
+              <button
+                class="action-btn action-btn--delete"
+                type="button"
+                (click)="onDelete(deal)"
+                [attr.aria-label]="'Delete ' + deal.dealName"
+              >
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate class="login-form">
+  <div class="field">
+    <label class="field__label" for="username">Username</label>
+    <input
+      id="username"
+      class="field__input"
+      [class.field__input--error]="isFieldInvalid('username')"
+      type="text"
+      formControlName="username"
+      autocomplete="username"
+      placeholder="Enter your username"
+    />
+    @if (isFieldInvalid('username')) {
+      <span class="field__error" role="alert">Username is required.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="password">Password</label>
+    <input
+      id="password"
+      class="field__input"
+      [class.field__input--error]="isFieldInvalid('password')"
+      type="password"
+      formControlName="password"
+      autocomplete="current-password"
+      placeholder="Enter your password"
+    />
+    @if (isFieldInvalid('password')) {
+      <span class="field__error" role="alert">Password is required.</span>
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <div class="login-form__error" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <button
+    class="btn btn--primary btn--full"
+    type="submit"
+    [disabled]="isLoading()"
+    [class.btn--loading]="isLoading()"
+  >
+    @if (isLoading()) {
+      <span class="btn__spinner" aria-hidden="true"></span>
+      Signing in...
+    } @else {
+      Sign In
+    }
+  </button>
+</form>

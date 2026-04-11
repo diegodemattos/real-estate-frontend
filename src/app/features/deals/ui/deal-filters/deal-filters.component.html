@@ -1,0 +1,43 @@
+<div class="filters-card">
+  <form [formGroup]="form" class="filters">
+    <div class="filters__field">
+      <label class="filters__label" for="filter-name">Deal Name</label>
+      <input
+        id="filter-name"
+        class="filters__input"
+        type="text"
+        formControlName="name"
+        placeholder="Search by name..."
+      />
+    </div>
+
+    <div class="filters__field filters__field--price">
+      <span class="filters__label">Price</span>
+      <div class="filters__price-range">
+        <input
+          id="filter-price-min"
+          class="filters__input"
+          type="number"
+          formControlName="priceMin"
+          placeholder="Min"
+          min="0"
+          aria-label="Minimum price"
+        />
+        <span class="filters__price-separator">to</span>
+        <input
+          id="filter-price-max"
+          class="filters__input"
+          type="number"
+          formControlName="priceMax"
+          placeholder="Max"
+          min="0"
+          aria-label="Maximum price"
+        />
+      </div>
+    </div>
+
+    <button class="btn btn--outline" type="button" (click)="onClear()">
+      Clear
+    </button>
+  </form>
+</div>

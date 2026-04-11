@@ -1,0 +1,103 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate class="deal-form">
+  <div class="form-row">
+    <div class="field">
+      <label class="field__label" for="dealName">Deal Name</label>
+      <input
+        id="dealName"
+        class="field__input"
+        [class.field__input--error]="isFieldInvalid('dealName')"
+        type="text"
+        formControlName="dealName"
+        placeholder="e.g. Sunset Apartments"
+      />
+      @if (isFieldInvalid('dealName')) {
+        <span class="field__error" role="alert">
+          Deal name is required.
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="address">Address</label>
+      <input
+        id="address"
+        class="field__input"
+        [class.field__input--error]="isFieldInvalid('address')"
+        type="text"
+        formControlName="address"
+        placeholder="e.g. 123 Main St, City, State"
+      />
+      @if (isFieldInvalid('address')) {
+        <span class="field__error" role="alert">Address is required.</span>
+      }
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="field">
+      <label class="field__label" for="purchasePrice">
+        Purchase Price ($)
+      </label>
+      <input
+        id="purchasePrice"
+        class="field__input"
+        [class.field__input--error]="isFieldInvalid('purchasePrice')"
+        type="number"
+        formControlName="purchasePrice"
+        placeholder="e.g. 2500000"
+        min="1"
+      />
+      @if (isFieldInvalid('purchasePrice')) {
+        @if (form.get('purchasePrice')?.errors?.['required']) {
+          <span class="field__error" role="alert">
+            Purchase price is required.
+          </span>
+        } @else if (form.get('purchasePrice')?.errors?.['min']) {
+          <span class="field__error" role="alert">
+            Purchase price must be greater than 0.
+          </span>
+        }
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="noi">Net Operating Income ($)</label>
+      <input
+        id="noi"
+        class="field__input"
+        [class.field__input--error]="isFieldInvalid('noi')"
+        type="number"
+        formControlName="noi"
+        placeholder="e.g. 175000"
+        min="0"
+      />
+      @if (isFieldInvalid('noi')) {
+        @if (form.get('noi')?.errors?.['required']) {
+          <span class="field__error" role="alert">NOI is required.</span>
+        } @else if (form.get('noi')?.errors?.['min']) {
+          <span class="field__error" role="alert">
+            NOI cannot be negative.
+          </span>
+        }
+      }
+    </div>
+  </div>
+
+  @if (previewCapRate() !== null) {
+    <div class="cap-rate-preview">
+      <span class="cap-rate-preview__label">Estimated Cap Rate:</span>
+      <span class="cap-rate-preview__value">
+        {{ previewCapRate()! | percent: '1.2-2' }}
+      </span>
+    </div>
+  }
+
+  <div class="deal-form__actions">
+    <button class="btn btn--outline" type="button" (click)="cancel()">
+      Cancel
+    </button>
+    <button class="btn btn--primary" type="submit">
+      {{ isEditMode() ? 'Update Deal' : 'Add Deal' }}
+    </button>
+  </div>
+</form>
