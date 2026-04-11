@@ -1,18 +1,15 @@
-@if (current(); as notification) {
-  <div
-    class="toast"
-    [class]="'toast--' + notification.variant"
-    role="status"
-    aria-live="polite"
-  >
-    <span class="toast__message">{{ notification.message }}</span>
-    <button
-      type="button"
-      class="toast__close"
-      aria-label="Dismiss notification"
-      (click)="onDismiss()"
-    >
-      &times;
-    </button>
-  </div>
-}
+<div role="status" aria-live="polite" aria-atomic="true" class="toast-region">
+  @if (current(); as notification) {
+    <div class="toast" [class]="'toast--' + notification.variant">
+      <span class="toast__message">{{ notification.message }}</span>
+      <button
+        type="button"
+        class="toast__close"
+        aria-label="Dismiss notification"
+        (click)="onDismiss()"
+      >
+        &times;
+      </button>
+    </div>
+  }
+</div>

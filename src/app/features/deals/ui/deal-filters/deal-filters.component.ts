@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   inject,
   output,
 } from '@angular/core';
@@ -24,7 +23,6 @@ export class DealFiltersComponent {
   readonly filtersChange = output<DealFilters>();
 
   private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly form = this.fb.group({
     name: [''],
@@ -54,7 +52,7 @@ export class DealFiltersComponent {
             a.priceMin === b.priceMin &&
             a.priceMax === b.priceMax
         ),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe((filters) => this.filtersChange.emit(filters));
   }

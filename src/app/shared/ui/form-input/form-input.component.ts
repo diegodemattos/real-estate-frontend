@@ -78,8 +78,6 @@ export class FormInputComponent implements ControlValueAccessor {
     const controlErrors = this.ngControl?.control?.errors;
     if (!controlErrors) return null;
 
-    // Custom validators can return { error: 'message' } to provide
-    // the display text directly without configuring the errors input.
     if (typeof controlErrors['error'] === 'string') {
       return controlErrors['error'];
     }

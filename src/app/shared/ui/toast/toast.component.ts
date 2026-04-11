@@ -23,9 +23,6 @@ export class ToastComponent {
   });
 
   constructor() {
-    // Auto-dismiss: switchMap cancels any in-flight timer when a new
-    // notification arrives, so a burst of toasts can't be cleared early
-    // by an older timer.
     this.notifications.notification$
       .pipe(
         filter((n): n is Notification => n !== null),

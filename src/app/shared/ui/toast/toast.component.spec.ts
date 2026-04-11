@@ -10,9 +10,11 @@ describe('ToastComponent', () => {
     service = TestBed.inject(NotificationService);
   });
 
-  it('renders nothing when there is no notification', () => {
+  it('keeps the aria-live region in the DOM even when there is no notification', () => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
+    const region = fixture.nativeElement.querySelector('[aria-live="polite"]');
+    expect(region).not.toBeNull();
     expect(fixture.nativeElement.querySelector('.toast')).toBeNull();
   });
 

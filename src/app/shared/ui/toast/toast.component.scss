@@ -6,6 +6,12 @@
   pointer-events: none;
 }
 
+// Always present in the DOM so screen readers register the live region
+// before the first announcement. Empty wrapper has no visual footprint.
+.toast-region {
+  pointer-events: none;
+}
+
 .toast {
   display: flex;
   align-items: center;
