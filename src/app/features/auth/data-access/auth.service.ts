@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api.config';
 import { SKIP_AUTH } from '../../../core/interceptors/tokens/skip-auth.token';
 import {
@@ -8,8 +8,6 @@ import {
   AuthUser,
   LoginCredentials,
 } from '../models/auth.model';
-
-const PASSWORD_RECOVERY_LATENCY_MS = 600;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -44,12 +42,16 @@ export class AuthService {
   }
 
   /**
-   * Simulated password-recovery request. Not part of the Swagger contract,
-   * so it stays as a direct observable rather than a mocked HTTP call.
-   * Always resolves successfully so the UI can't disclose whether an
-   * address is registered.
+   * POST /auth/forgot-password — public endpoint (no Bearer token).
+   * The backend replies the same way regardless of whether the email is
+   * registered, so the UI can surface a generic "if this email is
+   * registered..." message without leaking account existence.
    */
-  requestPasswordRecovery(_email: string): Observable<void> {
-    return of(void 0).pipe(delay(PASSWORD_RECOVERY_LATENCY_MS));
+  requestPasswordRecovery(email: string): Observable<void> {
+    return this.http.post<void>(
+      `${API_BASE_URL}/auth/forgot-password`,
+      { email },
+      { context: new HttpContext().set(SKIP_AUTH, true) }
+    );
   }
 }

@@ -149,6 +149,11 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
     return handleLogin(req);
   }
 
+  // POST /auth/forgot-password
+  if (method === 'POST' && path === '/auth/forgot-password') {
+    return handleForgotPassword(req);
+  }
+
   // GET /auth/me
   if (method === 'GET' && path === '/auth/me') {
     return requireAuth(req, () => handleGetMe(req));
@@ -193,17 +198,35 @@ function handleLogin(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> 
   ) {
     return mockError(401, 'Invalid credentials');
   }
-  const expiresAt = Date.now() + TOKEN_TTL_MS;
-  const accessToken = buildMockToken(body.username, expiresAt);
-  return mockSuccess({ accessToken, expiresAt }, 200);
+  const expiresAtMs = Date.now() + TOKEN_TTL_MS;
+  const accessToken = buildMockToken(body.username, expiresAtMs);
+  const expiresIn = Math.floor(TOKEN_TTL_MS / 1000);
+  return mockSuccess({ accessToken, expiresIn }, 200);
+}
+
+/**
+ * POST /auth/forgot-password — public endpoint (no Bearer token required).
+ * Always resolves with 200 regardless of the email so the mock doesn't
+ * disclose which addresses are registered, matching real backends.
+ */
+function handleForgotPassword(
+  req: HttpRequest<unknown>
+): Observable<HttpEvent<unknown>> {
+  const body = req.body as { email?: unknown } | null;
+  if (!body || typeof body.email !== 'string' || body.email.trim() === '') {
+    return mockError(400, 'Email is required');
+  }
+  return of(new HttpResponse<null>({ status: 200, body: null })).pipe(
+    delay(SIMULATED_LATENCY_MS)
+  );
 }
 
 function handleGetMe(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> {
   const token = extractBearerToken(req);
   const payload = token ? decodeJwtPayload(token) : null;
   const email =
-    payload && typeof payload['sub'] === 'string'
-      ? (payload['sub'] as string)
+    payload && typeof payload['username'] === 'string'
+      ? (payload['username'] as string)
       : MOCK_USERNAME;
   return mockSuccess({ id: MOCK_USER_ID, email }, 200);
 }
@@ -339,13 +362,15 @@ function writeDeals(deals: StoredDeal[]): void {
 
 // ---------- JWT utilities ----------
 
-function buildMockToken(email: string, expiresAt: number): string {
+function buildMockToken(email: string, expiresAtMs: number): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const payload = btoa(
     JSON.stringify({
-      sub: email,
+      sub: MOCK_USER_ID,
+      username: email,
+      role: 'admin',
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(expiresAt / 1000),
+      exp: Math.floor(expiresAtMs / 1000),
     })
   );
   const signature = btoa('mock-signature');

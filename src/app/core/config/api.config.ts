@@ -4,4 +4,4 @@
  * prefix, so non-API requests (assets, fonts, third-party SDKs) pass through
  * untouched. Swap this for a real origin once a backend is available.
  */
-export const API_BASE_URL = '/api';
+export const API_BASE_URL = 'https://real-estate-backend-production-4dfb.up.railway.app';

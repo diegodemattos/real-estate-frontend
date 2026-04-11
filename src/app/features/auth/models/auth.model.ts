@@ -7,9 +7,9 @@ export interface AuthUser {
   email: string;
 }
 
-/** Shape returned by the (mock) login API endpoint. */
+/** Shape returned by the `POST /auth/login` endpoint. */
 export interface AuthTokenResponse {
   accessToken: string;
-  /** Unix timestamp in milliseconds when the token expires. */
-  expiresAt: number;
+  /** Seconds until the token expires, as returned by the backend. */
+  expiresIn: number;
 }

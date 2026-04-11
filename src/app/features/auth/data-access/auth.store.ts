@@ -68,7 +68,7 @@ export const AuthStore = signalStore(
           tap((response) => {
             sessionService.saveToken(
               response.accessToken,
-              response.expiresAt
+              response.expiresIn
             );
           }),
           switchMap(() => authService.getMe()),
