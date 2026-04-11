@@ -306,14 +306,16 @@ export class DealsPageComponent {
   }
 
   onDealAdded(newDeal: NewDeal): void {
-    this.dealsStore.addDeal(newDeal);
-    this.isFormModalOpen.set(false);
+    this.dealsStore.addDeal(newDeal).subscribe(() => {
+      this.isFormModalOpen.set(false);
+    });
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
-    this.dealsStore.updateDeal(updatedDeal);
-    this.isFormModalOpen.set(false);
-    this.editingDeal.set(null);
+    this.dealsStore.updateDeal(updatedDeal).subscribe(() => {
+      this.isFormModalOpen.set(false);
+      this.editingDeal.set(null);
+    });
   }
 
   // — Delete modal handlers —
@@ -324,13 +326,15 @@ export class DealsPageComponent {
 
   onDeleteConfirmed(): void {
     const deal = this.dealToDelete();
-    if (deal) {
-      if (this.editingDeal()?.id === deal.id) {
-        this.onFormModalClose();
-      }
-      this.dealsStore.deleteDeal(deal.id);
+    if (!deal) {
+      return;
     }
-    this.dealToDelete.set(null);
+    if (this.editingDeal()?.id === deal.id) {
+      this.onFormModalClose();
+    }
+    this.dealsStore.deleteDeal(deal.id).subscribe(() => {
+      this.dealToDelete.set(null);
+    });
   }
 
   onDeleteCancelled(): void {

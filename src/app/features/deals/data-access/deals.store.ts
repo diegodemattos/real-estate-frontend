@@ -1,48 +1,7 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
-
-const INITIAL_DEALS: Deal[] = [
-  {
-    id: '1',
-    dealName: 'Sunset Apartments',
-    purchasePrice: 2_500_000,
-    address: '1234 Sunset Blvd, Los Angeles, CA',
-    noi: 175_000,
-    capRate: 175_000 / 2_500_000,
-  },
-  {
-    id: '2',
-    dealName: 'Downtown Office Tower',
-    purchasePrice: 8_000_000,
-    address: '500 Main St, New York, NY',
-    noi: 640_000,
-    capRate: 640_000 / 8_000_000,
-  },
-  {
-    id: '3',
-    dealName: 'Harbor Retail Center',
-    purchasePrice: 3_200_000,
-    address: '88 Harbor Dr, Miami, FL',
-    noi: 256_000,
-    capRate: 256_000 / 3_200_000,
-  },
-  {
-    id: '4',
-    dealName: 'Greenway Industrial Park',
-    purchasePrice: 5_500_000,
-    address: '200 Greenway Rd, Houston, TX',
-    noi: 385_000,
-    capRate: 385_000 / 5_500_000,
-  },
-  {
-    id: '5',
-    dealName: 'Lakeside Condos',
-    purchasePrice: 1_800_000,
-    address: '45 Lake Shore Dr, Chicago, IL',
-    noi: 108_000,
-    capRate: 108_000 / 1_800_000,
-  },
-];
+import { DealsService } from './deals.service';
 
 const EMPTY_FILTERS: DealFilters = {
   name: '',
@@ -52,10 +11,16 @@ const EMPTY_FILTERS: DealFilters = {
 
 @Injectable({ providedIn: 'root' })
 export class DealsStore {
-  private readonly _deals = signal<Deal[]>(INITIAL_DEALS);
+  private readonly dealsService = inject(DealsService);
+
+  private readonly _deals = signal<Deal[]>([]);
   private readonly _filters = signal<DealFilters>(EMPTY_FILTERS);
+  private readonly _isLoading = signal(false);
+  private readonly _isMutating = signal(false);
 
   readonly filters = this._filters.asReadonly();
+  readonly isLoading = this._isLoading.asReadonly();
+  readonly isMutating = this._isMutating.asReadonly();
 
   readonly isFiltering = computed(() => {
     const { name, priceMin, priceMax } = this._filters();
@@ -84,34 +49,64 @@ export class DealsStore {
   readonly hasFilteredDeals = computed(() => this.filteredDeals().length > 0);
   readonly totalDealsCount = computed(() => this._deals().length);
 
-  addDeal(newDeal: NewDeal): void {
-    const capRate =
-      newDeal.purchasePrice > 0 ? newDeal.noi / newDeal.purchasePrice : 0;
-
-    const deal: Deal = {
-      ...newDeal,
-      id: Date.now().toString(),
-      capRate,
-    };
-
-    this._deals.update((deals) => [...deals, deal]);
+  constructor() {
+    this.loadDeals();
   }
 
-  updateDeal(updatedDeal: UpdatedDeal): void {
-    const capRate =
-      updatedDeal.purchasePrice > 0
-        ? updatedDeal.noi / updatedDeal.purchasePrice
-        : 0;
+  /**
+   * Fetches the deals from the service and hydrates the store.
+   * Called once at bootstrap; expose it so callers can refresh on demand.
+   */
+  loadDeals(): void {
+    this._isLoading.set(true);
+    this.dealsService.getDeals().subscribe({
+      next: (deals) => {
+        this._deals.set(deals);
+        this._isLoading.set(false);
+      },
+      error: () => this._isLoading.set(false),
+    });
+  }
 
-    const deal: Deal = { ...updatedDeal, capRate };
-
-    this._deals.update((deals) =>
-      deals.map((d) => (d.id === deal.id ? deal : d))
+  addDeal(newDeal: NewDeal): Observable<Deal> {
+    this._isMutating.set(true);
+    return this.dealsService.createDeal(newDeal).pipe(
+      tap({
+        next: (deal) => {
+          this._deals.update((deals) => [...deals, deal]);
+          this._isMutating.set(false);
+        },
+        error: () => this._isMutating.set(false),
+      })
     );
   }
 
-  deleteDeal(id: string): void {
-    this._deals.update((deals) => deals.filter((d) => d.id !== id));
+  updateDeal(updatedDeal: UpdatedDeal): Observable<Deal> {
+    this._isMutating.set(true);
+    return this.dealsService.updateDeal(updatedDeal).pipe(
+      tap({
+        next: (deal) => {
+          this._deals.update((deals) =>
+            deals.map((d) => (d.id === deal.id ? deal : d))
+          );
+          this._isMutating.set(false);
+        },
+        error: () => this._isMutating.set(false),
+      })
+    );
+  }
+
+  deleteDeal(id: string): Observable<void> {
+    this._isMutating.set(true);
+    return this.dealsService.deleteDeal(id).pipe(
+      tap({
+        next: () => {
+          this._deals.update((deals) => deals.filter((d) => d.id !== id));
+          this._isMutating.set(false);
+        },
+        error: () => this._isMutating.set(false),
+      })
+    );
   }
 
   updateFilters(filters: Partial<DealFilters>): void {
