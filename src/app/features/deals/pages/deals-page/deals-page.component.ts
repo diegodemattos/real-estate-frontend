@@ -34,7 +34,6 @@ import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model
 export class DealsPageComponent {
   protected readonly dealsStore = inject(DealsStore);
 
-  // — Form modal state —
   readonly isFormModalOpen = signal(false);
   readonly isEditMode = signal(false);
   readonly isLoadingDeal = signal(false);
@@ -44,7 +43,6 @@ export class DealsPageComponent {
     this.isEditMode() ? 'Edit Deal' : 'Add New Deal'
   );
 
-  // — Delete confirmation modal state —
   readonly dealToDelete = signal<Deal | null>(null);
   readonly isDeleteModalOpen = computed(() => this.dealToDelete() !== null);
   readonly deleteModalMessage = computed(() => {
@@ -54,10 +52,7 @@ export class DealsPageComponent {
       : '';
   });
 
-  // — Derived —
   readonly currentNameFilter = computed(() => this.dealsStore.filters().name);
-
-  // — Form modal handlers —
 
   openAddModal(): void {
     this.isEditMode.set(false);
@@ -65,11 +60,6 @@ export class DealsPageComponent {
     this.isFormModalOpen.set(true);
   }
 
-  /**
-   * Opens the modal in edit mode and simulates fetching the deal from the API.
-   * The modal renders a loader until the (mock) request resolves, then swaps
-   * to the form pre-filled with the fresh deal snapshot.
-   */
   onDealEdit(deal: Deal): void {
     this.isEditMode.set(true);
     this.editingDeal.set(null);
@@ -96,18 +86,14 @@ export class DealsPageComponent {
   }
 
   onDealAdded(newDeal: NewDeal): void {
-    this.dealsStore.addDeal(newDeal).subscribe(() => {
-      this.onFormModalClose();
-    });
+    this.dealsStore.addDeal(newDeal).subscribe(() => this.onFormModalClose());
   }
 
   onDealUpdated(updatedDeal: UpdatedDeal): void {
-    this.dealsStore.updateDeal(updatedDeal).subscribe(() => {
-      this.onFormModalClose();
-    });
+    this.dealsStore
+      .updateDeal(updatedDeal)
+      .subscribe(() => this.onFormModalClose());
   }
-
-  // — Delete modal handlers —
 
   onDealDeleteRequest(deal: Deal): void {
     this.dealToDelete.set(deal);
@@ -115,9 +101,8 @@ export class DealsPageComponent {
 
   onDeleteConfirmed(): void {
     const deal = this.dealToDelete();
-    if (!deal) {
-      return;
-    }
+    if (!deal) return;
+
     if (this.editingDeal()?.id === deal.id) {
       this.onFormModalClose();
     }
@@ -129,8 +114,6 @@ export class DealsPageComponent {
   onDeleteCancelled(): void {
     this.dealToDelete.set(null);
   }
-
-  // — Filters —
 
   onFiltersChange(filters: DealFilters): void {
     this.dealsStore.updateFilters(filters);

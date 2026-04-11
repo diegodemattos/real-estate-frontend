@@ -8,18 +8,6 @@ import {
 type ButtonVariant = 'primary' | 'outline' | 'danger' | 'ghost';
 type ButtonType = 'button' | 'submit' | 'reset';
 
-/**
- * Shared button component used everywhere the app needs an action.
- * Handles variant styling, loading state (spinner + disabled), and
- * propagates clicks via the `action` output.
- *
- * The content inside `<app-button>` is projected as the label, so the
- * consumer keeps full control over the text / inline icons:
- *
- *   <app-button variant="primary" [loading]="isSaving()" loadingLabel="Saving...">
- *     Save
- *   </app-button>
- */
 @Component({
   selector: 'app-button',
   standalone: true,
@@ -41,9 +29,7 @@ export class ButtonComponent {
   readonly action = output<void>();
 
   protected onClick(): void {
-    if (this.disabled() || this.loading()) {
-      return;
-    }
+    if (this.disabled() || this.loading()) return;
     this.action.emit();
   }
 }

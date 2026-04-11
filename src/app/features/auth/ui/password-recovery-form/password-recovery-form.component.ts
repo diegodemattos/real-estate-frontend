@@ -26,8 +26,6 @@ import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 export class PasswordRecoveryFormComponent {
   readonly errorMessage = input<string>('');
   readonly isLoading = input<boolean>(false);
-
-  /** Emits the entered email when the form is submitted with valid input. */
   readonly recover = output<string>();
 
   private readonly fb = inject(FormBuilder);

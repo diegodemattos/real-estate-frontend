@@ -13,40 +13,18 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
 
-  /**
-   * POST /auth/login — opted out of the auth interceptor via the SKIP_AUTH
-   * context flag because this is the very endpoint that hands out tokens.
-   *
-   * The UI collects an email, but the Swagger contract names the field
-   * `username`, so we map at the HTTP boundary.
-   */
   login(credentials: LoginCredentials): Observable<AuthTokenResponse> {
     return this.http.post<AuthTokenResponse>(
       `${API_BASE_URL}/auth/login`,
-      {
-        username: credentials.email,
-        password: credentials.password,
-      },
-      {
-        context: new HttpContext().set(SKIP_AUTH, true),
-      }
+      { username: credentials.email, password: credentials.password },
+      { context: new HttpContext().set(SKIP_AUTH, true) }
     );
   }
 
-  /**
-   * GET /auth/me — returns the currently authenticated user.
-   * Auth interceptor attaches the Bearer token automatically.
-   */
   getMe(): Observable<AuthUser> {
     return this.http.get<AuthUser>(`${API_BASE_URL}/auth/me`);
   }
 
-  /**
-   * POST /auth/forgot-password — public endpoint (no Bearer token).
-   * The backend replies the same way regardless of whether the email is
-   * registered, so the UI can surface a generic "if this email is
-   * registered..." message without leaking account existence.
-   */
   requestPasswordRecovery(email: string): Observable<void> {
     return this.http.post<void>(
       `${API_BASE_URL}/auth/forgot-password`,

@@ -18,10 +18,7 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   styleUrls: ['./main-header.component.scss'],
 })
 export class MainHeaderComponent {
-  /** Reflects the current menu state so the toggle can render aria-expanded. */
   readonly isMenuOpen = input<boolean>(false);
-
-  /** Fires whenever the user clicks the hamburger button. */
   readonly menuToggle = output<void>();
 
   protected readonly authStore = inject(AuthStore);

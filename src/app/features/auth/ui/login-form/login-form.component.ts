@@ -6,6 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { LinkComponent } from '../../../../shared/ui/link/link.component';
@@ -17,6 +18,7 @@ import { LoginCredentials } from '../../models/auth.model';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     FormInputComponent,
     ButtonComponent,
     LinkComponent,
@@ -44,11 +46,6 @@ export class LoginFormComponent {
       return;
     }
 
-    const value = this.form.getRawValue();
-
-    this.login.emit({
-      email: value.email,
-      password: value.password,
-    });
+    this.login.emit(this.form.getRawValue());
   }
 }

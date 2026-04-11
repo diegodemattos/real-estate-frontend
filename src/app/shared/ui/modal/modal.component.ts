@@ -18,10 +18,6 @@ export class ModalComponent {
   readonly title = input<string>('');
   readonly closed = output<void>();
 
-  /**
-   * Stable ID linking aria-labelledby to the modal title.
-   * Unique per instance via a short random suffix.
-   */
   readonly titleId = `modal-title-${Math.random().toString(36).slice(2, 9)}`;
 
   @HostListener('document:keydown.escape')

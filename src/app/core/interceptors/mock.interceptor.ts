@@ -8,24 +8,11 @@ import {
 import { Observable, delay, of, switchMap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
-/**
- * Mock backend implemented as an HTTP interceptor.
- *
- * It short-circuits every request targeting `API_BASE_URL/...` and responds
- * with data sourced from localStorage, simulating a REST API that matches
- * the Swagger contract. Requests outside the API prefix pass through.
- *
- * Drop a real backend in: remove `mockInterceptor` from `app.config.ts`
- * (nothing else changes — the services already call HttpClient).
- */
-
-// ---------- Mock backend state & constants ----------
-
 const DEALS_KEY = 're_deals';
 const MOCK_USERNAME = 'admin@termsheet.com';
 const MOCK_PASSWORD = 'Ts@123456';
 const MOCK_USER_ID = 'u-1';
-const TOKEN_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
+const TOKEN_TTL_MS = 8 * 60 * 60 * 1000;
 const SIMULATED_LATENCY_MS = 600;
 
 interface StoredDeal {
@@ -134,8 +121,6 @@ const SEED_DEALS: StoredDeal[] = [
   },
 ];
 
-// ---------- Interceptor entry point ----------
-
 export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith(API_BASE_URL)) {
     return next(req);
@@ -144,53 +129,35 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   const path = req.url.slice(API_BASE_URL.length);
   const method = req.method;
 
-  // POST /auth/login
   if (method === 'POST' && path === '/auth/login') {
     return handleLogin(req);
   }
-
-  // POST /auth/forgot-password
   if (method === 'POST' && path === '/auth/forgot-password') {
     return handleForgotPassword(req);
   }
-
-  // GET /auth/me
   if (method === 'GET' && path === '/auth/me') {
     return requireAuth(req, () => handleGetMe(req));
   }
-
-  // GET /deals
   if (method === 'GET' && path === '/deals') {
     return requireAuth(req, () => handleGetDeals());
   }
-
-  // POST /deals
   if (method === 'POST' && path === '/deals') {
     return requireAuth(req, () => handleCreateDeal(req));
   }
 
-  // /deals/:id
   const dealIdMatch = /^\/deals\/([^/]+)$/.exec(path);
   if (dealIdMatch) {
     const id = decodeURIComponent(dealIdMatch[1]);
-    if (method === 'GET') {
-      return requireAuth(req, () => handleGetDeal(id));
-    }
-    if (method === 'PATCH') {
-      return requireAuth(req, () => handleUpdateDeal(id, req));
-    }
-    if (method === 'DELETE') {
-      return requireAuth(req, () => handleDeleteDeal(id));
-    }
+    if (method === 'GET') return requireAuth(req, () => handleGetDeal(id));
+    if (method === 'PATCH') return requireAuth(req, () => handleUpdateDeal(id, req));
+    if (method === 'DELETE') return requireAuth(req, () => handleDeleteDeal(id));
   }
 
   return mockError(404, `Mock endpoint not found: ${method} ${path}`);
 };
 
-// ---------- Endpoint handlers ----------
-
 function handleLogin(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> {
-  const body = (req.body as LoginBody | null) ?? null;
+  const body = req.body as LoginBody | null;
   if (
     !body ||
     body.username !== MOCK_USERNAME ||
@@ -200,15 +167,12 @@ function handleLogin(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> 
   }
   const expiresAtMs = Date.now() + TOKEN_TTL_MS;
   const accessToken = buildMockToken(body.username, expiresAtMs);
-  const expiresIn = Math.floor(TOKEN_TTL_MS / 1000);
-  return mockSuccess({ accessToken, expiresIn }, 200);
+  return mockSuccess(
+    { accessToken, expiresIn: Math.floor(TOKEN_TTL_MS / 1000) },
+    200
+  );
 }
 
-/**
- * POST /auth/forgot-password — public endpoint (no Bearer token required).
- * Always resolves with 200 regardless of the email so the mock doesn't
- * disclose which addresses are registered, matching real backends.
- */
 function handleForgotPassword(
   req: HttpRequest<unknown>
 ): Observable<HttpEvent<unknown>> {
@@ -225,7 +189,7 @@ function handleGetMe(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> 
   const token = extractBearerToken(req);
   const payload = token ? decodeJwtPayload(token) : null;
   const email =
-    payload && typeof payload['username'] === 'string'
+    typeof payload?.['username'] === 'string'
       ? (payload['username'] as string)
       : MOCK_USERNAME;
   return mockSuccess({ id: MOCK_USER_ID, email }, 200);
@@ -237,10 +201,9 @@ function handleGetDeals(): Observable<HttpEvent<unknown>> {
 
 function handleGetDeal(id: string): Observable<HttpEvent<unknown>> {
   const deal = readDeals().find((d) => d.id === id);
-  if (!deal) {
-    return mockError(404, `Deal ${id} not found`);
-  }
-  return mockSuccess(deal, 200);
+  return deal
+    ? mockSuccess(deal, 200)
+    : mockError(404, `Deal ${id} not found`);
 }
 
 function handleCreateDeal(
@@ -252,10 +215,7 @@ function handleCreateDeal(
   }
   const deal: StoredDeal = {
     id: Date.now().toString(),
-    dealName: body.dealName,
-    purchasePrice: body.purchasePrice,
-    address: body.address,
-    noi: body.noi,
+    ...body,
     capRate: computeCapRate(body.noi, body.purchasePrice),
   };
   writeDeals([...readDeals(), deal]);
@@ -292,8 +252,6 @@ function handleDeleteDeal(id: string): Observable<HttpEvent<unknown>> {
   );
 }
 
-// ---------- Auth guard for protected handlers ----------
-
 function requireAuth(
   req: HttpRequest<unknown>,
   handler: () => Observable<HttpEvent<unknown>>
@@ -313,14 +271,14 @@ function requireAuth(
   return handler();
 }
 
-// ---------- Response helpers ----------
-
 function mockSuccess<T>(body: T, status: number): Observable<HttpEvent<T>> {
   return of(new HttpResponse<T>({ status, body })).pipe(
     delay(SIMULATED_LATENCY_MS)
   );
 }
 
+// `delay` only shifts next notifications, not errors — wrap in of()+switchMap
+// to push the throw past the timer.
 function mockError(
   status: number,
   message: string
@@ -330,24 +288,18 @@ function mockError(
     statusText: message,
     error: { message },
   });
-  // Delay the error emission with an of()+switchMap pair — the plain delay
-  // operator only shifts next notifications, not errors.
   return of(null).pipe(
     delay(SIMULATED_LATENCY_MS),
     switchMap(() => throwError(() => error))
   );
 }
 
-// ---------- Local persistence ----------
-
 function readDeals(): StoredDeal[] {
   const raw = localStorage.getItem(DEALS_KEY);
-
   if (raw === null) {
     writeDeals(SEED_DEALS);
     return SEED_DEALS;
   }
-
   try {
     return JSON.parse(raw) as StoredDeal[];
   } catch {
@@ -360,8 +312,6 @@ function writeDeals(deals: StoredDeal[]): void {
   localStorage.setItem(DEALS_KEY, JSON.stringify(deals));
 }
 
-// ---------- JWT utilities ----------
-
 function buildMockToken(email: string, expiresAtMs: number): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const payload = btoa(
@@ -373,8 +323,7 @@ function buildMockToken(email: string, expiresAtMs: number): string {
       exp: Math.floor(expiresAtMs / 1000),
     })
   );
-  const signature = btoa('mock-signature');
-  return `${header}.${payload}.${signature}`;
+  return `${header}.${payload}.${btoa('mock-signature')}`;
 }
 
 function decodeJwtPayload(token: string): Record<string, unknown> | null {
@@ -387,10 +336,7 @@ function decodeJwtPayload(token: string): Record<string, unknown> | null {
 
 function extractBearerToken(req: HttpRequest<unknown>): string | null {
   const header = req.headers.get('Authorization');
-  if (!header || !header.startsWith('Bearer ')) {
-    return null;
-  }
-  return header.slice('Bearer '.length);
+  return header?.startsWith('Bearer ') ? header.slice(7) : null;
 }
 
 function computeCapRate(noi: number, purchasePrice: number): number {

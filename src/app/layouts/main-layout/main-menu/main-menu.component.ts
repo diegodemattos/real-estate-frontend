@@ -18,13 +18,8 @@ interface NavItem {
   },
 })
 export class MainMenuComponent {
-  /** Drives the slide-in/out animation. Defaults to closed. */
   readonly isOpen = input<boolean>(false);
 
-  /**
-   * Add another entry here when a new page is introduced —
-   * the layout, header, and footer remain unchanged.
-   */
   readonly items: readonly NavItem[] = [
     { label: 'Deals', route: '/main/deals' },
     { label: 'Closing', route: '/main/closing' },

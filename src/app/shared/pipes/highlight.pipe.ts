@@ -14,14 +14,12 @@ export class HighlightPipe implements PipeTransform {
       return text;
     }
 
-    // Escape the original text to prevent XSS from deal name content
     const safeText = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
 
-    // Escape regex special chars in the search term
     const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedSearch})`, 'gi');
     const highlighted = safeText.replace(

@@ -31,23 +31,6 @@ const initialState: DealsState = {
   isMutating: false,
 };
 
-/**
- * Centralised state for the deals feature, implemented with @ngrx/signals.
- *
- * The store is exposed as a regular DI token (`inject(DealsStore)`), and
- * every state field is automatically a signal (`store.deals()`,
- * `store.isLoading()`, etc.) so component templates didn't need to change
- * when migrating away from the previous hand-rolled store.
- *
- * Mutations follow the same pattern in every method:
- *   1. flip the relevant flag with `patchState`
- *   2. call the (HttpClient-backed) `DealsService`
- *   3. fold the response back into state via `patchState`
- *
- * Mutating methods return the underlying observable so callers (the deals
- * page) can subscribe and react to completion — closing the modal,
- * navigating, etc.
- */
 export const DealsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
@@ -57,28 +40,21 @@ export const DealsStore = signalStore(
       return name.trim() !== '' || priceMin !== null || priceMax !== null;
     }),
     filteredDeals: computed(() => {
-      const deals = store.deals();
       const { name, priceMin, priceMax } = store.filters();
+      const search = name.trim().toLowerCase();
 
-      return deals.filter((deal) => {
+      return store.deals().filter((deal) => {
         const matchesName =
-          !name.trim() ||
-          deal.dealName.toLowerCase().includes(name.toLowerCase().trim());
-
-        const matchesPriceMin =
-          priceMin === null || deal.purchasePrice >= priceMin;
-
-        const matchesPriceMax =
-          priceMax === null || deal.purchasePrice <= priceMax;
-
-        return matchesName && matchesPriceMin && matchesPriceMax;
+          !search || deal.dealName.toLowerCase().includes(search);
+        const matchesMin = priceMin === null || deal.purchasePrice >= priceMin;
+        const matchesMax = priceMax === null || deal.purchasePrice <= priceMax;
+        return matchesName && matchesMin && matchesMax;
       });
     }),
     totalDealsCount: computed(() => store.deals().length),
   })),
+  // Separate block so it can read the `filteredDeals` computed above.
   withComputed((store) => ({
-    // Defined in a second `withComputed` block so it can read the
-    // `filteredDeals` computed declared above.
     hasFilteredDeals: computed(() => store.filteredDeals().length > 0),
   })),
   withMethods((store, dealsService = inject(DealsService)) => ({
@@ -90,11 +66,6 @@ export const DealsStore = signalStore(
       });
     },
 
-    /**
-     * Fetches a single deal from the service.
-     * Used by the edit flow so the modal always shows a fresh copy of the
-     * record rather than the possibly-stale row the user clicked.
-     */
     loadDeal(id: string): Observable<Deal> {
       return dealsService.getDealById(id);
     },
@@ -142,9 +113,7 @@ export const DealsStore = signalStore(
     },
 
     updateFilters(filters: Partial<DealFilters>): void {
-      patchState(store, {
-        filters: { ...store.filters(), ...filters },
-      });
+      patchState(store, { filters: { ...store.filters(), ...filters } });
     },
 
     clearFilters(): void {

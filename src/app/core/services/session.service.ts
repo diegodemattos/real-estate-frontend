@@ -4,17 +4,16 @@ const AUTH_KEY = 're_auth';
 
 interface StoredAuth {
   accessToken: string;
-  /** Seconds until expiration, as returned by the backend. Kept in storage
-   *  to mirror the API response shape — the actual validity check reads
-   *  the JWT `exp` claim so this field is informational. */
   expiresIn: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   saveToken(accessToken: string, expiresIn: number): void {
-    const entry: StoredAuth = { accessToken, expiresIn };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(entry));
+    localStorage.setItem(
+      AUTH_KEY,
+      JSON.stringify({ accessToken, expiresIn } satisfies StoredAuth)
+    );
   }
 
   getToken(): string | null {
@@ -25,33 +24,18 @@ export class SessionService {
     return this.read()?.expiresIn ?? null;
   }
 
-  /**
-   * Returns true only when a token exists AND its JWT `exp` claim is still
-   * in the future. Reading the expiration from the token payload itself
-   * (instead of tracking an `issuedAt` alongside `expiresIn` in storage)
-   * keeps the stored shape faithful to the API response while giving an
-   * accurate "is this session still valid" answer — guards call this
-   * directly so expiry is always evaluated at navigation time.
-   */
   isTokenValid(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    const payload = this.decodeTokenPayload(token);
-    if (!payload || typeof payload['exp'] !== 'number') return false;
-    return Date.now() < (payload['exp'] as number) * 1000;
+    const exp = this.decodePayload(token)?.['exp'];
+    return typeof exp === 'number' && Date.now() < exp * 1000;
   }
 
-  /**
-   * Reads the `username` claim from the JWT — the backend stores the
-   * user's email there. Returns null if the token is absent or malformed.
-   */
   getEmailFromToken(): string | null {
     const token = this.getToken();
     if (!token) return null;
-    const payload = this.decodeTokenPayload(token);
-    return typeof payload?.['username'] === 'string'
-      ? (payload['username'] as string)
-      : null;
+    const username = this.decodePayload(token)?.['username'];
+    return typeof username === 'string' ? username : null;
   }
 
   clearToken(): void {
@@ -68,9 +52,7 @@ export class SessionService {
     }
   }
 
-  private decodeTokenPayload(
-    token: string
-  ): Record<string, unknown> | null {
+  private decodePayload(token: string): Record<string, unknown> | null {
     try {
       return JSON.parse(atob(token.split('.')[1])) as Record<string, unknown>;
     } catch {

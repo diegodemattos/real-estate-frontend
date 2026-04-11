@@ -28,13 +28,7 @@ import { Deal, NewDeal, UpdatedDeal } from '../../models/deal.model';
   styleUrls: ['./deal-form.component.scss'],
 })
 export class DealFormComponent {
-  /**
-   * When provided, the form switches to edit mode and pre-fills with this deal.
-   * Null means add mode.
-   */
   readonly deal = input<Deal | null>(null);
-
-  /** Drives the submit button loading state while the parent persists the change. */
   readonly isSaving = input<boolean>(false);
 
   readonly dealAdded = output<NewDeal>();
@@ -53,10 +47,6 @@ export class DealFormComponent {
     noi: [null as number | null, [Validators.required, Validators.min(0)]],
   });
 
-  /**
-   * Bridges form.valueChanges (RxJS) into the signal graph so previewCapRate
-   * can be a computed() — no manual subscriptions needed.
-   */
   private readonly formValues = toSignal(this.form.valueChanges, {
     initialValue: this.form.value,
   });
@@ -74,11 +64,9 @@ export class DealFormComponent {
   readonly previewCapRate = computed(() => {
     const { purchasePrice, noi } = this.formValues();
     if (
-      purchasePrice !== null &&
-      purchasePrice !== undefined &&
+      purchasePrice != null &&
       purchasePrice > 0 &&
-      noi !== null &&
-      noi !== undefined &&
+      noi != null &&
       noi >= 0
     ) {
       return noi / purchasePrice;
@@ -87,12 +75,9 @@ export class DealFormComponent {
   });
 
   constructor() {
-    /**
-     * Sync the deal input into the form whenever it changes.
-     * allowSignalWrites: true is required because form.patchValue() fires
-     * valueChanges synchronously, which writes to the toSignal-managed
-     * formValues signal during this effect's execution.
-     */
+    // allowSignalWrites: true because form.patchValue() fires valueChanges
+    // synchronously, writing to the toSignal-managed formValues signal
+    // during this effect's execution.
     effect(
       () => {
         const deal = this.deal();
@@ -119,22 +104,17 @@ export class DealFormComponent {
     }
 
     const value = this.form.getRawValue();
+    const payload = {
+      dealName: value.dealName ?? '',
+      purchasePrice: Number(value.purchasePrice),
+      address: value.address ?? '',
+      noi: Number(value.noi),
+    };
 
     if (this.isEditMode()) {
-      this.dealUpdated.emit({
-        id: this.deal()!.id,
-        dealName: value.dealName ?? '',
-        purchasePrice: Number(value.purchasePrice),
-        address: value.address ?? '',
-        noi: Number(value.noi),
-      });
+      this.dealUpdated.emit({ id: this.deal()!.id, ...payload });
     } else {
-      this.dealAdded.emit({
-        dealName: value.dealName ?? '',
-        purchasePrice: Number(value.purchasePrice),
-        address: value.address ?? '',
-        noi: Number(value.noi),
-      });
+      this.dealAdded.emit(payload);
     }
   }
 
