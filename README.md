@@ -50,7 +50,7 @@ npm install
 ### Dev with mock (offline)
 
 ```bash
-npm run serve:dev
+npm run start
 ```
 
 Runs the dev server with the `development` configuration, replacing
@@ -70,7 +70,7 @@ password: Ts@123456
 ### Dev with real backend
 
 ```bash
-npm start
+npm run start:prod
 ```
 
 Uses the `production` configuration, so `environment.production === true`
