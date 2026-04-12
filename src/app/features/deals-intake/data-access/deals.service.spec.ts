@@ -31,7 +31,7 @@ describe('DealsService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('GETs /deals', () => {
+  it('should GET /deals', () => {
     service.getDeals().subscribe((deals) => {
       expect(deals).toEqual([deal]);
     });
@@ -41,7 +41,7 @@ describe('DealsService', () => {
     req.flush([deal]);
   });
 
-  it('GETs /deals/:id', () => {
+  it('should GET /deals/:id', () => {
     service.getDealById('1').subscribe((d) => {
       expect(d).toEqual(deal);
     });
@@ -51,7 +51,7 @@ describe('DealsService', () => {
     req.flush(deal);
   });
 
-  it('POSTs /deals', () => {
+  it('should POST /deals', () => {
     const newDeal = { dealName: 'New', purchasePrice: 500_000, address: 'B', noi: 40_000 };
     service.createDeal(newDeal).subscribe((d) => {
       expect(d.dealName).toBe('New');
@@ -63,7 +63,7 @@ describe('DealsService', () => {
     req.flush({ id: '2', ...newDeal, capRate: 0.08 });
   });
 
-  it('PATCHes /deals/:id', () => {
+  it('should PATCH /deals/:id', () => {
     const updated = { id: '1', dealName: 'Renamed', purchasePrice: 1_000_000, address: 'A', noi: 80_000 };
     service.updateDeal(updated).subscribe((d) => {
       expect(d.dealName).toBe('Renamed');
@@ -75,7 +75,7 @@ describe('DealsService', () => {
     req.flush({ ...deal, dealName: 'Renamed' });
   });
 
-  it('DELETEs /deals/:id', () => {
+  it('should DELETE /deals/:id', () => {
     service.deleteDeal('1').subscribe();
 
     const req = httpMock.expectOne(`${API_BASE_URL}/deals/1`);

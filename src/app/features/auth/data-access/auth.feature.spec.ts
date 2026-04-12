@@ -8,13 +8,13 @@ describe('authFeature reducer', () => {
     operation: { type: null, status: 'idle' },
   };
 
-  it('returns the initial state', () => {
+  it('should return the initial state', () => {
     const state = reducer(undefined, { type: '@ngrx/store/init' });
     expect(state).toEqual(initialState);
   });
 
   describe('login', () => {
-    it('sets operation to login/loading', () => {
+    it('should set operation to login/loading', () => {
       const state = reducer(
         initialState,
         AuthActions.login({ credentials: { email: 'a@b.c', password: 'pw' } })
@@ -22,7 +22,7 @@ describe('authFeature reducer', () => {
       expect(state.operation).toEqual({ type: 'login', status: 'loading' });
     });
 
-    it('sets operation to login/success on loginSuccess', () => {
+    it('should set operation to login/success on loginSuccess', () => {
       const loading = reducer(
         initialState,
         AuthActions.login({ credentials: { email: 'a@b.c', password: 'pw' } })
@@ -31,7 +31,7 @@ describe('authFeature reducer', () => {
       expect(state.operation).toEqual({ type: 'login', status: 'success' });
     });
 
-    it('sets operation to login/error on loginFailure', () => {
+    it('should set operation to login/error on loginFailure', () => {
       const loading = reducer(
         initialState,
         AuthActions.login({ credentials: { email: 'a@b.c', password: 'pw' } })
@@ -42,18 +42,18 @@ describe('authFeature reducer', () => {
   });
 
   describe('requestRecovery', () => {
-    it('sets operation to requestRecovery/loading', () => {
+    it('should set operation to requestRecovery/loading', () => {
       const state = reducer(initialState, AuthActions.requestRecovery({ email: 'a@b.c' }));
       expect(state.operation).toEqual({ type: 'requestRecovery', status: 'loading' });
     });
 
-    it('sets operation to requestRecovery/success', () => {
+    it('should set operation to requestRecovery/success', () => {
       const loading = reducer(initialState, AuthActions.requestRecovery({ email: 'a@b.c' }));
       const state = reducer(loading, AuthActions.requestRecoverySuccess());
       expect(state.operation).toEqual({ type: 'requestRecovery', status: 'success' });
     });
 
-    it('sets operation to requestRecovery/error', () => {
+    it('should set operation to requestRecovery/error', () => {
       const loading = reducer(initialState, AuthActions.requestRecovery({ email: 'a@b.c' }));
       const state = reducer(loading, AuthActions.requestRecoveryFailure({ error: 'fail' }));
       expect(state.operation).toEqual({ type: 'requestRecovery', status: 'error' });
@@ -62,22 +62,22 @@ describe('authFeature reducer', () => {
 });
 
 describe('authFeature selectors', () => {
-  it('selectIsMutating returns true when matching type is loading', () => {
+  it('should return true from selectIsMutating when matching type is loading', () => {
     const selector = authFeature.selectIsMutating('login');
     expect(selector.projector({ type: 'login', status: 'loading' })).toBe(true);
   });
 
-  it('selectIsMutating returns false when type does not match', () => {
+  it('should return false from selectIsMutating when type does not match', () => {
     const selector = authFeature.selectIsMutating('login');
     expect(selector.projector({ type: 'requestRecovery', status: 'loading' })).toBe(false);
   });
 
-  it('selectIsMutating without type returns true when any operation is loading', () => {
+  it('should return true from selectIsMutating without type when any operation is loading', () => {
     const selector = authFeature.selectIsMutating();
     expect(selector.projector({ type: 'requestRecovery', status: 'loading' })).toBe(true);
   });
 
-  it('selectIsMutating without type returns false when idle', () => {
+  it('should return false from selectIsMutating without type when idle', () => {
     const selector = authFeature.selectIsMutating();
     expect(selector.projector({ type: null, status: 'idle' })).toBe(false);
   });

@@ -10,7 +10,7 @@ describe('AuthLayoutComponent', () => {
     });
   });
 
-  it('renders the hero and form panels with a router outlet', () => {
+  it('should render the hero and form panels with a router outlet', () => {
     const fixture = TestBed.createComponent(AuthLayoutComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.auth-layout__hero')).toBeTruthy();

@@ -10,7 +10,7 @@ describe('ToastComponent', () => {
     service = TestBed.inject(NotificationService);
   });
 
-  it('keeps the aria-live region in the DOM even when there is no notification', () => {
+  it('should keep the aria-live region in the DOM even when there is no notification', () => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
     const region = fixture.nativeElement.querySelector('[aria-live="polite"]');
@@ -18,7 +18,7 @@ describe('ToastComponent', () => {
     expect(fixture.nativeElement.querySelector('.toast')).toBeNull();
   });
 
-  it('renders the notification with the correct variant class', () => {
+  it('should render the notification with the correct variant class', () => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
 
@@ -31,7 +31,7 @@ describe('ToastComponent', () => {
     expect(el.textContent).toContain('Deal saved');
   });
 
-  it('auto-dismisses after the configured delay', fakeAsync(() => {
+  it('should auto-dismiss after the configured delay', fakeAsync(() => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
 
@@ -44,7 +44,7 @@ describe('ToastComponent', () => {
     expect(fixture.nativeElement.querySelector('.toast')).toBeNull();
   }));
 
-  it('resets the auto-dismiss timer when a new notification arrives (switchMap)', fakeAsync(() => {
+  it('should reset the auto-dismiss timer when a new notification arrives (switchMap)', fakeAsync(() => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
 
@@ -68,7 +68,7 @@ describe('ToastComponent', () => {
     expect(fixture.nativeElement.querySelector('.toast')).toBeNull();
   }));
 
-  it('manual dismiss clears the toast immediately', () => {
+  it('should clear the toast immediately on manual dismiss', () => {
     const fixture = TestBed.createComponent(ToastComponent);
     fixture.detectChanges();
 

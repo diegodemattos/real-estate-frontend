@@ -36,13 +36,13 @@ describe('AnalysisPageComponent', () => {
       });
   });
 
-  it('calls loadDeals on init', () => {
+  it('should call loadDeals on init', () => {
     const fixture = TestBed.createComponent(AnalysisPageComponent);
     fixture.detectChanges();
     expect(store.loadDeals).toHaveBeenCalled();
   });
 
-  it('renders summary cards when deals are loaded', () => {
+  it('should render summary cards when deals are loaded', () => {
     const fixture = TestBed.createComponent(AnalysisPageComponent);
     fixture.detectChanges();
 
@@ -51,7 +51,7 @@ describe('AnalysisPageComponent', () => {
     expect(values[0].textContent.trim()).toBe('1');
   });
 
-  it('shows empty state when no deals', () => {
+  it('should show empty state when no deals', () => {
     store.deals = signal([]);
     store.totalDeals = signal(0);
 

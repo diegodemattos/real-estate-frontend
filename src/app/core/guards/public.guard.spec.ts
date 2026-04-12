@@ -25,13 +25,13 @@ describe('publicGuard', () => {
     );
   }
 
-  it('allows navigation when no valid token exists', () => {
+  it('should allow navigation when no valid token exists', () => {
     sessionService.isTokenValid.mockReturnValue(false);
     expect(run()).toBe(true);
     expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 
-  it('redirects to /main/deals-intake when a valid token exists', () => {
+  it('should redirect to /main/deals-intake when a valid token exists', () => {
     sessionService.isTokenValid.mockReturnValue(true);
     run();
     expect(router.createUrlTree).toHaveBeenCalledWith(['/main/deals-intake']);

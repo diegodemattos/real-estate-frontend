@@ -31,7 +31,7 @@ describe('authInterceptor', () => {
     );
   }
 
-  it('skips the token when SKIP_AUTH context flag is set', (done) => {
+  it('should skip the token when SKIP_AUTH context flag is set', (done) => {
     const req = new HttpRequest('GET', '/api/auth/login', {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
@@ -43,7 +43,7 @@ describe('authInterceptor', () => {
     });
   });
 
-  it('forwards untouched when no valid token is stored', (done) => {
+  it('should forward untouched when no valid token is stored', (done) => {
     sessionService.isTokenValid.mockReturnValue(false);
     const req = new HttpRequest('GET', '/api/deals');
     run(req).subscribe(() => {
@@ -53,7 +53,7 @@ describe('authInterceptor', () => {
     });
   });
 
-  it('attaches the Bearer token when the session is valid', (done) => {
+  it('should attach the Bearer token when the session is valid', (done) => {
     sessionService.isTokenValid.mockReturnValue(true);
     sessionService.getToken.mockReturnValue('abc.def.ghi');
     const req = new HttpRequest('GET', '/api/deals');

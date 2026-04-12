@@ -18,7 +18,7 @@ class HostEnabledComponent {}
 class HostDisabledComponent {}
 
 describe('AutofocusDirective', () => {
-  it('is attached to the element and receives true by default', () => {
+  it('should be attached to the element and receive true by default', () => {
     TestBed.configureTestingModule({ imports: [HostEnabledComponent] });
     const fixture = TestBed.createComponent(HostEnabledComponent);
     fixture.detectChanges();
@@ -31,7 +31,7 @@ describe('AutofocusDirective', () => {
     expect(directive.appAutofocus()).toBe(true);
   });
 
-  it('receives false when bound to false', () => {
+  it('should receive false when bound to false', () => {
     TestBed.configureTestingModule({ imports: [HostDisabledComponent] });
     const fixture = TestBed.createComponent(HostDisabledComponent);
     fixture.detectChanges();

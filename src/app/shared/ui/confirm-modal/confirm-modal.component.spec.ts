@@ -14,7 +14,7 @@ describe('ConfirmModalComponent', () => {
     return fixture;
   }
 
-  it('renders the message inside the open modal', () => {
+  it('should render the message inside the open modal', () => {
     const fixture = create();
     fixture.detectChanges();
     expect(
@@ -22,7 +22,7 @@ describe('ConfirmModalComponent', () => {
     ).toContain('Are you sure?');
   });
 
-  it('onConfirm emits confirmed when not confirming', () => {
+  it('should emit confirmed on onConfirm when not confirming', () => {
     const fixture = create();
     fixture.detectChanges();
     const spy = jest.fn();
@@ -31,7 +31,7 @@ describe('ConfirmModalComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('onConfirm/onCancel are blocked while isConfirming is true', () => {
+  it('should block onConfirm/onCancel while isConfirming is true', () => {
     const fixture = create();
     fixture.componentRef.setInput('isConfirming', true);
     fixture.detectChanges();
@@ -47,7 +47,7 @@ describe('ConfirmModalComponent', () => {
     expect(cancelSpy).not.toHaveBeenCalled();
   });
 
-  it('onCancel emits cancelled when not confirming', () => {
+  it('should emit cancelled on onCancel when not confirming', () => {
     const fixture = create();
     fixture.detectChanges();
     const spy = jest.fn();

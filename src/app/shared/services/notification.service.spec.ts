@@ -9,13 +9,13 @@ describe('NotificationService', () => {
     service = TestBed.inject(NotificationService);
   });
 
-  it('starts with null and replays the current value to new subscribers', () => {
+  it('should start with null and replay the current value to new subscribers', () => {
     const spy = jest.fn();
     service.notification$.subscribe(spy);
     expect(spy).toHaveBeenCalledWith(null);
   });
 
-  it('emits a success notification with a generated id', () => {
+  it('should emit a success notification with a generated id', () => {
     const received: (Notification | null)[] = [];
     service.notification$.subscribe((n) => received.push(n));
 
@@ -29,7 +29,7 @@ describe('NotificationService', () => {
     expect(last?.id.length).toBeGreaterThan(0);
   });
 
-  it('emits an error notification', () => {
+  it('should emit an error notification', () => {
     const received: (Notification | null)[] = [];
     service.notification$.subscribe((n) => received.push(n));
 
@@ -39,7 +39,7 @@ describe('NotificationService', () => {
     expect(received[received.length - 1]?.message).toBe('Failed to delete');
   });
 
-  it('dismiss clears the current notification', () => {
+  it('should clear the current notification on dismiss', () => {
     const received: (Notification | null)[] = [];
     service.notification$.subscribe((n) => received.push(n));
 
@@ -49,7 +49,7 @@ describe('NotificationService', () => {
     expect(received[received.length - 1]).toBeNull();
   });
 
-  it('emits a fresh id even when the same message is shown twice', () => {
+  it('should emit a fresh id even when the same message is shown twice', () => {
     const received: (Notification | null)[] = [];
     service.notification$.subscribe((n) => received.push(n));
 

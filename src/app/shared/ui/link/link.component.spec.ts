@@ -10,7 +10,7 @@ describe('LinkComponent', () => {
     });
   });
 
-  it('renders an anchor pointing at the `to` input', () => {
+  it('should render an anchor pointing at the `to` input', () => {
     const fixture = TestBed.createComponent(LinkComponent);
     fixture.componentRef.setInput('to', '/public/login');
     fixture.detectChanges();

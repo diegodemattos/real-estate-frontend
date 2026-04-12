@@ -36,7 +36,7 @@ describe('AuthEffects', () => {
   });
 
   describe('login$', () => {
-    it('saves the session and dispatches loginSuccess on success', (done) => {
+    it('should save the session and dispatch loginSuccess on success', (done) => {
       authService.login.mockReturnValue(of({ accessToken: 'tok', expiresIn: 3600 }));
 
       effects.login$.subscribe((action) => {
@@ -48,7 +48,7 @@ describe('AuthEffects', () => {
       actions$.next(AuthActions.login({ credentials: { email: 'a@b.c', password: 'pw' } }));
     });
 
-    it('dispatches loginFailure on error', (done) => {
+    it('should dispatch loginFailure on error', (done) => {
       authService.login.mockReturnValue(throwError(() => new Error('401')));
 
       effects.login$.subscribe((action) => {
@@ -61,7 +61,7 @@ describe('AuthEffects', () => {
   });
 
   describe('setUserOnLogin$', () => {
-    it('dispatches CoreActions.setUser when loginSuccess fires', (done) => {
+    it('should dispatch CoreActions.setUser when loginSuccess fires', (done) => {
       effects.setUserOnLogin$.subscribe((action) => {
         expect(action).toEqual(CoreActions.setUser({ user: { email: 'a@b.c' } }));
         done();
@@ -72,7 +72,7 @@ describe('AuthEffects', () => {
   });
 
   describe('requestRecovery$', () => {
-    it('dispatches requestRecoverySuccess on success', (done) => {
+    it('should dispatch requestRecoverySuccess on success', (done) => {
       authService.requestPasswordRecovery.mockReturnValue(of(void 0));
 
       effects.requestRecovery$.subscribe((action) => {
@@ -83,7 +83,7 @@ describe('AuthEffects', () => {
       actions$.next(AuthActions.requestRecovery({ email: 'a@b.c' }));
     });
 
-    it('dispatches requestRecoveryFailure on error', (done) => {
+    it('should dispatch requestRecoveryFailure on error', (done) => {
       authService.requestPasswordRecovery.mockReturnValue(throwError(() => new Error('500')));
 
       effects.requestRecovery$.subscribe((action) => {

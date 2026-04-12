@@ -12,7 +12,7 @@ describe('DealsScatterChartComponent', () => {
     TestBed.configureTestingModule({ imports: [DealsScatterChartComponent] });
   });
 
-  it('renders nothing when deals is empty', () => {
+  it('should render nothing when deals is empty', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', []);
     fixture.detectChanges();
@@ -20,7 +20,7 @@ describe('DealsScatterChartComponent', () => {
     expect(fixture.nativeElement.querySelector('.legend-table')).toBeNull();
   });
 
-  it('renders an svg with numbered data points', () => {
+  it('should render an svg with numbered data points', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', deals);
     fixture.detectChanges();
@@ -33,7 +33,7 @@ describe('DealsScatterChartComponent', () => {
     expect(labels[1].textContent.trim()).toBe('2');
   });
 
-  it('each point has a tooltip with the deal name', () => {
+  it('should have a tooltip with the deal name on each point', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', deals);
     fixture.detectChanges();
@@ -43,7 +43,7 @@ describe('DealsScatterChartComponent', () => {
     expect(titles[1].textContent).toContain('Downtown');
   });
 
-  it('renders the color legend with cap rate ranges', () => {
+  it('should render the color legend with cap rate ranges', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', deals);
     fixture.detectChanges();
@@ -55,7 +55,7 @@ describe('DealsScatterChartComponent', () => {
     expect(items[2].textContent).toContain('Low');
   });
 
-  it('renders a reference table with deal names', () => {
+  it('should render a reference table with deal names', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', deals);
     fixture.detectChanges();
@@ -66,7 +66,7 @@ describe('DealsScatterChartComponent', () => {
     expect(rows[1].textContent).toContain('Downtown');
   });
 
-  it('renders axis titles', () => {
+  it('should render axis titles', () => {
     const fixture = TestBed.createComponent(DealsScatterChartComponent);
     fixture.componentRef.setInput('deals', deals);
     fixture.detectChanges();

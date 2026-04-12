@@ -6,7 +6,7 @@ describe('EmptyStateComponent', () => {
     TestBed.configureTestingModule({ imports: [EmptyStateComponent] });
   });
 
-  it('renders the message input as the displayed text', () => {
+  it('should render the message input as the displayed text', () => {
     const fixture = TestBed.createComponent(EmptyStateComponent);
     fixture.componentRef.setInput('message', 'Nothing here yet');
     fixture.detectChanges();

@@ -6,7 +6,7 @@ describe('MainFooterComponent', () => {
     TestBed.configureTestingModule({ imports: [MainFooterComponent] });
   });
 
-  it('exposes the current year', () => {
+  it('should expose the current year', () => {
     const fixture = TestBed.createComponent(MainFooterComponent);
     fixture.detectChanges();
     expect(fixture.componentInstance.currentYear).toBe(new Date().getFullYear());

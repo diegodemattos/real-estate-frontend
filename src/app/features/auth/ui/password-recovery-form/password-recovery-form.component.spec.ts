@@ -14,7 +14,7 @@ describe('PasswordRecoveryFormComponent', () => {
     return fixture;
   }
 
-  it('emits recover with the email when submitted with a valid email', () => {
+  it('should emit recover with the email when submitted with a valid email', () => {
     const fixture = create();
     fixture.componentInstance.form.patchValue({ email: 'user@example.com' });
     const spy = jest.fn();
@@ -24,7 +24,7 @@ describe('PasswordRecoveryFormComponent', () => {
     expect(spy).toHaveBeenCalledWith('user@example.com');
   });
 
-  it('does not emit when email is empty', () => {
+  it('should not emit when email is empty', () => {
     const fixture = create();
     const spy = jest.fn();
     fixture.componentInstance.recover.subscribe(spy);
@@ -33,7 +33,7 @@ describe('PasswordRecoveryFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('does not emit when email format is invalid', () => {
+  it('should not emit when email format is invalid', () => {
     const fixture = create();
     fixture.componentInstance.form.patchValue({ email: 'not-an-email' });
     const spy = jest.fn();
@@ -43,7 +43,7 @@ describe('PasswordRecoveryFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('does not emit while isLoading is true', () => {
+  it('should not emit while isLoading is true', () => {
     const fixture = create();
     fixture.componentRef.setInput('isLoading', true);
     fixture.componentInstance.form.patchValue({ email: 'user@example.com' });

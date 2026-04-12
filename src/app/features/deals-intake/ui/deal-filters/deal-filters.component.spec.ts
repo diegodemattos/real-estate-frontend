@@ -6,7 +6,7 @@ describe('DealFiltersComponent', () => {
     TestBed.configureTestingModule({ imports: [DealFiltersComponent] });
   });
 
-  it('emits filtersChange with normalized values after debounce', fakeAsync(() => {
+  it('should emit filtersChange with normalized values after debounce', fakeAsync(() => {
     const fixture = TestBed.createComponent(DealFiltersComponent);
     const spy = jest.fn();
     fixture.componentInstance.filtersChange.subscribe(spy);
@@ -30,7 +30,7 @@ describe('DealFiltersComponent', () => {
     });
   }));
 
-  it('coalesces rapid changes into a single emission (debounceTime)', fakeAsync(() => {
+  it('should coalesce rapid changes into a single emission (debounceTime)', fakeAsync(() => {
     const fixture = TestBed.createComponent(DealFiltersComponent);
     const spy = jest.fn();
     fixture.componentInstance.filtersChange.subscribe(spy);
@@ -52,7 +52,7 @@ describe('DealFiltersComponent', () => {
     });
   }));
 
-  it('skips re-emission when normalized filters are unchanged (distinctUntilChanged)', fakeAsync(() => {
+  it('should skip re-emission when normalized filters are unchanged (distinctUntilChanged)', fakeAsync(() => {
     const fixture = TestBed.createComponent(DealFiltersComponent);
     const spy = jest.fn();
     fixture.componentInstance.filtersChange.subscribe(spy);
@@ -68,7 +68,7 @@ describe('DealFiltersComponent', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
-  it('onClear resets all fields and emits an empty filter set', fakeAsync(() => {
+  it('should reset all fields and emit an empty filter set on onClear', fakeAsync(() => {
     const fixture = TestBed.createComponent(DealFiltersComponent);
     const spy = jest.fn();
     fixture.componentInstance.filtersChange.subscribe(spy);

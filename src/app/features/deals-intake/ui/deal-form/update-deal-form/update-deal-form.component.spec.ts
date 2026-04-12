@@ -16,7 +16,7 @@ describe('UpdateDealFormComponent', () => {
     TestBed.configureTestingModule({ imports: [UpdateDealFormComponent] });
   });
 
-  it('patches the form with the provided deal on init', () => {
+  it('should patch the form with the provided deal on init', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.detectChanges();
@@ -29,14 +29,14 @@ describe('UpdateDealFormComponent', () => {
     });
   });
 
-  it('previewCapRate computes noi/purchasePrice once both are valid', () => {
+  it('should compute noi/purchasePrice in previewCapRate once both are valid', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.detectChanges();
     expect(fixture.componentInstance.previewCapRate()).toBeCloseTo(0.08);
   });
 
-  it('submit emits dealUpdated with the id and updated payload', () => {
+  it('should emit dealUpdated with the id and updated payload on submit', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.detectChanges();
@@ -51,7 +51,7 @@ describe('UpdateDealFormComponent', () => {
     );
   });
 
-  it('submit is a no-op when the form is invalid', () => {
+  it('should be a no-op on submit when the form is invalid', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('UpdateDealFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('submit is a no-op while isSaving is true', () => {
+  it('should be a no-op on submit while isSaving is true', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.componentRef.setInput('isSaving', true);
@@ -75,7 +75,7 @@ describe('UpdateDealFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('cancel emits dealCancelled', () => {
+  it('should emit dealCancelled on cancel', () => {
     const fixture = TestBed.createComponent(UpdateDealFormComponent);
     fixture.componentRef.setInput('deal', sampleDeal);
     fixture.detectChanges();

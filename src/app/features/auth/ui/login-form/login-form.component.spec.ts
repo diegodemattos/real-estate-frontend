@@ -16,7 +16,7 @@ describe('LoginFormComponent', () => {
     return fixture;
   }
 
-  it('starts with the seeded admin credentials', () => {
+  it('should start with the seeded admin credentials', () => {
     const fixture = create();
     expect(fixture.componentInstance.form.value).toEqual({
       email: 'admin@termsheet.com',
@@ -24,7 +24,7 @@ describe('LoginFormComponent', () => {
     });
   });
 
-  it('emits login with the form value when submitted with valid input', () => {
+  it('should emit login with the form value when submitted with valid input', () => {
     const fixture = create();
     const spy = jest.fn();
     fixture.componentInstance.login.subscribe(spy);
@@ -36,7 +36,7 @@ describe('LoginFormComponent', () => {
     });
   });
 
-  it('does not emit when the form is invalid', () => {
+  it('should not emit when the form is invalid', () => {
     const fixture = create();
     fixture.componentInstance.form.patchValue({ email: '', password: '' });
     const spy = jest.fn();
@@ -46,7 +46,7 @@ describe('LoginFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('does not emit while isLoading is true', () => {
+  it('should not emit while isLoading is true', () => {
     const fixture = create();
     fixture.componentRef.setInput('isLoading', true);
     fixture.detectChanges();

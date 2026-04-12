@@ -38,7 +38,7 @@ describe('LoginPageComponent', () => {
     jest.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('navigates to /main/deals-intake when loginSuccess$ emits', () => {
+  it('should navigate to /main/deals-intake when loginSuccess$ emits', () => {
     const fixture = TestBed.createComponent(LoginPageComponent);
     fixture.detectChanges();
 
@@ -48,7 +48,7 @@ describe('LoginPageComponent', () => {
     expect(fixture.componentInstance.errorMessage()).toBe('');
   });
 
-  it('sets an error message when loginFailure$ emits', () => {
+  it('should set an error message when loginFailure$ emits', () => {
     const fixture = TestBed.createComponent(LoginPageComponent);
     fixture.detectChanges();
 
@@ -60,7 +60,7 @@ describe('LoginPageComponent', () => {
     );
   });
 
-  it('onLogin clears the error and dispatches via facade', () => {
+  it('should clear the error and dispatch via facade on onLogin', () => {
     const fixture = TestBed.createComponent(LoginPageComponent);
     fixture.detectChanges();
     fixture.componentInstance.errorMessage.set('previous error');

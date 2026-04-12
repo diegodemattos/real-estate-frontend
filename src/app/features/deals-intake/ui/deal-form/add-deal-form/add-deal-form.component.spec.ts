@@ -6,13 +6,13 @@ describe('AddDealFormComponent', () => {
     TestBed.configureTestingModule({ imports: [AddDealFormComponent] });
   });
 
-  it('starts with an empty invalid form', () => {
+  it('should start with an empty invalid form', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.detectChanges();
     expect(fixture.componentInstance.isFormValid()).toBe(false);
   });
 
-  it('previewCapRate computes noi/purchasePrice once both are valid', () => {
+  it('should compute noi/purchasePrice in previewCapRate once both are valid', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.detectChanges();
     expect(fixture.componentInstance.previewCapRate()).toBeNull();
@@ -21,7 +21,7 @@ describe('AddDealFormComponent', () => {
     expect(fixture.componentInstance.previewCapRate()).toBeCloseTo(0.08);
   });
 
-  it('submit emits dealAdded with the payload when the form is valid', () => {
+  it('should emit dealAdded with the payload when the form is valid on submit', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.detectChanges();
     fixture.componentInstance.form.patchValue({
@@ -43,7 +43,7 @@ describe('AddDealFormComponent', () => {
     });
   });
 
-  it('submit is a no-op when the form is invalid', () => {
+  it('should be a no-op on submit when the form is invalid', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.detectChanges();
 
@@ -53,7 +53,7 @@ describe('AddDealFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('submit is a no-op while isSaving is true', () => {
+  it('should be a no-op on submit while isSaving is true', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.componentRef.setInput('isSaving', true);
     fixture.detectChanges();
@@ -70,7 +70,7 @@ describe('AddDealFormComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('cancel emits dealCancelled', () => {
+  it('should emit dealCancelled on cancel', () => {
     const fixture = TestBed.createComponent(AddDealFormComponent);
     fixture.detectChanges();
     const spy = jest.fn();

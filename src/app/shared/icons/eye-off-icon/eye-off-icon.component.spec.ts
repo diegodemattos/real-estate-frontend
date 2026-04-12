@@ -6,7 +6,7 @@ describe('EyeOffIconComponent', () => {
     TestBed.configureTestingModule({ imports: [EyeOffIconComponent] });
   });
 
-  it('renders an svg element', () => {
+  it('should render an svg element', () => {
     const fixture = TestBed.createComponent(EyeOffIconComponent);
     fixture.detectChanges();
     const svg = fixture.nativeElement.querySelector('svg');

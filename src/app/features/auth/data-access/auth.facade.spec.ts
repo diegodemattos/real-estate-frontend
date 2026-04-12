@@ -29,18 +29,18 @@ describe('AuthFacade', () => {
     jest.spyOn(store, 'dispatch');
   });
 
-  it('login dispatches AuthActions.login', () => {
+  it('should dispatch AuthActions.login on login', () => {
     const credentials = { email: 'a@b.c', password: 'pw' };
     facade.login(credentials);
     expect(store.dispatch).toHaveBeenCalledWith(AuthActions.login({ credentials }));
   });
 
-  it('requestRecovery dispatches AuthActions.requestRecovery', () => {
+  it('should dispatch AuthActions.requestRecovery on requestRecovery', () => {
     facade.requestRecovery('a@b.c');
     expect(store.dispatch).toHaveBeenCalledWith(AuthActions.requestRecovery({ email: 'a@b.c' }));
   });
 
-  it('isMutating returns a signal reflecting operation status', () => {
+  it('should return a signal reflecting operation status from isMutating', () => {
     store.setState({
       [authFeature.name]: { operation: { type: 'login', status: 'loading' } },
     });

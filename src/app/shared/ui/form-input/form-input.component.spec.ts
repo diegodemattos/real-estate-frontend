@@ -48,14 +48,14 @@ describe('FormInputComponent', () => {
     return fixture.nativeElement.querySelector('input');
   }
 
-  it('renders the label and required marker when required is true', () => {
+  it('should render the label and required marker when required is true', () => {
     const fixture = createHost();
     const label = fixture.nativeElement.querySelector('.form-input__label');
     expect(label.textContent).toContain('Email');
     expect(fixture.nativeElement.querySelector('.form-input__required')).toBeTruthy();
   });
 
-  it('writes typed values back to the FormControl (string for text types)', () => {
+  it('should write typed values back to the FormControl (string for text types)', () => {
     const fixture = createHost();
     const el = input(fixture);
     el.value = 'user@example.com';
@@ -67,7 +67,7 @@ describe('FormInputComponent', () => {
     );
   });
 
-  it('coerces numeric inputs to numbers and empty to null', () => {
+  it('should coerce numeric inputs to numbers and empty to null', () => {
     TestBed.configureTestingModule({ imports: [HostComponent] });
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.type = 'number';
@@ -86,7 +86,7 @@ describe('FormInputComponent', () => {
     expect(fixture.componentInstance.form.controls['field'].value).toBeNull();
   });
 
-  it('displays the required error message after blur on an empty control', () => {
+  it('should display the required error message after blur on an empty control', () => {
     const fixture = createHost();
     const el = input(fixture);
     el.dispatchEvent(new Event('blur'));
@@ -96,7 +96,7 @@ describe('FormInputComponent', () => {
     expect(err.textContent).toContain('Email is required');
   });
 
-  it('displays the email error when the value is an invalid email', () => {
+  it('should display the email error when the value is an invalid email', () => {
     const fixture = createHost();
     const el = input(fixture);
     el.value = 'not-an-email';
@@ -108,7 +108,7 @@ describe('FormInputComponent', () => {
     expect(err.textContent).toContain('Please enter a valid email');
   });
 
-  it('shows no error text when errors input has no mapping for the active validator', () => {
+  it('should show no error text when errors input has no mapping for the active validator', () => {
     TestBed.configureTestingModule({ imports: [HostComponent] });
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.errorMessages = {};
@@ -125,7 +125,7 @@ describe('FormInputComponent', () => {
     expect(fixture.nativeElement.querySelector('.form-input__error')).toBeNull();
   });
 
-  it('displays the message from { error: "string" } custom validator error directly', () => {
+  it('should display the message from { error: "string" } custom validator error directly', () => {
     TestBed.configureTestingModule({ imports: [HostComponent] });
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.errorMessages = {};
@@ -144,7 +144,7 @@ describe('FormInputComponent', () => {
     expect(err.textContent).toContain('Custom validator message.');
   });
 
-  it('renders the password visibility toggle when type is password', () => {
+  it('should render the password visibility toggle when type is password', () => {
     TestBed.configureTestingModule({ imports: [HostComponent] });
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.type = 'password';

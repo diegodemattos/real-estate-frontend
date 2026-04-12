@@ -6,20 +6,20 @@ describe('AlertComponent', () => {
     TestBed.configureTestingModule({ imports: [AlertComponent] });
   });
 
-  it('defaults to the info variant', () => {
+  it('should default to the info variant', () => {
     const fixture = TestBed.createComponent(AlertComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.alert--info')).toBeTruthy();
   });
 
-  it('applies the selected variant class', () => {
+  it('should apply the selected variant class', () => {
     const fixture = TestBed.createComponent(AlertComponent);
     fixture.componentRef.setInput('variant', 'error');
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.alert--error')).toBeTruthy();
   });
 
-  it('has role="alert" on the host', () => {
+  it('should have role="alert" on the host', () => {
     const fixture = TestBed.createComponent(AlertComponent);
     fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).getAttribute('role')).toBe(

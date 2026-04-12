@@ -36,7 +36,7 @@ describe('CoreEffects', () => {
   });
 
   describe('hydrate$', () => {
-    it('dispatches hydrateUser when a valid token is persisted', (done) => {
+    it('should dispatch hydrateUser when a valid token is persisted', (done) => {
       sessionService.isTokenValid.mockReturnValue(true);
       sessionService.getEmail.mockReturnValue('admin@termsheet.com');
 
@@ -50,7 +50,7 @@ describe('CoreEffects', () => {
       actions$.next({ type: ROOT_EFFECTS_INIT });
     });
 
-    it('dispatches nothing when no valid token is persisted', (done) => {
+    it('should dispatch nothing when no valid token is persisted', (done) => {
       sessionService.isTokenValid.mockReturnValue(false);
       let dispatched = false;
 
@@ -65,7 +65,7 @@ describe('CoreEffects', () => {
   });
 
   describe('logout$', () => {
-    it('clears the session token', (done) => {
+    it('should clear the session token', (done) => {
       effects.logout$.subscribe(() => {
         expect(sessionService.clearToken).toHaveBeenCalled();
         done();

@@ -8,26 +8,26 @@ describe('SessionService', () => {
     service = new SessionService();
   });
 
-  it('persists email, token and computes expiresAt', () => {
+  it('should persist email, token and compute expiresAt', () => {
     service.saveSession('admin@termsheet.com', 'abc.def.ghi', 3600);
 
     expect(service.getToken()).toBe('abc.def.ghi');
     expect(service.getEmail()).toBe('admin@termsheet.com');
   });
 
-  it('reports a valid session when expiresAt is in the future', () => {
+  it('should report a valid session when expiresAt is in the future', () => {
     service.saveSession('admin@termsheet.com', 'some.token', 3600);
 
     expect(service.isTokenValid()).toBe(true);
   });
 
-  it('reports an invalid session when expiresAt is in the past', () => {
+  it('should report an invalid session when expiresAt is in the past', () => {
     service.saveSession('a@b.c', 'some.token', -1);
 
     expect(service.isTokenValid()).toBe(false);
   });
 
-  it('returns null for every getter after clearToken', () => {
+  it('should return null for every getter after clearToken', () => {
     service.saveSession('admin@termsheet.com', 'some.token', 1800);
     service.clearToken();
 

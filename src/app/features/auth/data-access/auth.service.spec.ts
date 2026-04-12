@@ -21,7 +21,7 @@ describe('AuthService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('POSTs /auth/login with the email mapped to the username field', () => {
+  it('should POST /auth/login with the email mapped to the username field', () => {
     service
       .login({ email: 'admin@termsheet.com', password: 'Ts@123456' })
       .subscribe((response) => {
@@ -38,7 +38,7 @@ describe('AuthService', () => {
     req.flush({ accessToken: 'token', expiresIn: 3600 });
   });
 
-  it('GETs /auth/me', () => {
+  it('should GET /auth/me', () => {
     service.getMe().subscribe((user) => {
       expect(user.email).toBe('admin@termsheet.com');
     });
@@ -48,7 +48,7 @@ describe('AuthService', () => {
     req.flush({ id: 'u-1', email: 'admin@termsheet.com' });
   });
 
-  it('POSTs /auth/forgot-password with the email body', () => {
+  it('should POST /auth/forgot-password with the email body', () => {
     service.requestPasswordRecovery('user@example.com').subscribe();
 
     const req = httpMock.expectOne(`${API_BASE_URL}/auth/forgot-password`);

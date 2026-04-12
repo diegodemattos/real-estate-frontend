@@ -23,13 +23,13 @@ describe('DealsAnalysisStore', () => {
     });
   });
 
-  it('starts with empty deals and isLoading false', () => {
+  it('should start with empty deals and isLoading false', () => {
     const store = TestBed.inject(DealsAnalysisStore);
     expect(store.deals()).toEqual([]);
     expect(store.isLoading()).toBe(false);
   });
 
-  it('loadDeals populates deals on success', () => {
+  it('should populate deals on success when loadDeals is called', () => {
     service.getDeals.mockReturnValue(of(deals));
     const store = TestBed.inject(DealsAnalysisStore);
 
@@ -39,7 +39,7 @@ describe('DealsAnalysisStore', () => {
     expect(store.isLoading()).toBe(false);
   });
 
-  it('loadDeals sets isLoading false on error', () => {
+  it('should set isLoading false on error when loadDeals is called', () => {
     service.getDeals.mockReturnValue(throwError(() => new Error('fail')));
     const store = TestBed.inject(DealsAnalysisStore);
 
@@ -49,28 +49,28 @@ describe('DealsAnalysisStore', () => {
     expect(store.isLoading()).toBe(false);
   });
 
-  it('totalDeals returns the count', () => {
+  it('should return the count from totalDeals', () => {
     service.getDeals.mockReturnValue(of(deals));
     const store = TestBed.inject(DealsAnalysisStore);
     store.loadDeals();
     expect(store.totalDeals()).toBe(2);
   });
 
-  it('totalPortfolioValue sums purchase prices', () => {
+  it('should sum purchase prices in totalPortfolioValue', () => {
     service.getDeals.mockReturnValue(of(deals));
     const store = TestBed.inject(DealsAnalysisStore);
     store.loadDeals();
     expect(store.totalPortfolioValue()).toBe(3_000_000);
   });
 
-  it('averageCapRate computes the mean', () => {
+  it('should compute the mean in averageCapRate', () => {
     service.getDeals.mockReturnValue(of(deals));
     const store = TestBed.inject(DealsAnalysisStore);
     store.loadDeals();
     expect(store.averageCapRate()).toBeCloseTo(0.07);
   });
 
-  it('averageCapRate returns 0 when deals is empty', () => {
+  it('should return 0 from averageCapRate when deals is empty', () => {
     const store = TestBed.inject(DealsAnalysisStore);
     expect(store.averageCapRate()).toBe(0);
   });

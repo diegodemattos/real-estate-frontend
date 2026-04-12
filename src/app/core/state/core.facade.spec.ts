@@ -25,21 +25,21 @@ describe('CoreFacade', () => {
     jest.spyOn(store, 'dispatch');
   });
 
-  it('user returns null by default', () => {
+  it('should return null for user by default', () => {
     expect(facade.user()).toBeNull();
   });
 
-  it('isAuthenticated returns false when user is null', () => {
+  it('should return false for isAuthenticated when user is null', () => {
     expect(facade.isAuthenticated()).toBe(false);
   });
 
-  it('user reflects store state', () => {
+  it('should reflect store state for user', () => {
     store.setState({ [coreFeature.name]: { user: { email: 'a@b.c' } } });
     expect(facade.user()).toEqual({ email: 'a@b.c' });
     expect(facade.isAuthenticated()).toBe(true);
   });
 
-  it('logout dispatches CoreActions.logout', () => {
+  it('should dispatch CoreActions.logout on logout', () => {
     facade.logout();
     expect(store.dispatch).toHaveBeenCalledWith(CoreActions.logout());
   });

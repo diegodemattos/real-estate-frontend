@@ -31,7 +31,7 @@ describe('DealsAnalysisService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('GETs /deals', () => {
+  it('should GET /deals', () => {
     service.getDeals().subscribe((deals) => {
       expect(deals).toEqual([deal]);
     });

@@ -20,13 +20,13 @@ describe('MainLayoutComponent', () => {
     jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
   });
 
-  it('starts with the menu closed', () => {
+  it('should start with the menu closed', () => {
     const fixture = TestBed.createComponent(MainLayoutComponent);
     fixture.detectChanges();
     expect((fixture.componentInstance as any).isMenuOpen()).toBe(false);
   });
 
-  it('toggleMenu flips the menu state', () => {
+  it('should flip the menu state on toggleMenu', () => {
     const fixture = TestBed.createComponent(MainLayoutComponent);
     fixture.detectChanges();
     const instance = fixture.componentInstance as any;
@@ -38,7 +38,7 @@ describe('MainLayoutComponent', () => {
     expect(instance.isMenuOpen()).toBe(false);
   });
 
-  it('closeMenu forces the menu closed', () => {
+  it('should force the menu closed on closeMenu', () => {
     const fixture = TestBed.createComponent(MainLayoutComponent);
     fixture.detectChanges();
     const instance = fixture.componentInstance as any;
@@ -48,7 +48,7 @@ describe('MainLayoutComponent', () => {
     expect(instance.isMenuOpen()).toBe(false);
   });
 
-  it('renders the backdrop only when the menu is open', () => {
+  it('should render the backdrop only when the menu is open', () => {
     const fixture = TestBed.createComponent(MainLayoutComponent);
     fixture.detectChanges();
     expect(

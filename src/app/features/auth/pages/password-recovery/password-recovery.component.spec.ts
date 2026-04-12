@@ -33,7 +33,7 @@ describe('PasswordRecoveryPageComponent', () => {
     });
   });
 
-  it('sets isSuccess when requestRecoverySuccess$ emits', () => {
+  it('should set isSuccess when requestRecoverySuccess$ emits', () => {
     const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
     fixture.detectChanges();
 
@@ -43,7 +43,7 @@ describe('PasswordRecoveryPageComponent', () => {
     expect(fixture.componentInstance.isLoading()).toBe(false);
   });
 
-  it('sets an error message when requestRecoveryFailure$ emits', () => {
+  it('should set an error message when requestRecoveryFailure$ emits', () => {
     const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
     fixture.detectChanges();
 
@@ -53,7 +53,7 @@ describe('PasswordRecoveryPageComponent', () => {
     expect(fixture.componentInstance.errorMessage()).toContain('Something went wrong');
   });
 
-  it('onRecover clears state and dispatches via facade', () => {
+  it('should clear state and dispatch via facade on onRecover', () => {
     const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
     fixture.detectChanges();
     fixture.componentInstance.isSuccess.set(true);

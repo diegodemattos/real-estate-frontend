@@ -47,7 +47,7 @@ describe('DealsEffects', () => {
   });
 
   describe('loadDeals$', () => {
-    it('dispatches loadDealsSuccess on success', (done) => {
+    it('should dispatch loadDealsSuccess on success', (done) => {
       service.getDeals.mockReturnValue(of([deal]));
 
       effects.loadDeals$.subscribe((action) => {
@@ -58,7 +58,7 @@ describe('DealsEffects', () => {
       actions$.next(DealsActions.loadDeals());
     });
 
-    it('dispatches loadDealsFailure on error', (done) => {
+    it('should dispatch loadDealsFailure on error', (done) => {
       service.getDeals.mockReturnValue(throwError(() => new Error('Network error')));
 
       effects.loadDeals$.subscribe((action) => {
@@ -71,7 +71,7 @@ describe('DealsEffects', () => {
   });
 
   describe('addDeal$', () => {
-    it('dispatches addDealSuccess on success', (done) => {
+    it('should dispatch addDealSuccess on success', (done) => {
       service.createDeal.mockReturnValue(of(deal));
 
       effects.addDeal$.subscribe((action) => {
@@ -82,7 +82,7 @@ describe('DealsEffects', () => {
       actions$.next(DealsActions.addDeal({ deal: { dealName: 'Sunset', purchasePrice: 1_000_000, address: 'A', noi: 80_000 } }));
     });
 
-    it('dispatches addDealFailure on error', (done) => {
+    it('should dispatch addDealFailure on error', (done) => {
       service.createDeal.mockReturnValue(throwError(() => new Error('fail')));
 
       effects.addDeal$.subscribe((action) => {
@@ -95,7 +95,7 @@ describe('DealsEffects', () => {
   });
 
   describe('updateDeal$', () => {
-    it('dispatches updateDealSuccess on success', (done) => {
+    it('should dispatch updateDealSuccess on success', (done) => {
       const updated = { ...deal, dealName: 'Renamed' };
       service.updateDeal.mockReturnValue(of(updated));
 
@@ -107,7 +107,7 @@ describe('DealsEffects', () => {
       actions$.next(DealsActions.updateDeal({ deal: { id: '1', dealName: 'Renamed', purchasePrice: 1_000_000, address: 'A', noi: 80_000 } }));
     });
 
-    it('dispatches updateDealFailure on error', (done) => {
+    it('should dispatch updateDealFailure on error', (done) => {
       service.updateDeal.mockReturnValue(throwError(() => new Error('fail')));
 
       effects.updateDeal$.subscribe((action) => {
@@ -120,7 +120,7 @@ describe('DealsEffects', () => {
   });
 
   describe('deleteDeal$', () => {
-    it('dispatches deleteDealSuccess on success', (done) => {
+    it('should dispatch deleteDealSuccess on success', (done) => {
       service.deleteDeal.mockReturnValue(of(void 0));
 
       effects.deleteDeal$.subscribe((action) => {
@@ -131,7 +131,7 @@ describe('DealsEffects', () => {
       actions$.next(DealsActions.deleteDeal({ id: '1' }));
     });
 
-    it('dispatches deleteDealFailure on error', (done) => {
+    it('should dispatch deleteDealFailure on error', (done) => {
       service.deleteDeal.mockReturnValue(throwError(() => new Error('fail')));
 
       effects.deleteDeal$.subscribe((action) => {

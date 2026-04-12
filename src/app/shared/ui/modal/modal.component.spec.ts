@@ -6,14 +6,14 @@ describe('ModalComponent', () => {
     TestBed.configureTestingModule({ imports: [ModalComponent] });
   });
 
-  it('does not render the backdrop when isOpen is false', () => {
+  it('should not render the backdrop when isOpen is false', () => {
     const fixture = TestBed.createComponent(ModalComponent);
     fixture.componentRef.setInput('isOpen', false);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.modal-backdrop')).toBeNull();
   });
 
-  it('renders backdrop and title when open', () => {
+  it('should render backdrop and title when open', () => {
     const fixture = TestBed.createComponent(ModalComponent);
     fixture.componentRef.setInput('isOpen', true);
     fixture.componentRef.setInput('title', 'Delete deal');
@@ -25,7 +25,7 @@ describe('ModalComponent', () => {
     );
   });
 
-  it('emits closed when the close button is clicked', () => {
+  it('should emit closed when the close button is clicked', () => {
     const fixture = TestBed.createComponent(ModalComponent);
     fixture.componentRef.setInput('isOpen', true);
     const spy = jest.fn();

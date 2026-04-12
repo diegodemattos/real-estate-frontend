@@ -26,7 +26,7 @@ describe('MainHeaderComponent', () => {
     jest.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('displays the authenticated user email', () => {
+  it('should display the authenticated user email', () => {
     const fixture = TestBed.createComponent(MainHeaderComponent);
     fixture.detectChanges();
     expect(
@@ -34,7 +34,7 @@ describe('MainHeaderComponent', () => {
     ).toContain('admin@termsheet.com');
   });
 
-  it('emits menuToggle when the hamburger button is clicked', () => {
+  it('should emit menuToggle when the hamburger button is clicked', () => {
     const fixture = TestBed.createComponent(MainHeaderComponent);
     const spy = jest.fn();
     fixture.componentRef.instance.menuToggle.subscribe(spy);
@@ -46,7 +46,7 @@ describe('MainHeaderComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('logs the user out and navigates to /public/auth/login', () => {
+  it('should log the user out and navigate to /public/auth/login', () => {
     const fixture = TestBed.createComponent(MainHeaderComponent);
     fixture.detectChanges();
     (fixture.componentRef.instance as any).onLogout();

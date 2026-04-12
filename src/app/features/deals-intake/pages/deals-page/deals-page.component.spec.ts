@@ -83,12 +83,12 @@ describe('DealsPageComponent', () => {
     return fixture;
   }
 
-  it('calls loadDeals on init', () => {
+  it('should call loadDeals on init', () => {
     create();
     expect(facade.loadDeals).toHaveBeenCalled();
   });
 
-  it('openAddModal opens the form in add mode', () => {
+  it('should open the form in add mode on openAddModal', () => {
     const fixture = create();
     fixture.componentInstance.openAddModal();
     expect(fixture.componentInstance.isFormModalOpen()).toBe(true);
@@ -96,7 +96,7 @@ describe('DealsPageComponent', () => {
     expect(fixture.componentInstance.editingDeal()).toBeNull();
   });
 
-  it('onDealEdit opens the form in edit mode and resolves editingDeal from deals', () => {
+  it('should open the form in edit mode and resolve editingDeal from deals on onDealEdit', () => {
     const fixture = create();
     fixture.componentInstance.onDealEdit(deal);
     expect(fixture.componentInstance.isFormModalOpen()).toBe(true);
@@ -104,7 +104,7 @@ describe('DealsPageComponent', () => {
     expect(fixture.componentInstance.editingDeal()).toEqual(deal);
   });
 
-  it('onFormModalClose resets all modal state', () => {
+  it('should reset all modal state on onFormModalClose', () => {
     const fixture = create();
     fixture.componentInstance.onDealEdit(deal);
     fixture.componentInstance.onFormModalClose();
@@ -113,14 +113,14 @@ describe('DealsPageComponent', () => {
     expect(fixture.componentInstance.editingDeal()).toBeNull();
   });
 
-  it('onDealAdded calls facade.addDeal', () => {
+  it('should call facade.addDeal on onDealAdded', () => {
     const fixture = create();
     const newDeal = { dealName: 'New', purchasePrice: 1, address: 'A', noi: 0 };
     fixture.componentInstance.onDealAdded(newDeal);
     expect(facade.addDeal).toHaveBeenCalledWith(newDeal);
   });
 
-  it('closes modal and shows success when addDealSuccess$ emits', () => {
+  it('should close modal and show success when addDealSuccess$ emits', () => {
     const fixture = create();
     fixture.componentInstance.openAddModal();
     addDealSuccess$.next({ deal });
@@ -128,20 +128,20 @@ describe('DealsPageComponent', () => {
     expect(notifications.success).toHaveBeenCalledWith(`Deal "${deal.dealName}" created.`);
   });
 
-  it('shows error when addDealFailure$ emits', () => {
+  it('should show error when addDealFailure$ emits', () => {
     create();
     addDealFailure$.next({ error: 'oops' });
     expect(notifications.error).toHaveBeenCalledWith('Failed to create deal.');
   });
 
-  it('onDealUpdated calls facade.updateDeal', () => {
+  it('should call facade.updateDeal on onDealUpdated', () => {
     const fixture = create();
     const updated = { id: '1', dealName: 'x', purchasePrice: 1, address: 'A', noi: 0 };
     fixture.componentInstance.onDealUpdated(updated);
     expect(facade.updateDeal).toHaveBeenCalledWith(updated);
   });
 
-  it('closes modal and shows success when updateDealSuccess$ emits', () => {
+  it('should close modal and show success when updateDealSuccess$ emits', () => {
     const fixture = create();
     fixture.componentInstance.onDealEdit(deal);
     updateDealSuccess$.next({ deal });
@@ -149,7 +149,7 @@ describe('DealsPageComponent', () => {
     expect(notifications.success).toHaveBeenCalledWith(`Deal "${deal.dealName}" updated.`);
   });
 
-  it('delete flow: request → confirm → facade.deleteDeal called', () => {
+  it('should call facade.deleteDeal after delete request and confirm', () => {
     const fixture = create();
     fixture.componentInstance.onDealDeleteRequest(deal);
     expect(fixture.componentInstance.isDeleteModalOpen()).toBe(true);
@@ -159,7 +159,7 @@ describe('DealsPageComponent', () => {
     expect(facade.deleteDeal).toHaveBeenCalledWith(deal.id);
   });
 
-  it('closes delete modal and shows success when deleteDealSuccess$ emits', () => {
+  it('should close delete modal and show success when deleteDealSuccess$ emits', () => {
     const fixture = create();
     fixture.componentInstance.onDealDeleteRequest(deal);
     deleteDealSuccess$.next({ id: deal.id });
@@ -167,7 +167,7 @@ describe('DealsPageComponent', () => {
     expect(notifications.success).toHaveBeenCalledWith(`Deal "${deal.dealName}" deleted.`);
   });
 
-  it('closes delete modal and shows error when deleteDealFailure$ emits', () => {
+  it('should close delete modal and show error when deleteDealFailure$ emits', () => {
     const fixture = create();
     fixture.componentInstance.onDealDeleteRequest(deal);
     deleteDealFailure$.next({ error: 'oops' });
@@ -175,14 +175,14 @@ describe('DealsPageComponent', () => {
     expect(notifications.error).toHaveBeenCalledWith('Failed to delete deal.');
   });
 
-  it('onDeleteCancelled clears dealToDelete', () => {
+  it('should clear dealToDelete on onDeleteCancelled', () => {
     const fixture = create();
     fixture.componentInstance.onDealDeleteRequest(deal);
     fixture.componentInstance.onDeleteCancelled();
     expect(fixture.componentInstance.dealToDelete()).toBeNull();
   });
 
-  it('onFiltersChange calls facade.updateFilters', () => {
+  it('should call facade.updateFilters on onFiltersChange', () => {
     const fixture = create();
     const filters = { name: 'sun', minPrice: null, maxPrice: null };
     fixture.componentInstance.onFiltersChange(filters);

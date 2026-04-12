@@ -11,21 +11,21 @@ describe('ButtonComponent', () => {
     return { fixture, button: () => fixture.nativeElement.querySelector('button') as HTMLButtonElement };
   }
 
-  it('renders projected content as the label', () => {
+  it('should render projected content as the label', () => {
     const fixture = TestBed.createComponent(ButtonComponent);
     fixture.nativeElement.querySelector('button')!.textContent = '';
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('button')).toBeTruthy();
   });
 
-  it('applies the variant class matching the variant input', () => {
+  it('should apply the variant class matching the variant input', () => {
     const { fixture, button } = create();
     fixture.componentRef.setInput('variant', 'danger');
     fixture.detectChanges();
     expect(button().classList.contains('button--danger')).toBe(true);
   });
 
-  it('emits the action output when clicked', () => {
+  it('should emit the action output when clicked', () => {
     const { fixture, button } = create();
     const spy = jest.fn();
     fixture.componentRef.instance.action.subscribe(spy);
@@ -34,7 +34,7 @@ describe('ButtonComponent', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('does not emit action when disabled', () => {
+  it('should not emit action when disabled', () => {
     const { fixture, button } = create();
     fixture.componentRef.setInput('disabled', true);
     const spy = jest.fn();
@@ -44,7 +44,7 @@ describe('ButtonComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('does not emit action and shows spinner when loading', () => {
+  it('should not emit action and should show spinner when loading', () => {
     const { fixture, button } = create();
     fixture.componentRef.setInput('loading', true);
     fixture.componentRef.setInput('loadingLabel', 'Saving...');
@@ -60,7 +60,7 @@ describe('ButtonComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('toggles the full-width host class from the full input', () => {
+  it('should toggle the full-width host class from the full input', () => {
     const fixture = TestBed.createComponent(ButtonComponent);
     fixture.componentRef.setInput('full', true);
     fixture.detectChanges();
@@ -69,7 +69,7 @@ describe('ButtonComponent', () => {
     ).toBe(true);
   });
 
-  it('forwards the type attribute to the underlying button', () => {
+  it('should forward the type attribute to the underlying button', () => {
     const { fixture, button } = create();
     fixture.componentRef.setInput('type', 'submit');
     fixture.detectChanges();
