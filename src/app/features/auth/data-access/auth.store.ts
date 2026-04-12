@@ -6,7 +6,7 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { SessionService } from '../../../core/services/session.service';
 import { AuthService } from './auth.service';
 import { AuthUser, LoginCredentials } from '../models/auth.model';
@@ -48,9 +48,9 @@ export const AuthStore = signalStore(
               response.accessToken,
               response.expiresIn
             );
+            const email = sessionService.getEmailFromToken();
+            patchState(store, { user: email ? { email } : null, isLoading: false });
           }),
-          switchMap(() => authService.getMe()),
-          tap((user) => patchState(store, { user, isLoading: false })),
           map(() => true),
           catchError(() => {
             sessionService.clearToken();
