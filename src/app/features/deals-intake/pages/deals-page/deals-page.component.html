@@ -1,0 +1,90 @@
+<div class="deals-page">
+  <section class="section">
+    <h2 class="section__title">Filters</h2>
+    <app-deal-filters (filtersChange)="onFiltersChange($event)" />
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <div class="section__header-left">
+        <h2 class="section__title">Deals</h2>
+        @if (isFiltering()) {
+          <span class="section__count">
+            {{ filteredDeals().length }} of
+            {{ totalDealsCount() }} shown
+          </span>
+        } @else if (!isLoading()) {
+          <span class="section__count">
+            {{ totalDealsCount() }} {{ dealsCountLabel() }}
+          </span>
+        }
+      </div>
+      <app-button variant="primary" (action)="openAddModal()">
+        + Add Deal
+      </app-button>
+    </div>
+
+    @if (isLoading()) {
+      <div class="table-loader" role="status" aria-live="polite">
+        <span class="table-loader__spinner" aria-hidden="true"></span>
+        <p class="table-loader__text">Loading deals...</p>
+      </div>
+    } @else if (hasFilteredDeals()) {
+      <app-deals-table
+        [deals]="filteredDeals()"
+        [nameFilter]="currentNameFilter()"
+        [editingDealId]="editingDeal()?.id ?? null"
+        (dealEdit)="onDealEdit($event)"
+        (dealDelete)="onDealDeleteRequest($event)"
+      />
+    } @else if (isFiltering()) {
+      <app-empty-state
+        message="No deals match your current filters. Try adjusting your search."
+      />
+    } @else {
+      <app-empty-state
+        message="No deals yet. Click '+ Add Deal' to get started."
+      />
+    }
+  </section>
+</div>
+
+<app-modal
+  [isOpen]="isFormModalOpen() && !isEditMode()"
+  title="Add New Deal"
+  (closed)="onFormModalClose()"
+>
+  @if (isFormModalOpen() && !isEditMode()) {
+    <app-add-deal-form
+      [isSaving]="isMutating()"
+      (dealAdded)="onDealAdded($event)"
+      (dealCancelled)="onFormModalClose()"
+    />
+  }
+</app-modal>
+
+<app-modal
+  [isOpen]="isFormModalOpen() && isEditMode()"
+  title="Edit Deal"
+  (closed)="onFormModalClose()"
+>
+  @if (editingDeal(); as deal) {
+    <app-update-deal-form
+      [deal]="deal"
+      [isSaving]="isMutating()"
+      (dealUpdated)="onDealUpdated($event)"
+      (dealCancelled)="onFormModalClose()"
+    />
+  }
+</app-modal>
+
+<app-confirm-modal
+  [isOpen]="isDeleteModalOpen()"
+  title="Delete Deal"
+  [message]="deleteModalMessage()"
+  confirmLabel="Delete"
+  cancelLabel="Cancel"
+  [isConfirming]="isMutating()"
+  (confirmed)="onDeleteConfirmed()"
+  (cancelled)="onDeleteCancelled()"
+/>

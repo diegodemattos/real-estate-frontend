@@ -31,9 +31,9 @@ describe('publicGuard', () => {
     expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 
-  it('redirects to /main/deals when a valid token exists', () => {
+  it('redirects to /main/deals-intake when a valid token exists', () => {
     sessionService.isTokenValid.mockReturnValue(true);
     run();
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/main/deals']);
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/main/deals-intake']);
   });
 });

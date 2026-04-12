@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { noWhitespaceValidator } from '../../../../shared/validators/no-whitespace.validator';
 import { RouterLink } from '@angular/router';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -38,8 +39,8 @@ export class LoginFormComponent {
   private readonly fb = inject(FormBuilder);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['admin@termsheet.com', [Validators.required, Validators.email]],
-    password: ['Ts@123456', Validators.required],
+    email: ['admin@termsheet.com', [Validators.required, Validators.email, noWhitespaceValidator]],
+    password: ['Ts@123456', [Validators.required, noWhitespaceValidator]],
   });
 
   private readonly formStatus = toSignal(this.form.statusChanges, {

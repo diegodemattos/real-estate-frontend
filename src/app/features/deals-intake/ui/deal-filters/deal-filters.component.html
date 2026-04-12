@@ -1,0 +1,35 @@
+<div class="filters-card">
+  <form [formGroup]="form" class="filters">
+    <div class="filters__name">
+      <app-form-input
+        label="Deal Name"
+        type="text"
+        placeholder="Search by name..."
+        formControlName="name"
+      />
+    </div>
+
+    <div class="filters__price">
+      <span class="filters__price-label">Price</span>
+      <div class="filters__price-range">
+        <app-form-input
+          type="number"
+          placeholder="Min"
+          ariaLabel="Minimum price"
+          [min]="0"
+          formControlName="minPrice"
+        />
+        <span class="filters__price-separator">to</span>
+        <app-form-input
+          type="number"
+          placeholder="Max"
+          ariaLabel="Maximum price"
+          [min]="0"
+          formControlName="maxPrice"
+        />
+      </div>
+    </div>
+
+    <app-button variant="outline" (action)="onClear()">Clear</app-button>
+  </form>
+</div>

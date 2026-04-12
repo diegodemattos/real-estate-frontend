@@ -6,5 +6,5 @@ export const publicGuard: CanActivateFn = () => {
   const sessionService = inject(SessionService);
   const router = inject(Router);
 
-  return !sessionService.isTokenValid() || router.createUrlTree(['/main/deals']);
+  return !sessionService.isTokenValid() || router.createUrlTree(['/main/deals-intake']);
 };

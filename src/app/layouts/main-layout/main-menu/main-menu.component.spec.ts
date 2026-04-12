@@ -10,13 +10,13 @@ describe('MainMenuComponent', () => {
     });
   });
 
-  it('exposes Deals and Closing nav items pointing at /main/*', () => {
+  it('exposes Deals Intake and Deals Analysis nav items pointing at /main/*', () => {
     const fixture = TestBed.createComponent(MainMenuComponent);
     fixture.detectChanges();
     const items = fixture.componentInstance.items;
     expect(items.map((i) => i.route)).toEqual([
-      '/main/deals',
-      '/main/closing',
+      '/main/deals-intake',
+      '/main/deals-analysis',
     ]);
   });
 

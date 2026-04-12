@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./main-footer.component.scss'],
 })
 export class MainFooterComponent {
-  readonly currentYear = new Date().getFullYear();
+  readonly currentYear: number = new Date().getFullYear();
 }

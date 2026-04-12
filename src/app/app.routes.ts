@@ -13,22 +13,13 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'auth',
         pathMatch: 'full',
       },
       {
-        path: 'login',
-        loadComponent: () =>
-          import(
-            './features/auth/pages/login-page/login-page.component'
-          ).then((m) => m.LoginPageComponent),
-      },
-      {
-        path: 'password-recovery',
-        loadComponent: () =>
-          import(
-            './features/auth/pages/password-recovery/password-recovery.component'
-          ).then((m) => m.PasswordRecoveryPageComponent),
+        path: 'auth',
+        loadChildren: () =>
+          import('./features/auth/auth.routes').then((m) => m.authRoutes),
       },
     ],
   },
@@ -42,22 +33,22 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'deals',
+        redirectTo: 'deals-intake',
         pathMatch: 'full',
       },
       {
-        path: 'deals',
-        loadComponent: () =>
-          import(
-            './features/deals/pages/deals-page/deals-page.component'
-          ).then((m) => m.DealsPageComponent),
+        path: 'deals-intake',
+        loadChildren: () =>
+          import('./features/deals-intake/deals-intake.routes').then(
+            (m) => m.dealsIntakeRoutes
+          ),
       },
       {
-        path: 'closing',
-        loadComponent: () =>
-          import(
-            './features/closing/pages/closing-page/closing-page.component'
-          ).then((m) => m.ClosingPageComponent),
+        path: 'deals-analysis',
+        loadChildren: () =>
+          import('./features/deals-analysis/deals-analysis.routes').then(
+            (m) => m.dealsAnalysisRoutes
+          ),
       },
     ],
   },

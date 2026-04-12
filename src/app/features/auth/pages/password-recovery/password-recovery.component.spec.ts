@@ -1,45 +1,68 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { Signal, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { PasswordRecoveryPageComponent } from './password-recovery.component';
-import { AuthService } from '../../data-access/auth.service';
+import { AuthFacade } from '../../data-access/auth.facade';
 
 describe('PasswordRecoveryPageComponent', () => {
-  let authService: { requestPasswordRecovery: jest.Mock };
+  const requestRecoverySuccess$ = new Subject<object>();
+  const requestRecoveryFailure$ = new Subject<{ error: string }>();
+
+  let facade: {
+    isMutating: jest.Mock;
+    requestRecovery: jest.Mock;
+    requestRecoverySuccess$: typeof requestRecoverySuccess$;
+    requestRecoveryFailure$: typeof requestRecoveryFailure$;
+  };
 
   beforeEach(() => {
-    authService = { requestPasswordRecovery: jest.fn() };
+    facade = {
+      isMutating: jest.fn().mockReturnValue(signal(false) as Signal<boolean>),
+      requestRecovery: jest.fn(),
+      requestRecoverySuccess$,
+      requestRecoveryFailure$,
+    };
+
     TestBed.configureTestingModule({
       imports: [PasswordRecoveryPageComponent],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: authService },
+        { provide: AuthFacade, useValue: facade },
       ],
     });
   });
 
-  it('flips isSuccess on a successful request', () => {
-    authService.requestPasswordRecovery.mockReturnValue(of(void 0));
+  it('sets isSuccess when requestRecoverySuccess$ emits', () => {
     const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
     fixture.detectChanges();
 
-    fixture.componentInstance.onRecover('a@b.c');
-    expect(authService.requestPasswordRecovery).toHaveBeenCalledWith('a@b.c');
+    requestRecoverySuccess$.next({});
+
     expect(fixture.componentInstance.isSuccess()).toBe(true);
     expect(fixture.componentInstance.isLoading()).toBe(false);
   });
 
-  it('sets an error message on a failed request', () => {
-    authService.requestPasswordRecovery.mockReturnValue(
-      throwError(() => new Error('network'))
-    );
+  it('sets an error message when requestRecoveryFailure$ emits', () => {
     const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
     fixture.detectChanges();
 
-    fixture.componentInstance.onRecover('a@b.c');
+    requestRecoveryFailure$.next({ error: 'network error' });
+
     expect(fixture.componentInstance.isSuccess()).toBe(false);
-    expect(fixture.componentInstance.errorMessage()).toContain(
-      'Something went wrong'
-    );
+    expect(fixture.componentInstance.errorMessage()).toContain('Something went wrong');
+  });
+
+  it('onRecover clears state and dispatches via facade', () => {
+    const fixture = TestBed.createComponent(PasswordRecoveryPageComponent);
+    fixture.detectChanges();
+    fixture.componentInstance.isSuccess.set(true);
+    fixture.componentInstance.errorMessage.set('old error');
+
+    fixture.componentInstance.onRecover('a@b.c');
+
+    expect(fixture.componentInstance.isSuccess()).toBe(false);
+    expect(fixture.componentInstance.errorMessage()).toBe('');
+    expect(facade.requestRecovery).toHaveBeenCalledWith('a@b.c');
   });
 });

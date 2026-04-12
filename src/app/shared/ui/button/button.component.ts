@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  InputSignal,
+  OutputEmitterRef,
   input,
   output,
 } from '@angular/core';
@@ -19,14 +21,14 @@ type ButtonType = 'button' | 'submit' | 'reset';
   },
 })
 export class ButtonComponent {
-  readonly variant = input<ButtonVariant>('primary');
-  readonly type = input<ButtonType>('button');
-  readonly disabled = input<boolean>(false);
-  readonly loading = input<boolean>(false);
-  readonly loadingLabel = input<string>('');
-  readonly full = input<boolean>(false);
+  readonly variant: InputSignal<ButtonVariant> = input<ButtonVariant>('primary');
+  readonly type: InputSignal<ButtonType> = input<ButtonType>('button');
+  readonly disabled: InputSignal<boolean> = input<boolean>(false);
+  readonly loading: InputSignal<boolean> = input<boolean>(false);
+  readonly loadingLabel: InputSignal<string> = input<string>('');
+  readonly full: InputSignal<boolean> = input<boolean>(false);
 
-  readonly action = output<void>();
+  readonly action: OutputEmitterRef<void> = output<void>();
 
   protected onClick(): void {
     if (this.disabled() || this.loading()) return;

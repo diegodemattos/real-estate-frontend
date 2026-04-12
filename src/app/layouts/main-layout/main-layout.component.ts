@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, WritableSignal, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MainHeaderComponent } from './main-header/main-header.component';
 import { MainMenuComponent } from './main-menu/main-menu.component';
@@ -18,7 +18,7 @@ import { MainFooterComponent } from './main-footer/main-footer.component';
   styleUrls: ['./main-layout.component.scss'],
 })
 export class MainLayoutComponent {
-  protected readonly isMenuOpen = signal(false);
+  protected readonly isMenuOpen: WritableSignal<boolean> = signal(false);
 
   protected toggleMenu(): void {
     this.isMenuOpen.update((open) => !open);

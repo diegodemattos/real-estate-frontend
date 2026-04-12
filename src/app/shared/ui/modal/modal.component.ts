@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
+  InputSignal,
+  OutputEmitterRef,
   input,
   output,
 } from '@angular/core';
@@ -14,18 +15,11 @@ import {
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
-  readonly isOpen = input.required<boolean>();
-  readonly title = input<string>('');
-  readonly closed = output<void>();
+  readonly isOpen: InputSignal<boolean> = input.required<boolean>();
+  readonly title: InputSignal<string> = input<string>('');
+  readonly closed: OutputEmitterRef<void> = output<void>();
 
-  readonly titleId = `modal-title-${Math.random().toString(36).slice(2, 9)}`;
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    if (this.isOpen()) {
-      this.onClose();
-    }
-  }
+  readonly titleId: string = `modal-title-${Math.random().toString(36).slice(2, 9)}`;
 
   onClose(): void {
     this.closed.emit();

@@ -11,10 +11,10 @@ export interface Notification {
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private readonly _notification$ = new BehaviorSubject<Notification | null>(
+  private readonly _notification$: BehaviorSubject<Notification | null> = new BehaviorSubject<Notification | null>(
     null
   );
-  private idCounter = 0;
+  private idCounter: number = 0;
 
   readonly notification$: Observable<Notification | null> =
     this._notification$.asObservable();

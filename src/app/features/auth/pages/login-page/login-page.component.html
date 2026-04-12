@@ -2,7 +2,7 @@
   <h1 class="login-card__title">Sign in</h1>
   <app-login-form
     [errorMessage]="errorMessage()"
-    [isLoading]="authStore.isLoading()"
+    [isLoading]="isLoading()"
     (login)="onLogin($event)"
   />
 </div>

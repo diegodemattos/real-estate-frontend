@@ -2,7 +2,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/config/api.config';
-import { SKIP_AUTH } from '../../../core/interceptors/tokens/skip-auth.token';
+import { SKIP_AUTH } from '../../../core/http/tokens/skip-auth.token';
 import {
   AuthTokenResponse,
   AuthUser,

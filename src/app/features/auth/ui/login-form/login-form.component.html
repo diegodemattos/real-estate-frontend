@@ -3,9 +3,10 @@
     label="Email Address"
     type="email"
     [required]="true"
+    [autofocus]="true"
     autocomplete="email"
     formControlName="email"
-    [errors]="{ required: 'Email is required.', email: 'Enter a valid email address.' }"
+    [errors]="{ required: 'Email is required.', whitespace: 'Email cannot be only spaces.', email: 'Enter a valid email address.' }"
   />
 
   <app-form-input
@@ -14,11 +15,11 @@
     [required]="true"
     autocomplete="current-password"
     formControlName="password"
-    [errors]="{ required: 'Password is required.' }"
+    [errors]="{ required: 'Password is required.', whitespace: 'Password cannot be only spaces.' }"
   />
 
   <div class="login-form__forgot">
-    <app-link to="/public/password-recovery">Forgot password?</app-link>
+    <app-link to="/public/auth/password-recovery">Forgot password?</app-link>
   </div>
 
   @if (errorMessage()) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -10,5 +10,5 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./link.component.scss'],
 })
 export class LinkComponent {
-  readonly to = input.required<string>();
+  readonly to: InputSignal<string> = input.required<string>();
 }

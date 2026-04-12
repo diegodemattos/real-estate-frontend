@@ -1,24 +1,36 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { Signal, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { LoginPageComponent } from './login-page.component';
-import { AuthStore } from '../../data-access/auth.store';
+import { AuthFacade } from '../../data-access/auth.facade';
+import { AuthUser } from '../../models/auth.model';
 
 describe('LoginPageComponent', () => {
-  let authStore: { login: jest.Mock; isLoading: jest.Mock };
+  const loginSuccess$ = new Subject<{ user: AuthUser }>();
+  const loginFailure$ = new Subject<{ error: string }>();
+
+  let facade: {
+    isMutating: jest.Mock;
+    login: jest.Mock;
+    loginSuccess$: typeof loginSuccess$;
+    loginFailure$: typeof loginFailure$;
+  };
   let router: Router;
 
   beforeEach(() => {
-    authStore = {
+    facade = {
+      isMutating: jest.fn().mockReturnValue(signal(false) as Signal<boolean>),
       login: jest.fn(),
-      isLoading: jest.fn().mockReturnValue(false),
+      loginSuccess$,
+      loginFailure$,
     };
 
     TestBed.configureTestingModule({
       imports: [LoginPageComponent],
       providers: [
         provideRouter([]),
-        { provide: AuthStore, useValue: authStore },
+        { provide: AuthFacade, useValue: facade },
       ],
     });
 
@@ -26,37 +38,36 @@ describe('LoginPageComponent', () => {
     jest.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('navigates to /main/deals on successful login', () => {
-    authStore.login.mockReturnValue(of(true));
+  it('navigates to /main/deals-intake when loginSuccess$ emits', () => {
     const fixture = TestBed.createComponent(LoginPageComponent);
     fixture.detectChanges();
 
-    fixture.componentInstance.onLogin({
-      email: 'a@b.c',
-      password: 'pw',
-    });
+    loginSuccess$.next({ user: { email: 'a@b.c' } });
 
-    expect(authStore.login).toHaveBeenCalledWith({
-      email: 'a@b.c',
-      password: 'pw',
-    });
-    expect(router.navigate).toHaveBeenCalledWith(['/main/deals']);
+    expect(router.navigate).toHaveBeenCalledWith(['/main/deals-intake']);
     expect(fixture.componentInstance.errorMessage()).toBe('');
   });
 
-  it('sets an error message on failed login', () => {
-    authStore.login.mockReturnValue(of(false));
+  it('sets an error message when loginFailure$ emits', () => {
     const fixture = TestBed.createComponent(LoginPageComponent);
     fixture.detectChanges();
 
-    fixture.componentInstance.onLogin({
-      email: 'a@b.c',
-      password: 'wrong',
-    });
+    loginFailure$.next({ error: 'Invalid credentials' });
 
     expect(router.navigate).not.toHaveBeenCalled();
     expect(fixture.componentInstance.errorMessage()).toContain(
       'Invalid email or password'
     );
+  });
+
+  it('onLogin clears the error and dispatches via facade', () => {
+    const fixture = TestBed.createComponent(LoginPageComponent);
+    fixture.detectChanges();
+    fixture.componentInstance.errorMessage.set('previous error');
+
+    fixture.componentInstance.onLogin({ email: 'a@b.c', password: 'pw' });
+
+    expect(fixture.componentInstance.errorMessage()).toBe('');
+    expect(facade.login).toHaveBeenCalledWith({ email: 'a@b.c', password: 'pw' });
   });
 });

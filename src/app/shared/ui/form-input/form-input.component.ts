@@ -1,43 +1,51 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  InputSignal,
+  Signal,
+  WritableSignal,
   computed,
   inject,
   input,
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { EyeIconComponent } from '../../icons/eye-icon/eye-icon.component';
+import { EyeOffIconComponent } from '../../icons/eye-off-icon/eye-off-icon.component';
 
 type InputType = 'text' | 'email' | 'password' | 'number';
 
 @Component({
   selector: 'app-form-input',
   standalone: true,
+  imports: [AutofocusDirective, EyeIconComponent, EyeOffIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './form-input.component.html',
   styleUrls: ['./form-input.component.scss'],
 })
 export class FormInputComponent implements ControlValueAccessor {
-  readonly label = input<string>('');
-  readonly type = input<InputType>('text');
-  readonly placeholder = input<string>('');
-  readonly required = input<boolean>(false);
-  readonly autocomplete = input<string>('');
-  readonly min = input<number | null>(null);
-  readonly ariaLabel = input<string>('');
-  readonly errors = input<Record<string, string>>({});
+  readonly label: InputSignal<string> = input<string>('');
+  readonly type: InputSignal<InputType> = input<InputType>('text');
+  readonly placeholder: InputSignal<string> = input<string>('');
+  readonly required: InputSignal<boolean> = input<boolean>(false);
+  readonly autocomplete: InputSignal<string> = input<string>('');
+  readonly min: InputSignal<number | null> = input<number | null>(null);
+  readonly ariaLabel: InputSignal<string> = input<string>('');
+  readonly errors: InputSignal<Record<string, string>> = input<Record<string, string>>({});
+  readonly autofocus: InputSignal<boolean> = input<boolean>(false);
 
   // Manual accessor assignment avoids the NG_VALUE_ACCESSOR forwardRef cycle
   // and lets the template read errors/touched straight from the control.
-  private readonly ngControl = inject(NgControl, {
+  private readonly ngControl: NgControl | null = inject(NgControl, {
     self: true,
     optional: true,
   });
 
-  protected readonly inputId = `form-input-${Math.random().toString(36).slice(2, 9)}`;
-  protected readonly value = signal<string>('');
-  protected readonly disabled = signal<boolean>(false);
-  protected readonly isPasswordVisible = signal<boolean>(false);
+  protected readonly inputId: string = `form-input-${Math.random().toString(36).slice(2, 9)}`;
+  protected readonly value: WritableSignal<string> = signal<string>('');
+  protected readonly disabled: WritableSignal<boolean> = signal<boolean>(false);
+  protected readonly isPasswordVisible: WritableSignal<boolean> = signal<boolean>(false);
 
   private onChange: (value: unknown) => void = () => undefined;
   private onTouched: () => void = () => undefined;
@@ -64,7 +72,7 @@ export class FormInputComponent implements ControlValueAccessor {
     this.disabled.set(isDisabled);
   }
 
-  protected readonly effectiveType = computed<InputType>(() =>
+  protected readonly effectiveType: Signal<InputType> = computed<InputType>(() =>
     this.type() === 'password' && this.isPasswordVisible() ? 'text' : this.type()
   );
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, input } from '@angular/core';
 
 type AlertVariant = 'error' | 'success' | 'info' | 'warning';
 
@@ -13,5 +13,5 @@ type AlertVariant = 'error' | 'success' | 'info' | 'warning';
   },
 })
 export class AlertComponent {
-  readonly variant = input<AlertVariant>('info');
+  readonly variant: InputSignal<AlertVariant> = input<AlertVariant>('info');
 }

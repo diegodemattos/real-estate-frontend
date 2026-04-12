@@ -1,12 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
+  Signal,
+  WritableSignal,
   inject,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '../../data-access/auth.service';
+import { AuthFacade } from '../../data-access/auth.facade';
 import { PasswordRecoveryFormComponent } from '../../ui/password-recovery-form/password-recovery-form.component';
 import { LinkComponent } from '../../../../shared/ui/link/link.component';
 import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
@@ -20,30 +21,27 @@ import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
   styleUrls: ['./password-recovery.component.scss'],
 })
 export class PasswordRecoveryPageComponent {
-  private readonly authService = inject(AuthService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly facade = inject(AuthFacade);
 
-  readonly isLoading = signal(false);
-  readonly isSuccess = signal(false);
-  readonly errorMessage = signal('');
+  readonly isLoading: Signal<boolean> = this.facade.isMutating('requestRecovery');
+  readonly isSuccess: WritableSignal<boolean> = signal(false);
+  readonly errorMessage: WritableSignal<string> = signal('');
+
+  constructor() {
+    this.facade.requestRecoverySuccess$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.isSuccess.set(true));
+
+    this.facade.requestRecoveryFailure$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() =>
+        this.errorMessage.set('Something went wrong. Please try again.')
+      );
+  }
 
   onRecover(email: string): void {
     this.errorMessage.set('');
     this.isSuccess.set(false);
-    this.isLoading.set(true);
-
-    this.authService
-      .requestPasswordRecovery(email)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        this.isSuccess.set(true);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.errorMessage.set('Something went wrong. Please try again.');
-      },
-    });
+    this.facade.requestRecovery(email);
   }
 }

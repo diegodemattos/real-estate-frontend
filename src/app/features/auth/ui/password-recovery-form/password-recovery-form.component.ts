@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { noWhitespaceValidator } from '../../../../shared/validators/no-whitespace.validator';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
@@ -33,7 +34,7 @@ export class PasswordRecoveryFormComponent {
   private readonly fb = inject(FormBuilder);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, noWhitespaceValidator]],
   });
 
   private readonly formStatus = toSignal(this.form.statusChanges, {

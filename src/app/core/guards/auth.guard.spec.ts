@@ -31,9 +31,9 @@ describe('authGuard', () => {
     expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 
-  it('redirects to /public/login when the token is invalid', () => {
+  it('redirects to /public/auth/login when the token is invalid', () => {
     sessionService.isTokenValid.mockReturnValue(false);
     run();
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/public/login']);
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/public/auth/login']);
   });
 });

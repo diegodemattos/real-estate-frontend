@@ -1,12 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Signal,
   inject,
   input,
   output,
 } from '@angular/core';
+import { InputSignal, OutputEmitterRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthStore } from '../../../features/auth/data-access/auth.store';
+import { CoreFacade } from '../../../core/state/core.facade';
+import { AuthUser } from '../../../features/auth/models/auth.model';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
 @Component({
@@ -18,18 +21,20 @@ import { ButtonComponent } from '../../../shared/ui/button/button.component';
   styleUrls: ['./main-header.component.scss'],
 })
 export class MainHeaderComponent {
-  readonly isMenuOpen = input<boolean>(false);
-  readonly menuToggle = output<void>();
+  readonly isMenuOpen: InputSignal<boolean> = input<boolean>(false);
+  readonly menuToggle: OutputEmitterRef<void> = output<void>();
 
-  protected readonly authStore = inject(AuthStore);
+  private readonly facade = inject(CoreFacade);
   private readonly router = inject(Router);
+
+  readonly user: Signal<AuthUser | null> = this.facade.user;
 
   protected onToggleMenu(): void {
     this.menuToggle.emit();
   }
 
   protected onLogout(): void {
-    this.authStore.logout();
-    this.router.navigate(['/public/login']);
+    this.facade.logout();
+    this.router.navigate(['/public/auth/login']);
   }
 }

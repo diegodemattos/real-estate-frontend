@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 
-const AUTH_KEY = 're_auth';
+const AUTH_KEY: string = 're_auth';
 
-interface StoredAuth {
+interface StoredSession {
+  email: string;
   accessToken: string;
-  expiresIn: number;
+  expiresAt: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
-  saveToken(accessToken: string, expiresIn: number): void {
+  saveSession(email: string, accessToken: string, expiresIn: number): void {
+    const expiresAt: number = Date.now() + expiresIn * 1000;
     localStorage.setItem(
       AUTH_KEY,
-      JSON.stringify({ accessToken, expiresIn } satisfies StoredAuth)
+      JSON.stringify({ email, accessToken, expiresAt } satisfies StoredSession)
     );
   }
 
@@ -20,41 +22,24 @@ export class SessionService {
     return this.read()?.accessToken ?? null;
   }
 
-  getExpiresIn(): number | null {
-    return this.read()?.expiresIn ?? null;
+  getEmail(): string | null {
+    return this.read()?.email ?? null;
   }
 
   isTokenValid(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-    const exp = this.decodePayload(token)?.['exp'];
-    return typeof exp === 'number' && Date.now() < exp * 1000;
-  }
-
-  getEmailFromToken(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-    const username = this.decodePayload(token)?.['username'];
-    return typeof username === 'string' ? username : null;
+    const session: StoredSession | null = this.read();
+    return session !== null && Date.now() < session.expiresAt;
   }
 
   clearToken(): void {
     localStorage.removeItem(AUTH_KEY);
   }
 
-  private read(): StoredAuth | null {
-    const raw = localStorage.getItem(AUTH_KEY);
+  private read(): StoredSession | null {
+    const raw: string | null = localStorage.getItem(AUTH_KEY);
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as StoredAuth;
-    } catch {
-      return null;
-    }
-  }
-
-  private decodePayload(token: string): Record<string, unknown> | null {
-    try {
-      return JSON.parse(atob(token.split('.')[1])) as Record<string, unknown>;
+      return JSON.parse(raw) as StoredSession;
     } catch {
       return null;
     }

@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { MainLayoutComponent } from './main-layout.component';
-import { AuthStore } from '../../features/auth/data-access/auth.store';
+import { CoreFacade } from '../../core/state/core.facade';
 
 describe('MainLayoutComponent', () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('MainLayoutComponent', () => {
       providers: [
         provideRouter([]),
         {
-          provide: AuthStore,
+          provide: CoreFacade,
           useValue: { user: signal(null), logout: jest.fn() },
         },
       ],

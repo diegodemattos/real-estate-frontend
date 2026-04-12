@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter, switchMap, timer } from 'rxjs';
 import {
@@ -6,7 +6,7 @@ import {
   NotificationService,
 } from '../../services/notification.service';
 
-const AUTO_DISMISS_MS = 3500;
+const AUTO_DISMISS_MS: number = 3500;
 
 @Component({
   selector: 'app-toast',
@@ -16,9 +16,9 @@ const AUTO_DISMISS_MS = 3500;
   styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent {
-  private readonly notifications = inject(NotificationService);
+  private readonly notifications: NotificationService = inject(NotificationService);
 
-  protected readonly current = toSignal(this.notifications.notification$, {
+  protected readonly current: Signal<Notification | null> = toSignal(this.notifications.notification$, {
     initialValue: null,
   });
 

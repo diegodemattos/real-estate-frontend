@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavItem {
@@ -18,10 +18,10 @@ interface NavItem {
   },
 })
 export class MainMenuComponent {
-  readonly isOpen = input<boolean>(false);
+  readonly isOpen: InputSignal<boolean> = input<boolean>(false);
 
   readonly items: readonly NavItem[] = [
-    { label: 'Deals', route: '/main/deals' },
-    { label: 'Closing', route: '/main/closing' },
+    { label: 'Deals Intake', route: '/main/deals-intake' },
+    { label: 'Deals Analysis', route: '/main/deals-analysis' },
   ];
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, input } from '@angular/core';
 
 @Component({
   selector: 'app-empty-state',
@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   styleUrls: ['./empty-state.component.scss'],
 })
 export class EmptyStateComponent {
-  readonly message = input.required<string>();
+  readonly message: InputSignal<string> = input.required<string>();
 }

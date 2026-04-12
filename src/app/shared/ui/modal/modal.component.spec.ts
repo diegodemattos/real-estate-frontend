@@ -38,25 +38,4 @@ describe('ModalComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('emits closed when Escape is pressed while open', () => {
-    const fixture = TestBed.createComponent(ModalComponent);
-    fixture.componentRef.setInput('isOpen', true);
-    const spy = jest.fn();
-    fixture.componentRef.instance.closed.subscribe(spy);
-    fixture.detectChanges();
-
-    fixture.componentRef.instance.onEscapeKey();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('does not emit closed on Escape when already closed', () => {
-    const fixture = TestBed.createComponent(ModalComponent);
-    fixture.componentRef.setInput('isOpen', false);
-    const spy = jest.fn();
-    fixture.componentRef.instance.closed.subscribe(spy);
-    fixture.detectChanges();
-
-    fixture.componentRef.instance.onEscapeKey();
-    expect(spy).not.toHaveBeenCalled();
-  });
 });

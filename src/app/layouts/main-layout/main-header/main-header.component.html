@@ -24,8 +24,8 @@
     </div>
 
     <div class="header__user">
-      @if (authStore.user(); as user) {
-        <span class="header__username">{{ user.email }}</span>
+      @if (user(); as u) {
+        <span class="header__username">{{ u.email }}</span>
       }
       <app-button variant="ghost" (action)="onLogout()">Sign Out</app-button>
     </div>
