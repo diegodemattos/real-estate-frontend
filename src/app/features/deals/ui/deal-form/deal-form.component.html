@@ -60,6 +60,7 @@
       type="submit"
       variant="primary"
       [loading]="isSaving()"
+      [disabled]="!isFormValid()"
       [loadingLabel]="submitLoadingLabel()"
     >
       {{ submitLabel() }}

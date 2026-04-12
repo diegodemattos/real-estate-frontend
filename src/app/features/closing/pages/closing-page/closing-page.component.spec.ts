@@ -6,9 +6,9 @@ describe('ClosingPageComponent', () => {
     TestBed.configureTestingModule({ imports: [ClosingPageComponent] });
   });
 
-  it('renders the "Em construção" placeholder message', () => {
+  it('renders the "Under construction" placeholder message', () => {
     const fixture = TestBed.createComponent(ClosingPageComponent);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Em construção');
+    expect(fixture.nativeElement.textContent).toContain('Under construction');
   });
 });

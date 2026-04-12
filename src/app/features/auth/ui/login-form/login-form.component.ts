@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   output,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
@@ -39,6 +41,12 @@ export class LoginFormComponent {
     email: ['admin@termsheet.com', [Validators.required, Validators.email]],
     password: ['Ts@123456', Validators.required],
   });
+
+  private readonly formStatus = toSignal(this.form.statusChanges, {
+    initialValue: this.form.status,
+  });
+
+  readonly isFormValid = computed(() => this.formStatus() === 'VALID');
 
   submit(): void {
     if (this.isLoading() || this.form.invalid) {

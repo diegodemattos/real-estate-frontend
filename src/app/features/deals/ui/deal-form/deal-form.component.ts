@@ -51,6 +51,12 @@ export class DealFormComponent {
     initialValue: this.form.value,
   });
 
+  private readonly formStatus = toSignal(this.form.statusChanges, {
+    initialValue: this.form.status,
+  });
+
+  readonly isFormValid = computed(() => this.formStatus() === 'VALID');
+
   readonly isEditMode = computed(() => this.deal() !== null);
 
   readonly submitLabel = computed(() =>
