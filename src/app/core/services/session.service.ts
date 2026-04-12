@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
+import { StoredSession } from '../models/stored-session.model';
 
 const AUTH_KEY: string = 're_auth';
-
-interface StoredSession {
-  email: string;
-  accessToken: string;
-  expiresAt: number;
-}
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {

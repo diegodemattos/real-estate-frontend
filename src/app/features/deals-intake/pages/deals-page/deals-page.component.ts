@@ -19,7 +19,8 @@ import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { ConfirmModalComponent } from '../../../../shared/ui/confirm-modal/confirm-modal.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { NotificationService } from '../../../../shared/services/notification.service';
-import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../../models/deal.model';
+import { Deal } from '../../../../domain/models/deal.model';
+import { DealFilters, NewDeal, UpdatedDeal } from '../../models/deal-intake.model';
 
 @Component({
   selector: 'app-deals-page',

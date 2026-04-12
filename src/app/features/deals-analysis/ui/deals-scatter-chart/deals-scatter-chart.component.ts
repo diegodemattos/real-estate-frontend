@@ -7,7 +7,8 @@ import {
   input,
 } from '@angular/core';
 import { PercentPipe, CurrencyPipe } from '@angular/common';
-import { AnalysisDeal } from '../../models/deals-analysis.model';
+import { Deal } from '../../../../domain/models/deal.model';
+import { CapRateCategory, classifyCapRate } from '../../../../domain/functions/cap-rate.functions';
 
 interface ChartPoint {
   cx: number;
@@ -59,7 +60,7 @@ const CHART_H: number = HEIGHT - PAD.top - PAD.bottom;
   styleUrls: ['./deals-scatter-chart.component.scss'],
 })
 export class DealsScatterChartComponent {
-  readonly deals: InputSignal<AnalysisDeal[]> = input.required<AnalysisDeal[]>();
+  readonly deals: InputSignal<Deal[]> = input.required<Deal[]>();
 
   readonly width: number = WIDTH;
   readonly height: number = HEIGHT;
@@ -143,9 +144,13 @@ function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
+const CAP_RATE_COLORS: Record<CapRateCategory, string> = {
+  good: 'var(--color-cap-good, #22c55e)',
+  high: 'var(--color-cap-high, #f59e0b)',
+  low: 'var(--color-cap-low, #ef4444)',
+  neutral: 'var(--color-text-secondary, #94a3b8)',
+};
+
 function capRateColor(rate: number): string {
-  if (rate >= 0.05 && rate <= 0.12) return 'var(--color-cap-good, #22c55e)';
-  if (rate > 0.12) return 'var(--color-cap-high, #f59e0b)';
-  if (rate > 0 && rate < 0.05) return 'var(--color-cap-low, #ef4444)';
-  return 'var(--color-text-secondary, #94a3b8)';
+  return CAP_RATE_COLORS[classifyCapRate(rate)];
 }

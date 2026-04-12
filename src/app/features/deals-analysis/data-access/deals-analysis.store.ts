@@ -8,10 +8,10 @@ import {
 } from '@ngrx/signals';
 import { catchError, tap, EMPTY } from 'rxjs';
 import { DealsAnalysisService } from './deals-analysis.service';
-import { AnalysisDeal } from '../models/deals-analysis.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 interface DealsAnalysisState {
-  deals: AnalysisDeal[];
+  deals: Deal[];
   isLoading: boolean;
 }
 

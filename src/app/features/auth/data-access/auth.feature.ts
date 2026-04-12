@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { AuthActions } from './auth.actions';
-import { RequestStatus } from '../../../shared/interfaces/request-status.interface';
+import { RequestStatus } from '../../../shared/models/request-status.models';
 
 export interface AuthState {
   operation: {

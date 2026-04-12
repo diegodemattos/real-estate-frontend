@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { AnalysisPageComponent } from './analysis-page.component';
 import { DealsAnalysisStore } from '../../data-access/deals-analysis.store';
-import { AnalysisDeal } from '../../models/deals-analysis.model';
+import { Deal } from '../../../../domain/models/deal.model';
 
 describe('AnalysisPageComponent', () => {
-  const deals: AnalysisDeal[] = [
+  const deals: Deal[] = [
     { id: '1', dealName: 'A', purchasePrice: 1_000_000, address: 'X', noi: 80_000, capRate: 0.08 },
   ];
 

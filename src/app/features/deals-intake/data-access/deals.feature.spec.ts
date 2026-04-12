@@ -1,6 +1,6 @@
 import { DealsActions } from './deals.actions';
 import { DealsState, dealsFeature } from './deals.feature';
-import { Deal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 const { reducer } = dealsFeature;
 

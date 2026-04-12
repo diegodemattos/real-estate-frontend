@@ -10,7 +10,7 @@ import { provideEffects } from '@ngrx/effects';
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 import { authInterceptor } from './core/http/interceptors/auth.interceptor';
-import { mockInterceptor } from './core/http/interceptors/mock.interceptor';
+import { mockInterceptor } from './core/mock/interceptor/mock.interceptor';
 import { coreFeature } from './core/state/core.feature';
 import { CoreEffects } from './core/state/core.effects';
 

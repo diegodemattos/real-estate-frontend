@@ -5,7 +5,7 @@ import { Subject, of, throwError } from 'rxjs';
 import { DealsEffects } from './deals.effects';
 import { DealsActions } from './deals.actions';
 import { DealsService } from './deals.service';
-import { Deal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 describe('DealsEffects', () => {
   let actions$: Subject<Action>;

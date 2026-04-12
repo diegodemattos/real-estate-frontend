@@ -5,8 +5,9 @@ import {
   output,
 } from '@angular/core';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
-import { Deal } from '../../models/deal.model';
+import { Deal } from '../../../../domain/models/deal.model';
 import { HighlightPipe } from '../../../../shared/pipes/highlight.pipe';
+import { classifyCapRate } from '../../../../domain/functions/cap-rate.functions';
 
 @Component({
   selector: 'app-deals-table',
@@ -25,10 +26,10 @@ export class DealsTableComponent {
   readonly dealDelete = output<Deal>();
 
   protected capRateBadgeClass(capRate: number): string {
-    if (capRate >= 0.05 && capRate <= 0.12) return 'cap-rate-badge cap-rate-badge--good';
-    if (capRate > 0.12) return 'cap-rate-badge cap-rate-badge--high';
-    if (capRate > 0 && capRate < 0.05) return 'cap-rate-badge cap-rate-badge--low';
-    return 'cap-rate-badge';
+    const category = classifyCapRate(capRate);
+    return category === 'neutral'
+      ? 'cap-rate-badge'
+      : `cap-rate-badge cap-rate-badge--${category}`;
   }
 
   onEdit(deal: Deal): void {

@@ -6,13 +6,13 @@ import {
 } from '@angular/common/http/testing';
 import { DealsAnalysisService } from './deals-analysis.service';
 import { API_BASE_URL } from '../../../core/config/api.config';
-import { AnalysisDeal } from '../models/deals-analysis.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 describe('DealsAnalysisService', () => {
   let service: DealsAnalysisService;
   let httpMock: HttpTestingController;
 
-  const deal: AnalysisDeal = {
+  const deal: Deal = {
     id: '1',
     dealName: 'Sunset',
     purchasePrice: 2_500_000,

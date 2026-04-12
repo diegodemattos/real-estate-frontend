@@ -3,46 +3,46 @@
   display: flex;
   flex-direction: column;
   background-color: var(--color-bg);
-}
 
-.main-layout__body {
-  flex: 1;
-  display: flex;
-  align-items: stretch;
-  min-height: 0;
-  position: relative;
-}
-
-.main-layout__main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-layout__backdrop {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .main-layout__backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    background-color: rgb(0 0 0 / 0.4);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    animation: main-layout-backdrop-in 0.15s ease;
+  &__body {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    min-height: 0;
+    position: relative;
   }
 
-  @keyframes main-layout-backdrop-in {
-    from {
-      opacity: 0;
+  &__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__backdrop {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    &__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgb(0 0 0 / 0.4);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      animation: main-layout-backdrop-in 0.15s ease;
     }
-    to {
-      opacity: 1;
-    }
+  }
+}
+
+@keyframes main-layout-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

@@ -27,105 +27,105 @@
   display: flex;
   flex-direction: column;
   gap: var(--form-input-gap);
-}
 
-.form-input__label {
-  font-size: var(--form-input-label-size);
-  font-weight: var(--form-input-label-weight);
-  color: var(--form-input-label-color);
-}
-
-.form-input__required {
-  color: var(--form-input-required-color);
-  margin-left: 0.125rem;
-}
-
-.form-input__control {
-  position: relative;
-}
-
-.form-input__input {
-  display: block;
-  width: 100%;
-  height: var(--form-input-height);
-  padding: 0 var(--form-input-padding-x);
-  border: 1px solid var(--form-input-border);
-  border-radius: var(--form-input-radius);
-  background-color: var(--form-input-bg);
-  color: var(--form-input-color);
-  font-size: var(--form-input-font-size);
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-
-  &:focus {
-    border-color: var(--form-input-focus-border);
-    box-shadow: 0 0 0 3px var(--form-input-focus-ring);
+  &__label {
+    font-size: var(--form-input-label-size);
+    font-weight: var(--form-input-label-weight);
+    color: var(--form-input-label-color);
   }
 
-  &::placeholder {
-    color: var(--form-input-muted-color);
+  &__required {
+    color: var(--form-input-required-color);
+    margin-left: 0.125rem;
   }
 
-  &:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
+  &__control {
+    position: relative;
   }
 
-  &[type='number'] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-
-  &[type='number']::-webkit-outer-spin-button,
-  &[type='number']::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-}
-
-.form-input__input--password {
-  padding-right: 2.75rem;
-}
-
-.form-input__input--error {
-  border-color: var(--form-input-error-color);
-
-  &:focus {
-    border-color: var(--form-input-error-color);
-    box-shadow: 0 0 0 3px var(--form-input-error-ring);
-  }
-}
-
-.form-input__password-toggle {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  color: var(--form-input-muted-color);
-  cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
-
-  &:hover {
+  &__input {
+    display: block;
+    width: 100%;
+    height: var(--form-input-height);
+    padding: 0 var(--form-input-padding-x);
+    border: 1px solid var(--form-input-border);
+    border-radius: var(--form-input-radius);
+    background-color: var(--form-input-bg);
     color: var(--form-input-color);
-    background-color: var(--form-input-toggle-hover-bg);
+    font-size: var(--form-input-font-size);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      border-color: var(--form-input-focus-border);
+      box-shadow: 0 0 0 3px var(--form-input-focus-ring);
+    }
+
+    &::placeholder {
+      color: var(--form-input-muted-color);
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    &[type='number']::-webkit-outer-spin-button,
+    &[type='number']::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    &--password {
+      padding-right: 2.75rem;
+    }
+
+    &--error {
+      border-color: var(--form-input-error-color);
+
+      &:focus {
+        border-color: var(--form-input-error-color);
+        box-shadow: 0 0 0 3px var(--form-input-error-ring);
+      }
+    }
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--form-input-focus-border);
-    outline-offset: 2px;
-  }
-}
+  &__password-toggle {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--form-input-muted-color);
+    cursor: pointer;
+    transition: color 0.15s ease, background-color 0.15s ease;
 
-.form-input__error {
-  font-size: 0.75rem;
-  color: var(--form-input-error-color);
+    &:hover {
+      color: var(--form-input-color);
+      background-color: var(--form-input-toggle-hover-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--form-input-focus-border);
+      outline-offset: 2px;
+    }
+  }
+
+  &__error {
+    font-size: 0.75rem;
+    color: var(--form-input-error-color);
+  }
 }

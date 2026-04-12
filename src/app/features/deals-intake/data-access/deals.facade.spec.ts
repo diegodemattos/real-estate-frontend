@@ -6,7 +6,7 @@ import { Action } from '@ngrx/store';
 import { DealsFacade } from './deals.facade';
 import { DealsActions } from './deals.actions';
 import { dealsFeature, DealsState } from './deals.feature';
-import { Deal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 describe('DealsFacade', () => {
   let facade: DealsFacade;

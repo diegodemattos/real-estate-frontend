@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DealsTableComponent } from './deals-table.component';
-import { Deal } from '../../models/deal.model';
+import { Deal } from '../../../../domain/models/deal.model';
 
 describe('DealsTableComponent', () => {
   const deals: Deal[] = [

@@ -1,7 +1,7 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { Deal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
 import { DealsActions } from './deals.actions';
-import { RequestStatus } from '../../../shared/interfaces/request-status.interface';
+import { RequestStatus } from '../../../shared/models/request-status.models';
 
 export interface DealsState {
   deals: Deal[];

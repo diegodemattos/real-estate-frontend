@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { UpdateDealFormComponent } from './update-deal-form.component';
-import { Deal } from '../../../models/deal.model';
+import { Deal } from '../../../../../domain/models/deal.model';
 
 describe('UpdateDealFormComponent', () => {
   const sampleDeal: Deal = {

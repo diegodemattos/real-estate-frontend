@@ -5,7 +5,8 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { DealsActions } from './deals.actions';
 import { DealsState, dealsFeature } from './deals.feature';
-import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
+import { DealFilters, NewDeal, UpdatedDeal } from '../models/deal-intake.model';
 
 @Injectable({ providedIn: 'root' })
 export class DealsFacade {

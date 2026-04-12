@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Deal, DealFilters, NewDeal, UpdatedDeal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
+import { DealFilters, NewDeal, UpdatedDeal } from '../models/deal-intake.model';
 
 export const DealsActions = createActionGroup({
   source: 'Deals',

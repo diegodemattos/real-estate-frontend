@@ -2,6 +2,13 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+  }
 }
 
 .form-row {
@@ -23,22 +30,15 @@
   border: 1px solid var(--color-primary-bg-strong);
   border-radius: var(--radius-md);
   width: fit-content;
-}
 
-.cap-rate-preview__label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
+  &__label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
 
-.cap-rate-preview__value {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-}
-
-.deal-form__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  padding-top: 0.25rem;
+  &__value {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+  }
 }

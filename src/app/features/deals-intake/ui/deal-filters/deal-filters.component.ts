@@ -9,7 +9,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs';
 import { FormInputComponent } from '../../../../shared/ui/form-input/form-input.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { DealFilters } from '../../models/deal.model';
+import { DealFilters } from '../../models/deal-intake.model';
 
 @Component({
   selector: 'app-deal-filters',

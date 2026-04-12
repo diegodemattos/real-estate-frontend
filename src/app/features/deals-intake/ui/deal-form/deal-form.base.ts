@@ -4,7 +4,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormControlStatus, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { noWhitespaceValidator } from '../../../../shared/validators/no-whitespace.validator';
-import { DealFormValue, NewDeal } from '../../models/deal.model';
+import { computeCapRate } from '../../../../domain/functions/cap-rate.functions';
+import { DealFormValue, NewDeal } from '../../models/deal-intake.model';
 
 export abstract class DealFormBase {
   // isSaving and dealCancelled must be declared in each concrete component
@@ -36,7 +37,7 @@ export abstract class DealFormBase {
   readonly previewCapRate: Signal<number | null> = computed(() => {
     const { purchasePrice, noi } = this.formValues();
     if (purchasePrice != null && purchasePrice > 0 && noi != null && noi >= 0) {
-      return noi / purchasePrice;
+      return computeCapRate(noi, purchasePrice);
     }
     return null;
   });

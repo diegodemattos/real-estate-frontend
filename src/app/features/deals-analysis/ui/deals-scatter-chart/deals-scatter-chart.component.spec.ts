@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { DealsScatterChartComponent } from './deals-scatter-chart.component';
-import { AnalysisDeal } from '../../models/deals-analysis.model';
+import { Deal } from '../../../../domain/models/deal.model';
 
 describe('DealsScatterChartComponent', () => {
-  const deals: AnalysisDeal[] = [
+  const deals: Deal[] = [
     { id: '1', dealName: 'Sunset', purchasePrice: 2_500_000, address: 'A', noi: 175_000, capRate: 0.07 },
     { id: '2', dealName: 'Downtown', purchasePrice: 8_000_000, address: 'B', noi: 640_000, capRate: 0.08 },
   ];

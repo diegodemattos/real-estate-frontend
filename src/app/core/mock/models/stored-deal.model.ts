@@ -1,4 +1,4 @@
-export interface AnalysisDeal {
+export interface StoredDeal {
   id: string;
   dealName: string;
   purchasePrice: number;

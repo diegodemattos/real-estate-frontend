@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormInputComponent } from '../../../../../shared/ui/form-input/form-input.component';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
 import { DealFormBase } from '../deal-form.base';
-import { NewDeal } from '../../../models/deal.model';
+import { NewDeal } from '../../../models/deal-intake.model';
 
 @Component({
   selector: 'app-add-deal-form',

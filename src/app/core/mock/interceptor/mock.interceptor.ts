@@ -7,6 +7,10 @@ import {
 } from '@angular/common/http';
 import { Observable, delay, of, switchMap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../../config/api.config';
+import { StoredDeal } from '../models/stored-deal.model';
+import { LoginBody, CreateDealBody, UpdateDealBody } from '../models/mock-request.model';
+import { SEED_DEALS } from '../data/seed-deals';
+import { computeCapRate } from '../../../domain/functions/cap-rate.functions';
 
 const DEALS_KEY: string = 're_deals';
 const MOCK_USERNAME: string = 'admin@termsheet.com';
@@ -14,112 +18,6 @@ const MOCK_PASSWORD: string = 'Ts@123456';
 const MOCK_USER_ID: string = 'u-1';
 const TOKEN_TTL_MS: number = 8 * 60 * 60 * 1000;
 const SIMULATED_LATENCY_MS: number = 600;
-
-interface StoredDeal {
-  id: string;
-  dealName: string;
-  purchasePrice: number;
-  address: string;
-  noi: number;
-  capRate: number;
-}
-
-interface LoginBody {
-  username: string;
-  password: string;
-}
-
-interface CreateDealBody {
-  dealName: string;
-  purchasePrice: number;
-  address: string;
-  noi: number;
-}
-
-type UpdateDealBody = Partial<CreateDealBody>;
-
-const SEED_DEALS: StoredDeal[] = [
-  {
-    id: '1',
-    dealName: 'Sunset Apartments',
-    purchasePrice: 2_500_000,
-    address: '1234 Sunset Blvd, Los Angeles, CA',
-    noi: 175_000,
-    capRate: 175_000 / 2_500_000,
-  },
-  {
-    id: '2',
-    dealName: 'Downtown Office Tower',
-    purchasePrice: 8_000_000,
-    address: '500 Main St, New York, NY',
-    noi: 640_000,
-    capRate: 640_000 / 8_000_000,
-  },
-  {
-    id: '3',
-    dealName: 'Harbor Retail Center',
-    purchasePrice: 3_200_000,
-    address: '88 Harbor Dr, Miami, FL',
-    noi: 256_000,
-    capRate: 256_000 / 3_200_000,
-  },
-  {
-    id: '4',
-    dealName: 'Greenway Industrial Park',
-    purchasePrice: 5_500_000,
-    address: '200 Greenway Rd, Houston, TX',
-    noi: 385_000,
-    capRate: 385_000 / 5_500_000,
-  },
-  {
-    id: '5',
-    dealName: 'Lakeside Condos',
-    purchasePrice: 1_800_000,
-    address: '45 Lake Shore Dr, Chicago, IL',
-    noi: 108_000,
-    capRate: 108_000 / 1_800_000,
-  },
-  {
-    id: '6',
-    dealName: 'Midtown Plaza',
-    purchasePrice: 4_200_000,
-    address: '300 Peachtree St NE, Atlanta, GA',
-    noi: 336_000,
-    capRate: 336_000 / 4_200_000,
-  },
-  {
-    id: '7',
-    dealName: 'Riverfront Warehouse',
-    purchasePrice: 6_800_000,
-    address: '1 Pier Ave, Seattle, WA',
-    noi: 476_000,
-    capRate: 476_000 / 6_800_000,
-  },
-  {
-    id: '8',
-    dealName: 'Oak Park Medical Center',
-    purchasePrice: 9_500_000,
-    address: '200 Longwood Ave, Boston, MA',
-    noi: 760_000,
-    capRate: 760_000 / 9_500_000,
-  },
-  {
-    id: '9',
-    dealName: 'Desert Vista Townhomes',
-    purchasePrice: 2_100_000,
-    address: '750 E Camelback Rd, Phoenix, AZ',
-    noi: 147_000,
-    capRate: 147_000 / 2_100_000,
-  },
-  {
-    id: '10',
-    dealName: 'University Heights Flats',
-    purchasePrice: 3_700_000,
-    address: '400 W 6th St, Austin, TX',
-    noi: 296_000,
-    capRate: 296_000 / 3_700_000,
-  },
-];
 
 export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith(API_BASE_URL)) {
@@ -339,6 +237,3 @@ function extractBearerToken(req: HttpRequest<unknown>): string | null {
   return header?.startsWith('Bearer ') ? header.slice(7) : null;
 }
 
-function computeCapRate(noi: number, purchasePrice: number): number {
-  return purchasePrice > 0 ? noi / purchasePrice : 0;
-}

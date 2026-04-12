@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { Signal, signal } from '@angular/core';
 import { DealsPageComponent } from './deals-page.component';
 import { DealsFacade } from '../../data-access/deals.facade';
-import { Deal } from '../../models/deal.model';
+import { Deal } from '../../../../domain/models/deal.model';
 import { NotificationService } from '../../../../shared/services/notification.service';
 
 describe('DealsPageComponent', () => {

@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http/testing';
 import { DealsService } from './deals.service';
 import { API_BASE_URL } from '../../../core/config/api.config';
-import { Deal } from '../models/deal.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 describe('DealsService', () => {
   let service: DealsService;

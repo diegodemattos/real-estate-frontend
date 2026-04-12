@@ -19,7 +19,7 @@ export class NotificationService {
   readonly notification$: Observable<Notification | null> =
     this._notification$.asObservable();
 
-  show(message: string, variant: NotificationVariant = 'info'): void {
+  private show(message: string, variant: NotificationVariant): void {
     this._notification$.next({
       id: `notification-${++this.idCounter}`,
       message,

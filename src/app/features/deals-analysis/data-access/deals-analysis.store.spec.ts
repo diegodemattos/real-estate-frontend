@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { DealsAnalysisStore } from './deals-analysis.store';
 import { DealsAnalysisService } from './deals-analysis.service';
-import { AnalysisDeal } from '../models/deals-analysis.model';
+import { Deal } from '../../../domain/models/deal.model';
 
 describe('DealsAnalysisStore', () => {
   let service: { getDeals: jest.Mock };
 
-  const deals: AnalysisDeal[] = [
+  const deals: Deal[] = [
     { id: '1', dealName: 'A', purchasePrice: 1_000_000, address: 'X', noi: 80_000, capRate: 0.08 },
     { id: '2', dealName: 'B', purchasePrice: 2_000_000, address: 'Y', noi: 120_000, capRate: 0.06 },
   ];

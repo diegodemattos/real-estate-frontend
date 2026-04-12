@@ -1,11 +1,4 @@
-export interface Deal {
-  id: string;
-  dealName: string;
-  purchasePrice: number;
-  address: string;
-  noi: number;
-  capRate: number;
-}
+import { Deal } from '../../../domain/models/deal.model';
 
 export interface DealFilters {
   name: string | null;
