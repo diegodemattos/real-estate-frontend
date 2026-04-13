@@ -2,7 +2,7 @@
 
 Angular 17 frontend for real estate deal management — authentication,
 private navigation, deal CRUD with filters and automatic cap rate calculation,
-built with signals, NgRx SignalStore, and an HTTP layer that can
+built with signals, NgRx Store, NgRx Signals, and an HTTP layer that can
 point to a real backend or run against an embedded mock.
 
 Hosted at: https://real-estate-frontend-ten-pink.vercel.app/
@@ -14,11 +14,11 @@ Hosted at: https://real-estate-frontend-ten-pink.vercel.app/
 * **Angular 17** — standalone components, signals, new control flow (`@if`, `@for`)
 * **TypeScript 5.4**
 * **RxJS 7.8** — asynchronous flows where appropriate
-* **@ngrx/signals** — SignalStore for centralized application state
+* **@ngrx/signals e @ngrx/store** — Store with actions/effects/facade pattern for centralized state and SignalStore for smaller features
 * **Reactive Forms + ControlValueAccessor** — a single reusable input component across all forms
 * **SCSS with CSS custom properties** — theme switching without recompiling components
 * **Manrope** — custom font served from assets
-* **Jest 29 + jest-preset-angular 14** — comprehensive unit testing suite
+* **Jest 29 + jest-preset-angular 14** — 48 test suites, ~227 tests
 
 ---
 
@@ -28,7 +28,9 @@ Hosted at: https://real-estate-frontend-ten-pink.vercel.app/
 * **Password recovery** — `POST /auth/forgot-password` with generic feedback
 * **Protected `/main` area** — synchronous guard + automatic redirect to `/public/login` when session expires
 * **Deals CRUD** — list, create, edit (with modal loader while fetching), delete (with confirmation + button loader)
-* **Filters** — name search with visual highlight, price range filtering (Min / Max)
+* **Deals Analysis** — scatter chart visualization of deals (NOI vs Purchase Price)
+* **Filters** — name search with debounced visual highlight, price range filtering (Min / Max)
+* **Toast notifications** — auto-dismissing success/error toasts with manual dismiss
 * **Cap rate badge** — automatic classification into good / high / low with distinct colors
 * **Responsive layout** — sidebar becomes drawer, table becomes stacked cards on mobile, auth adapts to single-column layout
 
@@ -111,8 +113,9 @@ npm test
 ```
 
 Runs Jest against all `*.spec.ts` files in `src/`. The suite covers HTTP services,
-NgRx stores, guards, interceptors, pipes, shared components, layouts, and feature components —
-30 suites, ~112 tests passing in ~7s.
+NgRx stores (features, effects, facades), guards, interceptors, pipes, validators,
+directives, shared components, layouts, and feature components —
+48 suites, ~227 tests passing in ~9s.
 
 Coverage report:
 
@@ -136,22 +139,31 @@ src/
 │   ├── core/                          global infrastructure
 │   │   ├── config/api.config.ts       API_BASE_URL
 │   │   ├── guards/                    authGuard, publicGuard
-│   │   ├── interceptors/
-│   │   │   ├── auth.interceptor.ts
-│   │   │   ├── mock.interceptor.ts
-│   │   │   └── tokens/skip-auth.token.ts
-│   │   └── services/session.service.ts
+│   │   ├── http/interceptors/         auth.interceptor + skip-auth token
+│   │   ├── mock/                      mock interceptor, seed data, request models
+│   │   ├── models/                    stored-session model
+│   │   ├── services/session.service   JWT persistence + hydration
+│   │   └── state/                     core feature (actions, effects, facade)
+│   │
+│   ├── domain/                        pure business logic (framework-agnostic)
+│   │   ├── functions/cap-rate.functions.ts
+│   │   └── models/deal.model.ts
 │   │
 │   ├── shared/                        reusable, domain-agnostic
+│   │   ├── directives/autofocus       declarative autofocus
+│   │   ├── icons/                     eye-icon, eye-off-icon (SVG components)
 │   │   ├── pipes/highlight.pipe.ts
+│   │   ├── services/notification      toast notification service
+│   │   ├── validators/no-whitespace   custom form validator
 │   │   └── ui/
 │   │       ├── button/
 │   │       ├── link/
 │   │       ├── alert/
 │   │       ├── modal/
 │   │       ├── confirm-modal/
-│   │       ├── form-input/
-│   │       └── empty-state/
+│   │       ├── form-input/            CVA with password toggle + coercion
+│   │       ├── empty-state/
+│   │       └── toast/                 auto-dismissing notifications
 │   │
 │   ├── layouts/                       page shells
 │   │   ├── auth-layout/
@@ -161,9 +173,9 @@ src/
 │   │       └── main-footer/
 │   │
 │   └── features/                      business domains
-│       ├── auth/
-│       ├── deals/
-│       └── closing/
+│       ├── auth/                      login, password recovery (actions/effects/facade)
+│       ├── deals-intake/              CRUD with filters (actions/effects/facade)
+│       └── deals-analysis/            scatter chart visualization (signalStore)
 │
 ├── environments/
 ├── assets/
@@ -179,32 +191,42 @@ src/
 * **`core/`** — app-wide infrastructure (config, guards, interceptors, session)
 * **`shared/`** — reusable UI, domain-agnostic
 * **`layouts/`** — visual shells only
-* **`features/`** — isolated business domains with consistent structure
+* **`domain/`** — pure business logic, no framework dependency
+* **`features/`** — isolated business domains with consistent structure (actions/effects/facade)
 
 Predictable structure: file paths reflect responsibility.
 No cross-layer leakage (e.g., shared doesn’t depend on features).
 
 ---
 
-### 2. Centralized state with `@ngrx/signals`
+### 2. Dual state management: `@ngrx/store` + `@ngrx/signals`
 
-Two SignalStores:
+**Global and complex state → NgRx Store** (actions / effects / facade):
 
-* **AuthStore** — authentication state with synchronous hydration (no UI flicker)
-* **DealsStore** — deals, filters, loading/mutation states with computed selectors
+* **CoreFeature** — app-wide session state with synchronous hydration (no UI flicker)
+* **AuthFeature** — login / logout / password recovery flows
+* **DealsFeature** — deals CRUD, filters, loading/mutation states with computed selectors
 
-Direct signal consumption in templates → **zero boilerplate**
-(no selectors, actions, reducers).
+**Simpler features → NgRx Signals** (signalStore):
+
+* **DealsAnalysisStore** — analysis-specific data for chart visualization
+
+Each NgRx Store feature exposes a **facade** as the single public API for components.
+Direct signal consumption in templates → **zero boilerplate**.
 
 ---
 
 ### 3. Scalable architecture with layouts + nested routes
 
-Two layout roots:
+Two layout roots with lazy-loaded feature routes:
 
 ```
-/public → AuthLayout (+publicGuard)
-/main   → MainLayout (+authGuard)
+/public              → AuthLayout (+publicGuard)
+  /auth/login
+  /auth/password-recovery
+/main            → MainLayout (+authGuard)
+  /deals         → deals-intake (CRUD + filters)
+  /analysis      → deals-analysis (scatter chart)
 ```
 
 Guards applied at layout level → automatic inheritance.
@@ -253,7 +275,7 @@ Features:
 
 Reusable presentational components:
 
-* `<app-button>`, `<app-modal>`, `<app-alert>`, etc.
+* `<app-button>`, `<app-modal>`, `<app-confirm-modal>`, `<app-alert>`, `<app-toast>`, `<app-empty-state>`, etc.
 
 Example: button includes built-in loading state →
 **no duplicated logic across features**.
@@ -284,17 +306,28 @@ No JS-based responsiveness → **clean, scalable UI logic**.
 
 ---
 
-### 9. Testing with Jest
+### 9. Domain layer
 
-* Modern Angular testing setup
-* Fast execution (~7s)
-* High coverage across layers
+Pure, framework-agnostic business logic in `domain/`:
+
+* `cap-rate.functions.ts` — cap rate computation shared by mock interceptor and store
+* `deal.model.ts` — canonical Deal interface consumed across features
+
+**No Angular imports** → easily testable and reusable.
+
+---
+
+### 10. Testing with Jest
+
+* 48 suites, ~227 tests, ~9s execution
+* High coverage across all layers
 
 Patterns:
 
-* `HttpTestingController`
-* Injection context testing
+* `HttpTestingController` for services
+* NgRx feature/effects/facade isolation
 * CVA testing via host components
+* `fakeAsync` + `tick` for timing-sensitive behavior
 
 ---
 
@@ -448,9 +481,11 @@ Instead of optimizing isolated pieces of code, the effort was directed toward:
 
 ## 🧠 9. State Management
 
-* Implemented **NgRx Signals**
+* Implemented **NgRx Store** with **actions / effects / facade** for global and complex state (core, auth, deals)
+* Implemented **NgRx Signals** (signalStore) for simpler features (deals analysis)
+* Introduced a **domain layer** (`domain/`) for pure business logic shared across stores and mock
 
-> **Chose a modern, lightweight approach aligned with Angular’s evolution, avoiding unnecessary complexity.**
+> **Chose the right tool for each level of complexity — full Store for features that need actions, effects and predictable flow; lightweight signalStore where simpler state suffices.**
 
 ---
 
@@ -482,13 +517,15 @@ Instead of optimizing isolated pieces of code, the effort was directed toward:
 
 ## 🧪 13. Testing Strategy
 
-* Implemented unit tests using Jest
+* Implemented unit tests using Jest — **48 suites, ~227 tests**
 
 Focused on:
 
-* Business logic
-* State management
-* Critical components
+* Domain functions (cap rate)
+* State management (features, effects, facades)
+* Guards, interceptors, services
+* Shared components (CVA, toast, modals)
+* Feature pages and UI components
 
 > **Tests were written to validate behavior and enable safe refactoring — not just to increase coverage metrics.**
 
@@ -513,11 +550,12 @@ Focused on:
 
 ---
 
-## ❌ Simplified state management approach
+## ❌ Right-sized state management
 
-* Avoided full NgRx Store setup
+* NgRx Store for features that need predictable action/effect flows
+* NgRx Signals for features where a simple signalStore is enough
 
-> **Chose the simplest solution that solves the problem effectively.**
+> **Chose the right level of complexity for each feature instead of forcing a single pattern everywhere.**
 
 ---
 
